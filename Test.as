@@ -23,7 +23,7 @@ HookReturnCode ClientSayH( SayParameters@ pParams )
     {
         fHandle.Write("==================================================\n");
         fHandle.Write("Player: "+authid_pp+" says:\n"+pParams.GetCommand()+"\n");
-        CCommand@ pArguments=pParams.GetArguments();
+        const CCommand@ pArguments=pParams.GetArguments();
         int pAC=pArguments.ArgC();
         fHandle.Write("Arguments number: "+string(pAC)+"\n");
         for( int n = 0; n < pAC; n++ ) 
@@ -53,7 +53,7 @@ HookReturnCode PlayerSpawnH( CBasePlayer@ pPlayer )
         fHandle.Write("==================================================\n");
         fHandle.Write("New player spawned!\n");
         fHandle.Write("Map name: "+g_Engine.mapname+"\n");
-        fhandle.Write("Current players in map: "+string(g_PlayerFuncs.GetNumPlayers())+"\n");
+        fHandle.Write("Current players in map: "+string(g_PlayerFuncs.GetNumPlayers())+"\n");
         fHandle.Write("==================================================\n");
     }
     fHandle.Close();
@@ -78,13 +78,13 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
         {
             case 0:
             case 3:
-                fhandle.Write("Player dies normally\n");
+                fHandle.Write("Player dies normally\n");
                 break;
             case 1:
-                fhandle.Write("Player dies in one piece\n");
+                fHandle.Write("Player dies in one piece\n");
                 break;
             case 2:
-                fhandle.Write("Player dies in pieces!!!\n");
+                fHandle.Write("Player dies in pieces!!!\n");
                 break;
             default:
                 fHandle.Write("Unknown GIB code\n");
@@ -106,6 +106,9 @@ HookReturnCode PlayerTakeDamageH(DamageInfo@ pDamageInfo)
         g_PlayerFuncs.ClientPrintAll( HUD_PRINTCONSOLE, "New player: "+authid_pp+"\n" );
         authid_pp=authid_pp.Replace(":","");
 
+        if(pDamageInfo.flDamage<1){
+            return HOOK_CONTINUE;
+        }
         File@ fHandle;
         @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+".txt" , OpenFile::APPEND);
         if( fHandle !is null ) 
@@ -198,9 +201,9 @@ HookReturnCode PlayerTakeDamageH(DamageInfo@ pDamageInfo)
                     break;
             }
             CBaseEntity@ pAtk=pDamageInfo.pAttacker;
-            fHandle.Write("Attacker: "+pAttacker.GetClassname()+"\n");
+            fHandle.Write("Attacker: "+pAtk.GetClassname()+"\n");
             CBaseEntity@ pInf=pDamageInfo.pInflictor;
-            fHandle.Write("Inflictor: "+pInflictor.GetClassname()+"\n");
+            fHandle.Write("Inflictor: "+pInf.GetClassname()+"\n");
             fHandle.Write("==================================================\n");
         }
         fHandle.Close();
