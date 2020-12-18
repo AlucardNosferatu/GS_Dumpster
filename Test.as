@@ -337,13 +337,15 @@ HookReturnCode WeaponPrimaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWe
     authid_pp=authid_pp.Replace(":","");
 
     bool b_wrtie_to_file=false;
-    if(fired_primary.exists[authid_pp])
+    if(fired_primary.exists(authid_pp))
     {
         // Not the first time
-        if(fired_primary[authid_pp]==pWeapon.GetClassname())
+        if(string(fired_primary[authid_pp])==pWeapon.GetClassname())
         {
             // Same weapon
-            if(g_Engine.time-fired_primary[authid_pp+"_time"]>100)
+            g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Time Elapsed: "+string(g_Engine.time-float(fired_primary[authid_pp+"_time"]))+"\n");
+            
+            if(g_Engine.time-float(fired_primary[authid_pp+"_time"])>20)
             {
                 // Long enough after last firing
                 b_wrtie_to_file=true;
@@ -373,13 +375,13 @@ HookReturnCode WeaponPrimaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWe
         if( fHandle !is null ) 
         {
             fHandle.Write("==================================================\n");
-            fHandle.Write(dt_str+"\n");
+            fHandle.Write(dt_str+"\n\n");
             fHandle.Write("Player: "+authid_pp+" is attacking!\n");
             fHandle.Write("With primary fire mode of: "+pWeapon.GetClassname()+"\n");
             fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
             fHandle.Write("Primary ammo: "+pWeapon.pszAmmo1()+"\n");
             fHandle.Write(string(pWeapon.m_iClip)+" rounds left in the current clip.\n");
-            fHandle.Write(string(pPlayer.m_rgAmmo(pWeapon.m_iPrimaryAmmoType)+" rounds left in total.\n");
+            fHandle.Write(string(pPlayer.m_rgAmmo(size_t(pWeapon.m_iPrimaryAmmoType)))+" rounds left in total.\n");
             fHandle.Write("==================================================\n");
         }
         fHandle.Close();
@@ -399,13 +401,15 @@ HookReturnCode WeaponSecondaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ p
     authid_pp=authid_pp.Replace(":","");
 
     bool b_wrtie_to_file=false;
-    if(fired_secondary.exists[authid_pp])
+    if(fired_secondary.exists(authid_pp))
     {
         // Not the first time
-        if(fired_secondary[authid_pp]==pWeapon.GetClassname())
+        if(string(fired_secondary[authid_pp])==pWeapon.GetClassname())
         {
             // Same weapon
-            if(g_Engine.time-fired_secondary[authid_pp+"_time"]>100)
+            g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Time Elapsed: "+string(g_Engine.time-float(fired_secondary[authid_pp+"_time"]))+"\n");
+
+            if(g_Engine.time-float(fired_secondary[authid_pp+"_time"])>20)
             {
                 // Long enough after last firing
                 b_wrtie_to_file=true;
@@ -435,13 +439,13 @@ HookReturnCode WeaponSecondaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ p
         if( fHandle !is null ) 
         {
             fHandle.Write("==================================================\n");
-            fHandle.Write(dt_str+"\n");
+            fHandle.Write(dt_str+"\n\n");
             fHandle.Write("Player: "+authid_pp+" is attacking!\n");
             fHandle.Write("With secondary fire mode of: "+pWeapon.GetClassname()+"\n");
             fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
             fHandle.Write("Secondary ammo: "+pWeapon.pszAmmo2()+"\n");
             fHandle.Write(string(pWeapon.m_iClip2)+" rounds left in the current clip.\n");
-            fHandle.Write(string(pPlayer.m_rgAmmo(pWeapon.m_iSecondaryAmmoType)+" rounds left in total.\n");
+            fHandle.Write(string(pPlayer.m_rgAmmo(size_t(pWeapon.m_iSecondaryAmmoType)))+" rounds left in total.\n");
             fHandle.Write("==================================================\n");
         }
         fHandle.Close();
