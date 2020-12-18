@@ -30,6 +30,7 @@ HookReturnCode ClientDisconnectH(CBasePlayer@ pPlayer)
     {
         fHandle.Write("==================================================\n");
         fHandle.Write("Player: "+authid_pp+" ejected!\n");
+        fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
         fHandle.Write("He/She/It died: "+pPlayer.m_iDeaths+" time!\n");
         fHandle.Write("Current players in map: "+string(g_PlayerFuncs.GetNumPlayers())+"\n");
         fHandle.Write("==================================================\n");
@@ -59,6 +60,7 @@ HookReturnCode ClientSayH(SayParameters@ pParams)
     {
         fHandle.Write("==================================================\n");
         fHandle.Write("Player: "+authid_pp+" says:\n"+pParams.GetCommand()+"\n");
+        fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
         const CCommand@ pArguments=pParams.GetArguments();
         int pAC=pArguments.ArgC();
         fHandle.Write("Arguments number: "+string(pAC)+"\n");
@@ -118,6 +120,7 @@ HookReturnCode PlayerSpawnH(CBasePlayer@ pPlayer)
     {
         fHandle.Write("==================================================\n");
         fHandle.Write("New player spawned!\n");
+        fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
         fHandle.Write("Map name: "+g_Engine.mapname+"\n");
         fHandle.Write("Current players in map: "+string(g_PlayerFuncs.GetNumPlayers())+"\n");
         fHandle.Write("==================================================\n");
@@ -146,6 +149,7 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
     {
         fHandle.Write("==================================================\n");
         fHandle.Write("Player: "+authid_pp+" get fucked!!!\n");
+        fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
         fHandle.Write("Fucker name: "+pAttacker.GetClassname()+"\n");
         switch(iGib)
         {
@@ -188,6 +192,7 @@ HookReturnCode PlayerTakeDamageH(DamageInfo@ pDamageInfo)
         {
             fHandle.Write("==================================================\n");
             fHandle.Write("Player: "+authid_pp+" is being fucked\n");
+            fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
             fHandle.Write("Fucked: "+string(pDamageInfo.flDamage)+"\n");
             switch(pDamageInfo.bitsDamageType)
             {
@@ -336,6 +341,7 @@ HookReturnCode WeaponPrimaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWe
             fHandle.Write("==================================================\n");
             fHandle.Write("Player: "+authid_pp+" is attacking!\n");
             fHandle.Write("With primary fire mode of: "+pWeapon.GetClassname()+"\n");
+            fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
             fHandle.Write("Primary ammo: "+pWeapon.pszAmmo1()+"\n");
             fHandle.Write(string(pWeapon.m_iClip)+" rounds left in the current clip.\n");
             fHandle.Write(string(pPlayer.m_rgAmmo(pWeapon.m_iPrimaryAmmoType)+" rounds left in total.\n");
@@ -392,6 +398,7 @@ HookReturnCode WeaponSecondaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ p
             fHandle.Write("==================================================\n");
             fHandle.Write("Player: "+authid_pp+" is attacking!\n");
             fHandle.Write("With secondary fire mode of: "+pWeapon.GetClassname()+"\n");
+            fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
             fHandle.Write("Secondary ammo: "+pWeapon.pszAmmo2()+"\n");
             fHandle.Write(string(pWeapon.m_iClip2)+" rounds left in the current clip.\n");
             fHandle.Write(string(pPlayer.m_rgAmmo(pWeapon.m_iSecondaryAmmoType)+" rounds left in total.\n");
@@ -401,3 +408,4 @@ HookReturnCode WeaponSecondaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ p
     }
     return HOOK_CONTINUE;
 }
+
