@@ -7,8 +7,8 @@ void PluginInit()
     g_Module.ScriptInfo.SetAuthor("Scrooge2029");
     g_Module.ScriptInfo.SetContactInfo("1641367382@qq.com");
     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "I love Carol forever and ever!\n");
-    g_Hooks.RegisterHook(Hooks::Player::ClientDisconnect, @ClientDisconnectH);
-    g_Hooks.RegisterHook(Hooks::Player::ClientSay, @ClientSayH);
+    g_Hooks.RegisterHook(Hooks::Player::ClientDisconnect, @PlayerDisconnectH);
+    g_Hooks.RegisterHook(Hooks::Player::ClientSay, @PlayerSayH);
     g_Hooks.RegisterHook(Hooks::Game::MapChange, @MapChangeH);
     g_Hooks.RegisterHook(Hooks::Player::PlayerSpawn, @PlayerSpawnH);
     g_Hooks.RegisterHook(Hooks::Player::PlayerKilled, @PlayerKilledH);
@@ -18,8 +18,12 @@ void PluginInit()
     
 }
 
-HookReturnCode ClientDisconnectH(CBasePlayer@ pPlayer)
+HookReturnCode PlayerDisconnectH(CBasePlayer@ pPlayer)
 {
+    DateTime datetime=DateTime();
+    string dt_str;
+    datetime.ToString(dt_str);
+
     edict_t@ edict_pp = pPlayer.edict();
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
     authid_pp=authid_pp.Replace(":","");
@@ -29,6 +33,7 @@ HookReturnCode ClientDisconnectH(CBasePlayer@ pPlayer)
     if( fHandle !is null ) 
     {
         fHandle.Write("==================================================\n");
+        fHandle.Write(dt_str+"\n");
         fHandle.Write("Player: "+authid_pp+" ejected!\n");
         fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
         fHandle.Write("He/She/It died: "+pPlayer.m_iDeaths+" time!\n");
@@ -46,8 +51,12 @@ HookReturnCode ClientDisconnectH(CBasePlayer@ pPlayer)
 	return HOOK_CONTINUE;
 }
 
-HookReturnCode ClientSayH(SayParameters@ pParams)
+HookReturnCode PlayerSayH(SayParameters@ pParams)
 {
+    DateTime datetime=DateTime();
+    string dt_str;
+    datetime.ToString(dt_str);
+
     CBasePlayer@ pPlayer=pParams.GetPlayer();
     edict_t@ edict_pp = pPlayer.edict();
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
@@ -59,6 +68,7 @@ HookReturnCode ClientSayH(SayParameters@ pParams)
     if( fHandle !is null ) 
     {
         fHandle.Write("==================================================\n");
+        fHandle.Write(dt_str+"\n");
         fHandle.Write("Player: "+authid_pp+" says:\n"+pParams.GetCommand()+"\n");
         fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
         const CCommand@ pArguments=pParams.GetArguments();
@@ -79,6 +89,10 @@ HookReturnCode ClientSayH(SayParameters@ pParams)
 
 HookReturnCode MapChangeH()
 {
+    DateTime datetime=DateTime();
+    string dt_str;
+    datetime.ToString(dt_str);
+
     int pCount=g_PlayerFuncs.GetNumPlayers();
     int pCount2=players_in_server.length();
     if(pCount!=pCount2)
@@ -94,6 +108,7 @@ HookReturnCode MapChangeH()
         if( fHandle !is null ) 
         {
             fHandle.Write("==================================================\n");
+            fHandle.Write(dt_str+"\n");
             fHandle.Write("Map changed to: "+g_Engine.mapname+"\n");
             if(pCount!=pCount2)
             {
@@ -108,7 +123,11 @@ HookReturnCode MapChangeH()
 }
 
 HookReturnCode PlayerSpawnH(CBasePlayer@ pPlayer)
-{		
+{
+    DateTime datetime=DateTime();
+    string dt_str;
+    datetime.ToString(dt_str);
+		
     edict_t@ edict_pp = pPlayer.edict();
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "New player: "+authid_pp+"\n");
@@ -119,6 +138,7 @@ HookReturnCode PlayerSpawnH(CBasePlayer@ pPlayer)
     if( fHandle !is null ) 
     {
         fHandle.Write("==================================================\n");
+        fHandle.Write(dt_str+"\n");
         fHandle.Write("New player spawned!\n");
         fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
         fHandle.Write("Map name: "+g_Engine.mapname+"\n");
@@ -138,6 +158,10 @@ HookReturnCode PlayerSpawnH(CBasePlayer@ pPlayer)
 
 HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int iGib)
 {
+    DateTime datetime=DateTime();
+    string dt_str;
+    datetime.ToString(dt_str);
+
     edict_t@ edict_pp = pPlayer.edict();
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Fucked player: "+authid_pp+"\n");
@@ -148,6 +172,7 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
     if( fHandle !is null ) 
     {
         fHandle.Write("==================================================\n");
+        fHandle.Write(dt_str+"\n");
         fHandle.Write("Player: "+authid_pp+" get fucked!!!\n");
         fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
         fHandle.Write("Fucker name: "+pAttacker.GetClassname()+"\n");
@@ -175,6 +200,10 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
 
 HookReturnCode PlayerTakeDamageH(DamageInfo@ pDamageInfo)
 {
+    DateTime datetime=DateTime();
+    string dt_str;
+    datetime.ToString(dt_str);
+
     if(pDamageInfo.pVictim.IsPlayer())
     {
         CBasePlayer@ pPlayer=cast<CBasePlayer@>(pDamageInfo.pVictim);
@@ -191,6 +220,7 @@ HookReturnCode PlayerTakeDamageH(DamageInfo@ pDamageInfo)
         if( fHandle !is null ) 
         {
             fHandle.Write("==================================================\n");
+            fHandle.Write(dt_str+"\n");
             fHandle.Write("Player: "+authid_pp+" is being fucked\n");
             fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
             fHandle.Write("Fucked: "+string(pDamageInfo.flDamage)+"\n");
@@ -297,12 +327,16 @@ HookReturnCode PlayerTakeDamageH(DamageInfo@ pDamageInfo)
 
 HookReturnCode WeaponPrimaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
 {
+    DateTime datetime=DateTime();
+    string dt_str;
+    datetime.ToString(dt_str);
+
     edict_t@ edict_pp = pPlayer.edict();
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Player: "+authid_pp+" is attacking!\n");
     authid_pp=authid_pp.Replace(":","");
 
-    bool wrtie_to_file=false;
+    bool b_wrtie_to_file=false;
     if(fired_primary.exists[authid_pp])
     {
         // Not the first time
@@ -312,14 +346,14 @@ HookReturnCode WeaponPrimaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWe
             if(g_Engine.time-fired_primary[authid_pp+"_time"]>100)
             {
                 // Long enough after last firing
-                wrtie_to_file=true;
+                b_wrtie_to_file=true;
                 fired_primary.set(authid_pp+"_time",g_Engine.time);
             }
         }
         else
         {
             // Not first time, but use a different weapon
-            wrtie_to_file=true;
+            b_wrtie_to_file=true;
             fired_primary.set(authid_pp,pWeapon.GetClassname());
             fired_primary.set(authid_pp+"_time",g_Engine.time);
         }
@@ -327,18 +361,19 @@ HookReturnCode WeaponPrimaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWe
     else
     {
         // First time to fire
-        wrtie_to_file=true;
+        b_wrtie_to_file=true;
         fired_primary.set(authid_pp,pWeapon.GetClassname());
         fired_primary.set(authid_pp+"_time",g_Engine.time);
     }
     
-    if(wrtie_to_file)
+    if(b_wrtie_to_file)
     {
         File@ fHandle;
         @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+".txt" , OpenFile::APPEND);
         if( fHandle !is null ) 
         {
             fHandle.Write("==================================================\n");
+            fHandle.Write(dt_str+"\n");
             fHandle.Write("Player: "+authid_pp+" is attacking!\n");
             fHandle.Write("With primary fire mode of: "+pWeapon.GetClassname()+"\n");
             fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
@@ -354,12 +389,16 @@ HookReturnCode WeaponPrimaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWe
 
 HookReturnCode WeaponSecondaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
 {
+    DateTime datetime=DateTime();
+    string dt_str;
+    datetime.ToString(dt_str);
+
     edict_t@ edict_pp = pPlayer.edict();
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Player: "+authid_pp+" is attacking!\n");
     authid_pp=authid_pp.Replace(":","");
 
-    bool wrtie_to_file=false;
+    bool b_wrtie_to_file=false;
     if(fired_secondary.exists[authid_pp])
     {
         // Not the first time
@@ -369,14 +408,14 @@ HookReturnCode WeaponSecondaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ p
             if(g_Engine.time-fired_secondary[authid_pp+"_time"]>100)
             {
                 // Long enough after last firing
-                wrtie_to_file=true;
+                b_wrtie_to_file=true;
                 fired_secondary.set(authid_pp+"_time",g_Engine.time);
             }
         }
         else
         {
             // Not first time, but use a different weapon
-            wrtie_to_file=true;
+            b_wrtie_to_file=true;
             fired_secondary.set(authid_pp,pWeapon.GetClassname());
             fired_secondary.set(authid_pp+"_time",g_Engine.time);
         }
@@ -384,18 +423,19 @@ HookReturnCode WeaponSecondaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ p
     else
     {
         // First time to fire
-        wrtie_to_file=true;
+        b_wrtie_to_file=true;
         fired_secondary.set(authid_pp,pWeapon.GetClassname());
         fired_secondary.set(authid_pp+"_time",g_Engine.time);
     }
     
-    if(wrtie_to_file)
+    if(b_wrtie_to_file)
     {
         File@ fHandle;
         @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+".txt" , OpenFile::APPEND);
         if( fHandle !is null ) 
         {
             fHandle.Write("==================================================\n");
+            fHandle.Write(dt_str+"\n");
             fHandle.Write("Player: "+authid_pp+" is attacking!\n");
             fHandle.Write("With secondary fire mode of: "+pWeapon.GetClassname()+"\n");
             fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
