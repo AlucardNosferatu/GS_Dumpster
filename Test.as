@@ -1,15 +1,51 @@
+array<string> players_in_server;
+dictionary fired_primary;
+dictionary fired_secondary;
+
 void PluginInit()
 {
-    g_Module.ScriptInfo.SetAuthor( "Scrooge2029" );
-    g_Module.ScriptInfo.SetContactInfo( "1641367382@qq.com" );
-    g_PlayerFuncs.ClientPrintAll( HUD_PRINTCONSOLE, "I love Carol forever and ever!\n" );
-    g_Hooks.RegisterHook( Hooks::Player::ClientSay, @ClientSayH );
-    g_Hooks.RegisterHook( Hooks::Player::PlayerSpawn, @PlayerSpawnH );
-    g_Hooks.RegisterHook( Hooks::Player::PlayerKilled, @PlayerKilledH );
-    g_Hooks.RegisterHook( Hooks::Player::PlayerTakeDamage, @PlayerTakeDamageH);
+    g_Module.ScriptInfo.SetAuthor("Scrooge2029");
+    g_Module.ScriptInfo.SetContactInfo("1641367382@qq.com");
+    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "I love Carol forever and ever!\n");
+    g_Hooks.RegisterHook(Hooks::Player::ClientDisconnect, @ClientDisconnectH);
+    g_Hooks.RegisterHook(Hooks::Player::ClientSay, @ClientSayH);
+    g_Hooks.RegisterHook(Hooks::Game::MapChange, @MapChangeH);
+    g_Hooks.RegisterHook(Hooks::Player::PlayerSpawn, @PlayerSpawnH);
+    g_Hooks.RegisterHook(Hooks::Player::PlayerKilled, @PlayerKilledH);
+    g_Hooks.RegisterHook(Hooks::Player::PlayerTakeDamage, @PlayerTakeDamageH);
+    g_Hooks.RegisterHook(Hooks::Weapon::WeaponPrimaryAttack, @WeaponPrimaryAttackH);
+    g_Hooks.RegisterHook(Hooks::Weapon::WeaponSecondaryAttack, @WeaponSecondaryAttackH);
+    
 }
 
-HookReturnCode ClientSayH( SayParameters@ pParams )
+HookReturnCode ClientDisconnectH(CBasePlayer@ pPlayer)
+{
+    edict_t@ edict_pp = pPlayer.edict();
+    string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
+    authid_pp=authid_pp.Replace(":","");
+
+	File@ fHandle;
+    @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+".txt" , OpenFile::APPEND);
+    if( fHandle !is null ) 
+    {
+        fHandle.Write("==================================================\n");
+        fHandle.Write("Player: "+authid_pp+" ejected!\n");
+        fHandle.Write("He/She/It died: "+pPlayer.m_iDeaths+" time!\n");
+        fHandle.Write("Current players in map: "+string(g_PlayerFuncs.GetNumPlayers())+"\n");
+        fHandle.Write("==================================================\n");
+    }
+    fHandle.Close();
+	
+    int index = players_in_server.find(authid_pp);
+    if(index!=-1)
+    {
+        players_in_server.removeAt(index);
+    }
+
+	return HOOK_CONTINUE;
+}
+
+HookReturnCode ClientSayH(SayParameters@ pParams)
 {
     CBasePlayer@ pPlayer=pParams.GetPlayer();
     edict_t@ edict_pp = pPlayer.edict();
@@ -39,11 +75,41 @@ HookReturnCode ClientSayH( SayParameters@ pParams )
 	return HOOK_CONTINUE;
 }
 
-HookReturnCode PlayerSpawnH( CBasePlayer@ pPlayer )
+HookReturnCode MapChangeH()
+{
+    int pCount=g_PlayerFuncs.GetNumPlayers();
+    int pCount2=players_in_server.length();
+    if(pCount!=pCount2)
+    {
+        g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "WARNING! PlayerCount Mismatch!\n");
+    }
+    for(int n=0;n<pCount2;n++)
+    {
+        string authid_pp=players_in_server[n];
+
+        File@ fHandle;
+        @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+".txt" , OpenFile::APPEND);
+        if( fHandle !is null ) 
+        {
+            fHandle.Write("==================================================\n");
+            fHandle.Write("Map changed to: "+g_Engine.mapname+"\n");
+            if(pCount!=pCount2)
+            {
+                fHandle.Write("WARNING! PlayerCount Mismatch!\n");
+            }
+            fHandle.Write("==================================================\n");
+        }
+        fHandle.Close();
+    }
+		
+	return HOOK_CONTINUE;
+}
+
+HookReturnCode PlayerSpawnH(CBasePlayer@ pPlayer)
 {		
     edict_t@ edict_pp = pPlayer.edict();
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
-    g_PlayerFuncs.ClientPrintAll( HUD_PRINTCONSOLE, "New player: "+authid_pp+"\n" );
+    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "New player: "+authid_pp+"\n");
     authid_pp=authid_pp.Replace(":","");
 
     File@ fHandle;
@@ -57,6 +123,13 @@ HookReturnCode PlayerSpawnH( CBasePlayer@ pPlayer )
         fHandle.Write("==================================================\n");
     }
     fHandle.Close();
+
+    int index = players_in_server.find(authid_pp);
+    if(index==-1)
+    {
+        players_in_server.insertAt(0,authid_pp);
+    }
+
     return HOOK_CONTINUE;
 }
 
@@ -64,7 +137,7 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
 {
     edict_t@ edict_pp = pPlayer.edict();
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
-    g_PlayerFuncs.ClientPrintAll( HUD_PRINTCONSOLE, "New player: "+authid_pp+"\n" );
+    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Fucked player: "+authid_pp+"\n");
     authid_pp=authid_pp.Replace(":","");
 
     File@ fHandle;
@@ -103,7 +176,7 @@ HookReturnCode PlayerTakeDamageH(DamageInfo@ pDamageInfo)
         CBasePlayer@ pPlayer=cast<CBasePlayer@>(pDamageInfo.pVictim);
         edict_t@ edict_pp = pPlayer.edict();
         string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
-        g_PlayerFuncs.ClientPrintAll( HUD_PRINTCONSOLE, "New player: "+authid_pp+"\n" );
+        g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Damaged player: "+authid_pp+"\n");
         authid_pp=authid_pp.Replace(":","");
 
         if(pDamageInfo.flDamage<1){
@@ -215,4 +288,116 @@ HookReturnCode PlayerTakeDamageH(DamageInfo@ pDamageInfo)
     }
 
     
+}
+
+HookReturnCode WeaponPrimaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
+{
+    edict_t@ edict_pp = pPlayer.edict();
+    string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
+    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Player: "+authid_pp+" is attacking!\n");
+    authid_pp=authid_pp.Replace(":","");
+
+    bool wrtie_to_file=false;
+    if(fired_primary.exists[authid_pp])
+    {
+        // Not the first time
+        if(fired_primary[authid_pp]==pWeapon.GetClassname())
+        {
+            // Same weapon
+            if(g_Engine.time-fired_primary[authid_pp+"_time"]>100)
+            {
+                // Long enough after last firing
+                wrtie_to_file=true;
+                fired_primary.set(authid_pp+"_time",g_Engine.time);
+            }
+        }
+        else
+        {
+            // Not first time, but use a different weapon
+            wrtie_to_file=true;
+            fired_primary.set(authid_pp,pWeapon.GetClassname());
+            fired_primary.set(authid_pp+"_time",g_Engine.time);
+        }
+    }
+    else
+    {
+        // First time to fire
+        wrtie_to_file=true;
+        fired_primary.set(authid_pp,pWeapon.GetClassname());
+        fired_primary.set(authid_pp+"_time",g_Engine.time);
+    }
+    
+    if(wrtie_to_file)
+    {
+        File@ fHandle;
+        @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+".txt" , OpenFile::APPEND);
+        if( fHandle !is null ) 
+        {
+            fHandle.Write("==================================================\n");
+            fHandle.Write("Player: "+authid_pp+" is attacking!\n");
+            fHandle.Write("With primary fire mode of: "+pWeapon.GetClassname()+"\n");
+            fHandle.Write("Primary ammo: "+pWeapon.pszAmmo1()+"\n");
+            fHandle.Write(string(pWeapon.m_iClip)+" rounds left in the current clip.\n");
+            fHandle.Write(string(pPlayer.m_rgAmmo(pWeapon.m_iPrimaryAmmoType)+" rounds left in total.\n");
+            fHandle.Write("==================================================\n");
+        }
+        fHandle.Close();
+    }
+    return HOOK_CONTINUE;
+}
+
+HookReturnCode WeaponSecondaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
+{
+    edict_t@ edict_pp = pPlayer.edict();
+    string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
+    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Player: "+authid_pp+" is attacking!\n");
+    authid_pp=authid_pp.Replace(":","");
+
+    bool wrtie_to_file=false;
+    if(fired_secondary.exists[authid_pp])
+    {
+        // Not the first time
+        if(fired_secondary[authid_pp]==pWeapon.GetClassname())
+        {
+            // Same weapon
+            if(g_Engine.time-fired_secondary[authid_pp+"_time"]>100)
+            {
+                // Long enough after last firing
+                wrtie_to_file=true;
+                fired_secondary.set(authid_pp+"_time",g_Engine.time);
+            }
+        }
+        else
+        {
+            // Not first time, but use a different weapon
+            wrtie_to_file=true;
+            fired_secondary.set(authid_pp,pWeapon.GetClassname());
+            fired_secondary.set(authid_pp+"_time",g_Engine.time);
+        }
+    }
+    else
+    {
+        // First time to fire
+        wrtie_to_file=true;
+        fired_secondary.set(authid_pp,pWeapon.GetClassname());
+        fired_secondary.set(authid_pp+"_time",g_Engine.time);
+    }
+    
+    if(wrtie_to_file)
+    {
+        File@ fHandle;
+        @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+".txt" , OpenFile::APPEND);
+        if( fHandle !is null ) 
+        {
+            fHandle.Write("==================================================\n");
+            fHandle.Write("Player: "+authid_pp+" is attacking!\n");
+            fHandle.Write("With secondary fire mode of: "+pWeapon.GetClassname()+"\n");
+            fHandle.Write("Secondary ammo: "+pWeapon.pszAmmo2()+"\n");
+            fHandle.Write(string(pWeapon.m_iClip2)+" rounds left in the current clip.\n");
+            fHandle.Write(string(pPlayer.m_rgAmmo(pWeapon.m_iSecondaryAmmoType)+" rounds left in total.\n");
+            fHandle.Write("==================================================\n");
+        }
+        fHandle.Close();
+    }
+    return HOOK_CONTINUE;
 }
