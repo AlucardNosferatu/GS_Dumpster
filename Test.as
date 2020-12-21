@@ -30,8 +30,8 @@ HookReturnCode PlayerDisconnectH(CBasePlayer@ pPlayer)
 
     int ping;
     int loss;
-    const edict_t@ edict_pp = pPlayer.edict();
-    g_EngineFuncs.GetPlayerStats(edict_pp, ping, loss);
+    const edict_t@ c_edict_pp = pPlayer.edict();
+    g_EngineFuncs.GetPlayerStats(c_edict_pp, ping, loss);
 
 	File@ fHandle;
     @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+".txt" , OpenFile::APPEND);
@@ -72,8 +72,8 @@ HookReturnCode PlayerSayH(SayParameters@ pParams)
 
     int ping;
     int loss;
-    const edict_t@ edict_pp = pPlayer.edict();
-    g_EngineFuncs.GetPlayerStats(edict_pp, ping, loss);
+    const edict_t@ c_edict_pp = pPlayer.edict();
+    g_EngineFuncs.GetPlayerStats(c_edict_pp, ping, loss);
 
 	File@ fHandle;
     @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+".txt" , OpenFile::APPEND);
@@ -149,8 +149,8 @@ HookReturnCode PlayerSpawnH(CBasePlayer@ pPlayer)
 
     int ping;
     int loss;
-    const edict_t@ edict_pp = pPlayer.edict();
-    g_EngineFuncs.GetPlayerStats(edict_pp, ping, loss);
+    const edict_t@ c_edict_pp = pPlayer.edict();
+    g_EngineFuncs.GetPlayerStats(c_edict_pp, ping, loss);
 
     File@ fHandle;
     @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+".txt" , OpenFile::APPEND);
@@ -190,8 +190,8 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
 
     int ping;
     int loss;
-    const edict_t@ edict_pp = pPlayer.edict();
-    g_EngineFuncs.GetPlayerStats(edict_pp, ping, loss);
+    const edict_t@ c_edict_pp = pPlayer.edict();
+    g_EngineFuncs.GetPlayerStats(c_edict_pp, ping, loss);
 
     File@ fHandle;
     @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+".txt" , OpenFile::APPEND);
@@ -242,8 +242,8 @@ HookReturnCode PlayerTakeDamageH(DamageInfo@ pDamageInfo)
 
         int ping;
         int loss;
-        const edict_t@ edict_pp = pPlayer.edict();
-        g_EngineFuncs.GetPlayerStats(edict_pp, ping, loss);
+        const edict_t@ c_edict_pp = pPlayer.edict();
+        g_EngineFuncs.GetPlayerStats(c_edict_pp, ping, loss);
 
         if(pDamageInfo.flDamage<1){
             return HOOK_CONTINUE;
@@ -373,8 +373,8 @@ HookReturnCode WeaponPrimaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWe
 
     int ping;
     int loss;
-    const edict_t@ edict_pp = pPlayer.edict();
-    g_EngineFuncs.GetPlayerStats(edict_pp, ping, loss);
+    const edict_t@ c_edict_pp = pPlayer.edict();
+    g_EngineFuncs.GetPlayerStats(c_edict_pp, ping, loss);
 
     bool b_wrtie_to_file=false;
     if(fired_primary.exists(authid_pp))
@@ -444,8 +444,8 @@ HookReturnCode WeaponSecondaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ p
 
     int ping;
     int loss;
-    const edict_t@ edict_pp = pPlayer.edict();
-    g_EngineFuncs.GetPlayerStats(edict_pp, ping, loss);
+    const edict_t@ c_edict_pp = pPlayer.edict();
+    g_EngineFuncs.GetPlayerStats(c_edict_pp, ping, loss);
 
     bool b_wrtie_to_file=false;
     if(fired_secondary.exists(authid_pp))
