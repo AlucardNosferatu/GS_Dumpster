@@ -28,13 +28,20 @@ HookReturnCode PlayerDisconnectH(CBasePlayer@ pPlayer)
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
     authid_pp=authid_pp.Replace(":","");
 
+    int ping;
+    int loss;
+    const edict_t@ edict_pp = pPlayer.edict();
+    g_EngineFuncs.GetPlayerStats(edict_pp, ping, loss);
+
 	File@ fHandle;
     @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+".txt" , OpenFile::APPEND);
     if( fHandle !is null ) 
     {
         fHandle.Write("==================================================\n");
-        fHandle.Write(dt_str+"\n");
+        fHandle.Write(dt_str+"\n\n");
         fHandle.Write("Player: "+authid_pp+" ejected!\n");
+        fHandle.Write("PING: "+string(ping)+"\n");
+        fHandle.Write("Packet Loss: "+string(loss)+"\n");
         fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
         fHandle.Write("He/She/It died: "+pPlayer.m_iDeaths+" time!\n");
         fHandle.Write("Current players in map: "+string(g_PlayerFuncs.GetNumPlayers())+"\n");
@@ -63,13 +70,20 @@ HookReturnCode PlayerSayH(SayParameters@ pParams)
     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Player: "+authid_pp+" says:\n"+pParams.GetCommand()+"\n");
     authid_pp=authid_pp.Replace(":","");
 
+    int ping;
+    int loss;
+    const edict_t@ edict_pp = pPlayer.edict();
+    g_EngineFuncs.GetPlayerStats(edict_pp, ping, loss);
+
 	File@ fHandle;
     @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+".txt" , OpenFile::APPEND);
     if( fHandle !is null ) 
     {
         fHandle.Write("==================================================\n");
-        fHandle.Write(dt_str+"\n");
+        fHandle.Write(dt_str+"\n\n");
         fHandle.Write("Player: "+authid_pp+" says:\n"+pParams.GetCommand()+"\n");
+        fHandle.Write("PING: "+string(ping)+"\n");
+        fHandle.Write("Packet Loss: "+string(loss)+"\n");
         fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
         const CCommand@ pArguments=pParams.GetArguments();
         int pAC=pArguments.ArgC();
@@ -108,7 +122,7 @@ HookReturnCode MapChangeH()
         if( fHandle !is null ) 
         {
             fHandle.Write("==================================================\n");
-            fHandle.Write(dt_str+"\n");
+            fHandle.Write(dt_str+"\n\n");
             fHandle.Write("Map changed to: "+g_Engine.mapname+"\n");
             if(pCount!=pCount2)
             {
@@ -133,13 +147,20 @@ HookReturnCode PlayerSpawnH(CBasePlayer@ pPlayer)
     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "New player: "+authid_pp+"\n");
     authid_pp=authid_pp.Replace(":","");
 
+    int ping;
+    int loss;
+    const edict_t@ edict_pp = pPlayer.edict();
+    g_EngineFuncs.GetPlayerStats(edict_pp, ping, loss);
+
     File@ fHandle;
     @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+".txt" , OpenFile::APPEND);
     if( fHandle !is null ) 
     {
         fHandle.Write("==================================================\n");
-        fHandle.Write(dt_str+"\n");
-        fHandle.Write("New player spawned!\n");
+        fHandle.Write(dt_str+"\n\n");
+        fHandle.Write("New player: "+authid_pp+" spawned!\n");
+        fHandle.Write("PING: "+string(ping)+"\n");
+        fHandle.Write("Packet Loss: "+string(loss)+"\n");
         fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
         fHandle.Write("Map name: "+g_Engine.mapname+"\n");
         fHandle.Write("Current players in map: "+string(g_PlayerFuncs.GetNumPlayers())+"\n");
@@ -167,13 +188,20 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Fucked player: "+authid_pp+"\n");
     authid_pp=authid_pp.Replace(":","");
 
+    int ping;
+    int loss;
+    const edict_t@ edict_pp = pPlayer.edict();
+    g_EngineFuncs.GetPlayerStats(edict_pp, ping, loss);
+
     File@ fHandle;
     @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+".txt" , OpenFile::APPEND);
     if( fHandle !is null ) 
     {
         fHandle.Write("==================================================\n");
-        fHandle.Write(dt_str+"\n");
+        fHandle.Write(dt_str+"\n\n");
         fHandle.Write("Player: "+authid_pp+" get fucked!!!\n");
+        fHandle.Write("PING: "+string(ping)+"\n");
+        fHandle.Write("Packet Loss: "+string(loss)+"\n");
         fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
         fHandle.Write("Fucker name: "+pAttacker.GetClassname()+"\n");
         switch(iGib)
@@ -212,6 +240,11 @@ HookReturnCode PlayerTakeDamageH(DamageInfo@ pDamageInfo)
         g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Damaged player: "+authid_pp+"\n");
         authid_pp=authid_pp.Replace(":","");
 
+        int ping;
+        int loss;
+        const edict_t@ edict_pp = pPlayer.edict();
+        g_EngineFuncs.GetPlayerStats(edict_pp, ping, loss);
+
         if(pDamageInfo.flDamage<1){
             return HOOK_CONTINUE;
         }
@@ -220,8 +253,10 @@ HookReturnCode PlayerTakeDamageH(DamageInfo@ pDamageInfo)
         if( fHandle !is null ) 
         {
             fHandle.Write("==================================================\n");
-            fHandle.Write(dt_str+"\n");
+            fHandle.Write(dt_str+"\n\n");
             fHandle.Write("Player: "+authid_pp+" is being fucked\n");
+            fHandle.Write("PING: "+string(ping)+"\n");
+            fHandle.Write("Packet Loss: "+string(loss)+"\n");
             fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
             fHandle.Write("Fucked: "+string(pDamageInfo.flDamage)+"\n");
             switch(pDamageInfo.bitsDamageType)
@@ -336,6 +371,11 @@ HookReturnCode WeaponPrimaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWe
     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Player: "+authid_pp+" is attacking!\n");
     authid_pp=authid_pp.Replace(":","");
 
+    int ping;
+    int loss;
+    const edict_t@ edict_pp = pPlayer.edict();
+    g_EngineFuncs.GetPlayerStats(edict_pp, ping, loss);
+
     bool b_wrtie_to_file=false;
     if(fired_primary.exists(authid_pp))
     {
@@ -377,6 +417,8 @@ HookReturnCode WeaponPrimaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWe
             fHandle.Write("==================================================\n");
             fHandle.Write(dt_str+"\n\n");
             fHandle.Write("Player: "+authid_pp+" is attacking!\n");
+            fHandle.Write("PING: "+string(ping)+"\n");
+            fHandle.Write("Packet Loss: "+string(loss)+"\n");
             fHandle.Write("With primary fire mode of: "+pWeapon.GetClassname()+"\n");
             fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
             fHandle.Write("Primary ammo: "+pWeapon.pszAmmo1()+"\n");
@@ -399,6 +441,11 @@ HookReturnCode WeaponSecondaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ p
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Player: "+authid_pp+" is attacking!\n");
     authid_pp=authid_pp.Replace(":","");
+
+    int ping;
+    int loss;
+    const edict_t@ edict_pp = pPlayer.edict();
+    g_EngineFuncs.GetPlayerStats(edict_pp, ping, loss);
 
     bool b_wrtie_to_file=false;
     if(fired_secondary.exists(authid_pp))
@@ -441,6 +488,8 @@ HookReturnCode WeaponSecondaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ p
             fHandle.Write("==================================================\n");
             fHandle.Write(dt_str+"\n\n");
             fHandle.Write("Player: "+authid_pp+" is attacking!\n");
+            fHandle.Write("PING: "+string(ping)+"\n");
+            fHandle.Write("Packet Loss: "+string(loss)+"\n");
             fHandle.Write("With secondary fire mode of: "+pWeapon.GetClassname()+"\n");
             fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
             fHandle.Write("Secondary ammo: "+pWeapon.pszAmmo2()+"\n");
