@@ -1,3 +1,6 @@
 
 *.wad
 *.bak
+CSRcon/.vs/
+CSRcon/CSRcon/bin/
+CSRcon/CSRcon/obj/
