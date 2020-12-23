@@ -6,6 +6,14 @@ void PluginInit()
 
 }
 
+CClientCommand g_HelloWorld("hello", "Hello", @helloword);
+//定义一个客户端命令，变量名g_HelloWorld，命令.hello，描述Hello，callback helloword
+void helloword(const CCommand@ pArgs) 
+{
+    //客户端命令的callback
+    g_PlayerFuncs.ClientPrintAll( HUD_PRINTCONSOLE, "Hello World!" );
+}
+
 CClientCommand g_GetEnhanced("fuck", "I Need Power!!!!", @enhance);
 void enhance(const CCommand@ pArgs) 
 {
@@ -22,7 +30,7 @@ void enhance(const CCommand@ pArgs)
     pPlayer.GiveNamedItem("item_longjump");
 }
 
-CClientCommand g_GetEnhanced("fuckfuck", "I Need More Power!!!!", @enhanceMore);
+CClientCommand g_GetEnhancedMore("fuckfuck", "I Need More Power!!!!", @enhanceMore);
 void enhanceMore(const CCommand@ pArgs) 
 {
     CBasePlayer@ pPlayer=g_ConCommandSystem.GetCurrentPlayer();
@@ -43,18 +51,16 @@ void enhanceMore(const CCommand@ pArgs)
             if (pWeapon !is null)
             {
                 string entity_name=pWeapon.GetClassname();
-                switch(entity_name)
+                if(entity_name=="weapon_crowbar" or entity_name=="weapon_grapple" or entity_name=="weapon_pipewrench")
                 {
-                    case "weapon_crowbar":
-                    case "weapon_grapple":
-                    case "weapon_pipewrench":
-                        pWeapon.m_flNextPrimaryAttack=0.001;
-                        break;
-                    default:
-                        pWeapon.m_iClip=666;
-                        pWeapon.m_flNextPrimaryAttack=0.001;
-                        pWeapon.m_flNextSecondaryAttack=0.001;
-                        break;
+                    pWeapon.m_flNextPrimaryAttack=0.001;
+                }
+                else
+                {
+                    pWeapon.m_iClip=666;
+                    pWeapon.m_iClip2=666;
+                    pWeapon.m_flNextPrimaryAttack=0.001;
+                    pWeapon.m_flNextSecondaryAttack=0.001;
                 }
             }
         }
