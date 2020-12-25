@@ -1,7 +1,6 @@
 // Created by Crowbar 0.71
 
-// Stored modelname (without quotes): "touhou_Remilia_Scarlet.mdl"
-$modelname "touhou_remilia.mdl"
+$modelname "Carol.mdl"
 $cd "."
 $cdtexture "."
 $cliptotextures
@@ -16,10 +15,6 @@ $bodygroup "head"
 {
 	studio "head"
 }
-// $bodygroup "cab"
-// {
-// 	studio "cab"
-// }
 $bodygroup "dress"
 {
 	studio "body"
@@ -32,14 +27,7 @@ $bodygroup "arm"
 {
 	studio "arm"
 }
-// $bodygroup "dress"
-// {
-// 	studio "ribon"
-// }
-// $bodygroup "wing"
-// {
-// 	studio "wing"
-// }
+
 
 $flags 0
 
