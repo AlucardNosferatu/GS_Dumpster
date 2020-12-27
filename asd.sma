@@ -1,6 +1,8 @@
 #include <amxmodx>
-#include <http>
+#include <amxmisc>
+#include <curl>
 
+#define CURL_BUFFER_SIZE 512
 
 public plugin_init()
 {
@@ -17,61 +19,75 @@ public hysd(id)
 	split(msg,command,32,params,512," ")
 	if(strcmp(command,"dick_install")==0)
 	{
-		new param1[64]
-		new param2[64]
-		new param3[64]
-		new param4[64]
-		new param5[64]
-		split(params,param1,64,param2,64,":")
-		console_print(id,param1)
-		params=""
-		strcat(params,param2,64)
-		split(params,param2,64,param3,64,":")
-		console_print(id,param2)
-		params=""
-		strcat(params,param3,64)
-		split(params,param3,64,param4,64,":")
-		console_print(id,param3)
-		params=""
-		strcat(params,param4,64)
-		split(params,param4,64,param5,64,"->")
-		console_print(id,param4)
-		console_print(id,param5)
-		
-		new url[512]="raw.githubusercontent.com/"
-		strcat(url,param1,512)
-		console_print(id,url)
-		
-		strcat(url,"/",512)
-		strcat(url,param2,512)
-		console_print(id,url)
-		
-		strcat(url,"/",512)
-		strcat(url,param3,512)
-		console_print(id,url)
-		
-		strcat(url,"/",512)
-		strcat(url,param4,512)
-		console_print(id,url)
-		
-		new filepath[128]="scripts/plugins/"
-		strcat(filepath,param5,128)
-		console_print(id,filepath)
-		
-		HTTP_DownloadFile(url,filepath);
+		curl_file(params)
 	}
 }
 
-public HTTP_Download( const szFile[] , iDownloadID , iBytesRecv , iFileSize , bool:TransferComplete )
+public reload_as()
 {
-	if ( TransferComplete )
-	{
-		server_print( "File=[%s] DownloadID=%d BytesTransferred=%d iSize=%d" , szFile , iDownloadID , iBytesRecv , iFileSize );
-		server_print( "%s download complete!" , szFile );
-	}
-	else
-	{
-		server_print( "File=[%s] DownloadID=%d BytesTransferred=%d iSize=%d" , szFile , iDownloadID , iBytesRecv , iFileSize );
-	}
-}  
+	server_cmd("as_reloadplugins")
+}
 
+public curl_file(input_params[])
+{
+	new params[512]
+	new param1[64]
+	new param2[64]
+	new param3[64]
+	new param4[64]
+	new param5[64]
+	params=""
+	strcat(params,input_params,512)
+	split(params,param1,64,param2,64,":")
+	params=""
+	strcat(params,param2,64)
+	split(params,param2,64,param3,64,":")
+	params=""
+	strcat(params,param3,64)
+	split(params,param3,64,param4,64,":")
+	params=""
+	strcat(params,param4,64)
+	split(params,param4,64,param5,64,"->")
+	
+	new url[512]="https://gitee.com/"
+	strcat(url,param1,512)
+	strcat(url,"/",512)
+	strcat(url,param2,512)
+	strcat(url,"/raw/",512)
+	strcat(url,param3,512)
+	strcat(url,"/",512)
+	strcat(url,param4,512)
+	
+	new filepath[128]="scripts/plugins/"
+	strcat(filepath,param5,128)
+	
+	new data[1]
+	data[0] = fopen(filepath, "wb")
+	new CURL:curl = curl_easy_init()
+	curl_easy_setopt(curl, CURLOPT_BUFFERSIZE, CURL_BUFFER_SIZE)
+	curl_easy_setopt(curl, CURLOPT_URL, url)
+	curl_easy_setopt(curl, CURLOPT_WRITEDATA, data[0])
+	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, "write")
+	curl_easy_perform(curl, "complete", data, sizeof(data))
+}
+
+public write(data[], size, nmemb, file)
+{
+	new actual_size = size * nmemb;
+	
+	fwrite_blocks(file, data, actual_size, BLOCK_CHAR)
+	
+	return actual_size
+}
+
+public complete(CURL:curl, CURLcode:code, data[])
+{
+	if(code == CURLE_WRITE_ERROR)
+		server_print("transfer aborted")
+	else
+		server_print("curl complete")
+	
+	fclose(data[0])
+	curl_easy_cleanup(curl)
+	reload_as()
+}
