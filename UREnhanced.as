@@ -13,7 +13,7 @@ CClientCommand g_GetEnhanced("fuck", "I Need Power!!!!", @enhance);
 void enhance(const CCommand@ pArgs) 
 {
     CBasePlayer@ pPlayer=g_ConCommandSystem.GetCurrentPlayer();
-    pPlayer.m_flMaxSpeed=600;
+    // pPlayer.m_flMaxSpeed=600;
     pPlayer.GiveNamedItem("weapon_egon",0,450);
     pPlayer.GiveNamedItem("weapon_rpg",0,15);
     pPlayer.GiveNamedItem("weapon_m249",0,150);
@@ -29,7 +29,7 @@ CClientCommand g_GetEnhancedMore("fuckfuck", "I Need More Power!!!!", @enhanceMo
 void enhanceMore(const CCommand@ pArgs) 
 {
     CBasePlayer@ pPlayer=g_ConCommandSystem.GetCurrentPlayer();
-    pPlayer.m_flMaxSpeed=600;
+    // pPlayer.m_flMaxSpeed=600;
     pPlayer.TakeHealth(666, DMG_GENERIC,666);
     pPlayer.TakeArmor(666, DMG_GENERIC,666);
     edict_t@ edict_pp = pPlayer.edict();
