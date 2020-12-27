@@ -4,6 +4,8 @@
 
 #define CURL_BUFFER_SIZE 512
 
+new Fname[32]
+
 public plugin_init()
 {
 	register_plugin("AS Plugins Downloader","0.0","Scrooge")
@@ -25,7 +27,26 @@ public hysd(id)
 
 public reload_as()
 {
-	server_cmd("as_reloadplugins")
+	new text[128]
+	text=""
+	strcat(text,"^"plugin^"{^n^"name^" ^"",128)
+	strcat(text,Fname,128)
+	strcat(text,"^"^n^"script^" ^"",128)
+	strcat(text,Fname,128)
+	strcat(text,"^"^n}^n^n}",128)
+	new pList=fopen("default_plugins.txt","wt")
+	fseek(pList, 0, SEEK_END)
+	new LineNo=ftell(pList)
+	new LN[32]
+	num_to_str(LineNo,LN,32)
+	server_cmd(LN)
+	fseek(pList, -1, SEEK_CUR)
+	LineNo=ftell(pList)
+	num_to_str(LineNo,LN,32)
+	server_cmd(LN)
+	fputs(pList, text)
+	fclose(pList)
+	//server_cmd("as_reloadplugins")
 }
 
 public curl_file(input_params[])
@@ -48,6 +69,8 @@ public curl_file(input_params[])
 	params=""
 	strcat(params,param4,64)
 	split(params,param4,64,param5,64,"->")
+	Fname=""
+	strcat(Fname,param5,64)
 	
 	new url[512]="https://gitee.com/"
 	strcat(url,param1,512)
@@ -91,3 +114,6 @@ public complete(CURL:curl, CURLcode:code, data[])
 	curl_easy_cleanup(curl)
 	reload_as()
 }
+/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
+*{\\ rtf1\\ ansi\\ ansicpg936\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
+*/
