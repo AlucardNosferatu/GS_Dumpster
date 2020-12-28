@@ -7,54 +7,76 @@
 
 new Fname[32]
 new JSON:jPURLs
+new lastFile
+new singleFile
 
 public plugin_init()
 {
 	register_plugin("AS Plugins Downloader","0.0","Scrooge")
 	register_concmd("dick","hysd")
-	
 	jPURLs=json_parse("addons/amxmodx/data/asp_urls.json", true)
 }
 
 public hysd(id)
 {
 	new msg[512]
+	lastFile=false
+	singleFile=false
 	read_argv(1, msg, charsmax(msg))
 	new command[32]
 	new params[512]
 	split(msg,command,32,params,512," ")
 	if(strcmp(command,"install")==0)
 	{
+		singleFile=true
 		curl_file(params)
 	}
 	else if(strcmp(command,"install_auto")==0)
 	{
-		
-		server_print(params)
-		new Author[1024]
-		new Repo[1024]
-		new Branch[1024]
-		new File[32][1024]
-		new JSON:jPURL
-		jPURL=json_object_get_value(jPURLs,params)
-		json_object_get_string(jPURL,"Author",Author,charsmax(Author))
-		json_object_get_string(jPURL,"Repo",Repo,charsmax(Repo))
-		json_object_get_string(jPURL,"Branch",Branch,charsmax(Branch))
-		json_object_get_string(jPURL,"Author",Author,charsmax(Author))
-		server_print(sPURL)
-		//new JSON:jPURL=json_decode(sPURL)
-		//new param1[64]
-		//json_get_string(jPURL,"Author",param1,64)
-		//server_print(param1)
-		//new param2[64]
-		//json_get_string(jPURL,"Repo",param2,64)
-		//server_print(param2)
-		//new param3[64]
-		//json_get_string(jPURL,"Branch",param3,64)
-		//server_print(param3)
-		//new param4[64]
-		//json_get_string(jPURL,"File",param4,64)
-		//server_print(param4)
+		new ret=read_json(params)
+	}
+}
+
+public bool:read_json(params[])
+{
+	server_print(params)
+	new JSON:jPURL
+	new Author[32]
+	new Repo[32]
+	new Branch[32]
+	new JSON:Files
+	jPURL=json_object_get_value(jPURLs,params)
+	json_object_get_string(jPURL,"Author",Author,charsmax(Author))
+	json_object_get_string(jPURL,"Repo",Repo,charsmax(Repo))
+	json_object_get_string(jPURL,"Branch",Branch,charsmax(Branch))
+	Files=json_object_get_value(jPURL,"File")
+	server_print(Author)
+	server_print(Repo)
+	server_print(Branch)
+	if(json_is_array(Files)==1)
+	{
+		new fCount=json_array_get_count(Files)
+		for(new i = 0; i < fCount; i++)
+		{
+			new File[32]
+			json_array_get_string(Files,i,File,charsmax(File))
+			server_print(File)
+			singleFile=false
+			if(i!=fCount-1)
+			{
+				lastFile=false
+			}
+			else
+			{
+				lastFile=true
+			}
+			//TODO: Make Concatenated String Params For Calling curl_file
+		}
+		return true
+	}
+	else
+	{
+		return false
 	}
 }
 
@@ -138,7 +160,17 @@ public complete(CURL:curl, CURLcode:code, data[])
 	
 	fclose(data[0])
 	curl_easy_cleanup(curl)
-	reload_as()
+	if(singleFile)
+	{
+		reload_as()
+	}
+	else
+	{
+		if(lastFile)
+		{
+			reload_as()
+		}
+	}
 }
 /* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
 *{\\ rtf1\\ ansi\\ ansicpg936\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
