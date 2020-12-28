@@ -60,10 +60,12 @@ public bool:read_json(params[])
 			singleFile=false
 			if(i!=fCount-1)
 			{
+				server_print("Not The Last File")
 				lastFile=false
 			}
 			else
 			{
+				server_print("Is The Last File")
 				lastFile=true
 			}
 			new Params4CF[512]
@@ -77,7 +79,6 @@ public bool:read_json(params[])
 			strcat(Params4CF,File,512)
 			strcat(Params4CF,"->",512)
 			strcat(Params4CF,File,512)
-			server_print(Params4CF)
 			curl_file(Params4CF)
 		}
 		return true
@@ -125,9 +126,16 @@ public curl_file(input_params[])
 	strcat(params,param4,64)
 	split(params,param4,64,param5,64,"->")
 	params=""
-	if(singleFile || lastFile)
+	if(singleFile)
 	{
 		split(param5,Fname,64,params,64,".as")
+	}
+	else
+	{
+		if(lastFile)
+		{
+			split(param5,Fname,64,params,64,".as")
+		}
 	}
 	
 	
@@ -150,7 +158,21 @@ public curl_file(input_params[])
 	curl_easy_setopt(curl, CURLOPT_URL, url)
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, data[0])
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, "write")
-	curl_easy_perform(curl, "complete", data, sizeof(data))
+	if(singleFile)
+	{
+		curl_easy_perform(curl, "complete_and_reload", data, sizeof(data))
+	}
+	else
+	{
+		if(lastFile)
+		{
+			curl_easy_perform(curl, "complete_and_reload", data, sizeof(data))
+		}
+		else
+		{
+			curl_easy_perform(curl, "complete", data, sizeof(data))
+		}
+	}
 }
 
 public write(data[], size, nmemb, file)
@@ -171,15 +193,19 @@ public complete(CURL:curl, CURLcode:code, data[])
 	
 	fclose(data[0])
 	curl_easy_cleanup(curl)
-	if(singleFile)
-	{
-		reload_as()
-	}
-	else
-	{
-		if(lastFile)
-		{
-			reload_as()
-		}
-	}
 }
+
+public complete_and_reload(CURL:curl, CURLcode:code, data[])
+{
+	if(code == CURLE_WRITE_ERROR)
+		server_print("transfer aborted")
+	else
+		server_print("curl complete")
+	
+	fclose(data[0])
+	curl_easy_cleanup(curl)
+	reload_as()
+}
+/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
+*{\\ rtf1\\ ansi\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
+*/
