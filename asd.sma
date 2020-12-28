@@ -1,15 +1,19 @@
 #include <amxmodx>
 #include <amxmisc>
 #include <curl>
+#include <json>
 
 #define CURL_BUFFER_SIZE 512
 
 new Fname[32]
+new JSON:jPURLs
 
 public plugin_init()
 {
 	register_plugin("AS Plugins Downloader","0.0","Scrooge")
 	register_concmd("dick","hysd")
+	
+	jPURLs=json_parse("addons/amxmodx/data/asp_urls.json", true)
 }
 
 public hysd(id)
@@ -22,6 +26,35 @@ public hysd(id)
 	if(strcmp(command,"install")==0)
 	{
 		curl_file(params)
+	}
+	else if(strcmp(command,"install_auto")==0)
+	{
+		
+		server_print(params)
+		new Author[1024]
+		new Repo[1024]
+		new Branch[1024]
+		new File[32][1024]
+		new JSON:jPURL
+		jPURL=json_object_get_value(jPURLs,params)
+		json_object_get_string(jPURL,"Author",Author,charsmax(Author))
+		json_object_get_string(jPURL,"Repo",Repo,charsmax(Repo))
+		json_object_get_string(jPURL,"Branch",Branch,charsmax(Branch))
+		json_object_get_string(jPURL,"Author",Author,charsmax(Author))
+		server_print(sPURL)
+		//new JSON:jPURL=json_decode(sPURL)
+		//new param1[64]
+		//json_get_string(jPURL,"Author",param1,64)
+		//server_print(param1)
+		//new param2[64]
+		//json_get_string(jPURL,"Repo",param2,64)
+		//server_print(param2)
+		//new param3[64]
+		//json_get_string(jPURL,"Branch",param3,64)
+		//server_print(param3)
+		//new param4[64]
+		//json_get_string(jPURL,"File",param4,64)
+		//server_print(param4)
 	}
 }
 
@@ -107,3 +140,6 @@ public complete(CURL:curl, CURLcode:code, data[])
 	curl_easy_cleanup(curl)
 	reload_as()
 }
+/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
+*{\\ rtf1\\ ansi\\ ansicpg936\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
+*/

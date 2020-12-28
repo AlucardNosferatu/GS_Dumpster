@@ -1,0 +1,24 @@
+{
+    "UREnhanced":
+    {
+        "Author":"lostxmas",
+        "Repo":"GS_Dumpster",
+        "Branch":"SvenCoop_AngelScripts",
+        "File":
+        [
+            "UREnhanced.as"
+        ]
+    }
+    ,
+    "HookLogger":
+    {
+        "Author":"lostxmas",
+        "Repo":"GS_Dumpster",
+        "Branch":"SvenCoop_AngelScripts",
+        "File":
+        [
+            "HookLogger.as",
+            "README.md"
+        ]
+    }
+}
