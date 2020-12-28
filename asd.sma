@@ -39,20 +39,18 @@ public hysd(id)
 
 public bool:read_json(params[])
 {
-	server_print(params)
 	new JSON:jPURL
 	new Author[32]
 	new Repo[32]
 	new Branch[32]
 	new JSON:Files
+	Fname=""
+	strcat(Fname,params,charsmax(Fname))
 	jPURL=json_object_get_value(jPURLs,params)
 	json_object_get_string(jPURL,"Author",Author,charsmax(Author))
 	json_object_get_string(jPURL,"Repo",Repo,charsmax(Repo))
 	json_object_get_string(jPURL,"Branch",Branch,charsmax(Branch))
 	Files=json_object_get_value(jPURL,"File")
-	server_print(Author)
-	server_print(Repo)
-	server_print(Branch)
 	if(json_is_array(Files)==1)
 	{
 		new fCount=json_array_get_count(Files)
@@ -60,7 +58,6 @@ public bool:read_json(params[])
 		{
 			new File[32]
 			json_array_get_string(Files,i,File,charsmax(File))
-			server_print(File)
 			singleFile=false
 			if(i!=fCount-1)
 			{
@@ -70,7 +67,19 @@ public bool:read_json(params[])
 			{
 				lastFile=true
 			}
-			//TODO: Make Concatenated String Params For Calling curl_file
+			new Params4CF[512]
+			Params4CF=""
+			strcat(Params4CF,Author,512)
+			strcat(Params4CF,":",512)
+			strcat(Params4CF,Repo,512)
+			strcat(Params4CF,":",512)
+			strcat(Params4CF,Branch,512)
+			strcat(Params4CF,":",512)
+			strcat(Params4CF,File,512)
+			strcat(Params4CF,"->",512)
+			strcat(Params4CF,File,512)
+			server_print(Params4CF)
+			curl_file(Params4CF)
 		}
 		return true
 	}
@@ -117,8 +126,10 @@ public curl_file(input_params[])
 	strcat(params,param4,64)
 	split(params,param4,64,param5,64,"->")
 	params=""
-	split(param5,Fname,64,params,64,".as")
-
+	if(singleFile)
+	{
+		split(param5,Fname,64,params,64,".as")
+	}
 	
 	new url[512]="https://gitee.com/"
 	strcat(url,param1,512)
@@ -172,6 +183,3 @@ public complete(CURL:curl, CURLcode:code, data[])
 		}
 	}
 }
-/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
-*{\\ rtf1\\ ansi\\ ansicpg936\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
-*/
