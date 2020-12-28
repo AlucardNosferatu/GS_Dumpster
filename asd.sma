@@ -44,8 +44,7 @@ public bool:read_json(params[])
 	new Repo[32]
 	new Branch[32]
 	new JSON:Files
-	Fname=""
-	strcat(Fname,params,charsmax(Fname))
+
 	jPURL=json_object_get_value(jPURLs,params)
 	json_object_get_string(jPURL,"Author",Author,charsmax(Author))
 	json_object_get_string(jPURL,"Repo",Repo,charsmax(Repo))
@@ -126,10 +125,11 @@ public curl_file(input_params[])
 	strcat(params,param4,64)
 	split(params,param4,64,param5,64,"->")
 	params=""
-	if(singleFile)
+	if(singleFile || lastFile)
 	{
 		split(param5,Fname,64,params,64,".as")
 	}
+	
 	
 	new url[512]="https://gitee.com/"
 	strcat(url,param1,512)

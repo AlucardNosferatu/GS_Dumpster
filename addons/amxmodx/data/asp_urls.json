@@ -17,8 +17,8 @@
         "Branch":"SvenCoop_AngelScripts",
         "File":
         [
-            "HookLogger.as",
-            "README.md"
+            "README.md",
+            "HookLogger.as"
         ]
     }
 }
