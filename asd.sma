@@ -9,7 +9,7 @@ new Fname[32]
 public plugin_init()
 {
 	register_plugin("AS Plugins Downloader","0.0","Scrooge")
-	register_clcmd("say","hysd")
+	register_concmd("dick","hysd")
 }
 
 public hysd(id)
@@ -19,7 +19,7 @@ public hysd(id)
 	new command[32]
 	new params[512]
 	split(msg,command,32,params,512," ")
-	if(strcmp(command,"dick_install")==0)
+	if(strcmp(command,"install")==0)
 	{
 		curl_file(params)
 	}
@@ -106,6 +106,3 @@ public complete(CURL:curl, CURLcode:code, data[])
 	curl_easy_cleanup(curl)
 	reload_as()
 }
-/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
-*{\\ rtf1\\ ansi\\ ansicpg936\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
-*/
