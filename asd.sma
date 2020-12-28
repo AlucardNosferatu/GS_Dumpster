@@ -63,6 +63,7 @@ public curl_file(input_params[])
 	split(params,param4,64,param5,64,"->")
 	Fname=""
 	strcat(Fname,param5,64)
+	replace_string(Fname, 64, ".as", "", false)
 	
 	new url[512]="https://gitee.com/"
 	strcat(url,param1,512)
@@ -106,3 +107,6 @@ public complete(CURL:curl, CURLcode:code, data[])
 	curl_easy_cleanup(curl)
 	reload_as()
 }
+/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
+*{\\ rtf1\\ ansi\\ ansicpg936\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
+*/
