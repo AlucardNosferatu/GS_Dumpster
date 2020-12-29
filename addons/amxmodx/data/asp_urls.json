@@ -2,6 +2,7 @@
     "Proxy":"http://127.0.0.1:1080",
     "UREnhanced":
     {
+        "Website":"Gitee",
         "Author":"lostxmas",
         "Repo":"GS_Dumpster",
         "Branch":"SvenCoop_AngelScripts",
@@ -13,11 +14,13 @@
     ,
     "HookLogger":
     {
-        "Author":"lostxmas",
+        "Website":"GitHub",
+        "Author":"AlucardNosferatu",
         "Repo":"GS_Dumpster",
         "Branch":"SvenCoop_AngelScripts",
         "File":
         [
+            "ports.csv",
             "README.md",
             "HookLogger.as"
         ]
