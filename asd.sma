@@ -116,7 +116,7 @@ public bool:read_json(params[])
 	}
 	else
 	{
-		server_print("Not an array, use specified install path")
+		//server_print("Not an array, use specified install path")
 		UseGivenInstallPath=true
 		
 		new fCount=json_object_get_count(Files)
@@ -136,15 +136,24 @@ public bool:read_json(params[])
 			{
 				//server_print("Not The Last File")
 				lastFile=false
+				server_print(FileLocal)
+				//FileLocal="sprites/misc/fuck.wav"
 				split(FileLocal,Dir,charsmax(Dir),Fn,charsmax(Fn),"/")
-				while(contain("/",Fn)!=-1)
+				//Dir="sprites" Fn="misc/fuck.wav"
+				while(contain(Fn,"/")!=-1)
 				{
-					server_print("Making Dir In Script/Plugins:")
+					server_print("Making Dir:")
 					server_print(Dir)
 					mkdir(Dir)
-					split(Dir,Dir,charsmax(Dir),Fn,charsmax(Fn),"/")
+					new temp[32]
+					split(Fn,temp,charsmax(temp),Fn,charsmax(Fn),"/")
+					//Fn="fuck.wav" temp="misc"
+					strcat(Dir,"/",charsmax(Dir))
+					//Dir="sprites/"
+					strcat(Dir,temp,charsmax(Dir))
+					//Dir="sprites/misc"
 				}
-				server_print("Making Last Dir In Script/Plugins:")
+				server_print("Making Last Dir:")
 				server_print(Dir)
 				mkdir(Dir)
 			}
@@ -154,19 +163,21 @@ public bool:read_json(params[])
 				lastFile=true
 				new FDir[32]
 				split(FileLocal,Dir,charsmax(Dir),Fn,charsmax(Fn),"/")
-				while(contain("/",Fn)!=-1)
+				while(contain(Fn,"/")!=-1)
 				{
-					server_print("Making Dir:")
-					
+					server_print("Making Dir In Script/Plugins:")
 					FDir="scripts/plugins/"
 					strcat(FDir,Dir,charsmax(FDir))
 					server_print(FDir)
 					mkdir(FDir)
-					split(Dir,Dir,charsmax(Dir),Fn,charsmax(Fn),"/")
+					new temp[32]
+					split(Fn,temp,charsmax(temp),Fn,charsmax(Fn),"/")
+					strcat(Dir,"/",charsmax(Dir))
+					strcat(Dir,temp,charsmax(Dir))
 				}
 				FDir="scripts/plugins/"
 				strcat(FDir,Dir,charsmax(FDir))
-				server_print("Making Last Dir:")
+				server_print("Making Last Dir In Script/Plugins:")
 				server_print(FDir)
 				mkdir(FDir)
 			}
