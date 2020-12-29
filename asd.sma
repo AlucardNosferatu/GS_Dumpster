@@ -12,6 +12,7 @@ new singleFile
 
 new Proxy[32]
 new Website[32]
+new UseGivenInstallPath
 
 
 public plugin_init()
@@ -33,6 +34,7 @@ public hysd(id)
 	if(strcmp(command,"install")==0)
 	{
 		singleFile=true
+		UseGivenInstallPath=false
 		curl_file(params)
 	}
 	else if(strcmp(command,"install_auto")==0)
@@ -56,8 +58,12 @@ public bool:read_json(params[])
 	json_object_get_string(jPURL,"Repo",Repo,charsmax(Repo))
 	json_object_get_string(jPURL,"Branch",Branch,charsmax(Branch))
 	Files=json_object_get_value(jPURL,"File")
-	if(json_is_array(Files)==1)
+	
+	new is_array=json_is_array(Files)
+	if(is_array==1)
 	{
+		UseGivenInstallPath=false
+
 		new fCount=json_array_get_count(Files)
 		for(new i = 0; i < fCount; i++)
 		{
@@ -110,7 +116,84 @@ public bool:read_json(params[])
 	}
 	else
 	{
-		return false
+		server_print("Not an array, use specified install path")
+		UseGivenInstallPath=true
+		
+		new fCount=json_object_get_count(Files)
+		for(new i = 0; i < fCount; i++)
+		{
+			new FileRepo[32]
+			new FileLocal[32]
+			new Dir[32]
+			new Fn[32]
+			json_object_get_name(Files,i,FileRepo,charsmax(FileRepo))
+			json_object_get_string(Files,FileRepo,FileLocal,charsmax(FileLocal))
+			
+			
+			
+			singleFile=false
+			if(i!=fCount-1)
+			{
+				//server_print("Not The Last File")
+				lastFile=false
+				split(FileLocal,Dir,charsmax(Dir),Fn,charsmax(Fn),"/")
+				while(contain("/",Fn)!=-1)
+				{
+					server_print("Making Dir In Script/Plugins:")
+					server_print(Dir)
+					mkdir(Dir)
+					split(Dir,Dir,charsmax(Dir),Fn,charsmax(Fn),"/")
+				}
+				server_print("Making Last Dir In Script/Plugins:")
+				server_print(Dir)
+				mkdir(Dir)
+			}
+			else
+			{
+				//server_print("Is The Last File")
+				lastFile=true
+				new FDir[32]
+				split(FileLocal,Dir,charsmax(Dir),Fn,charsmax(Fn),"/")
+				while(contain("/",Fn)!=-1)
+				{
+					server_print("Making Dir:")
+					
+					FDir="scripts/plugins/"
+					strcat(FDir,Dir,charsmax(FDir))
+					server_print(FDir)
+					mkdir(FDir)
+					split(Dir,Dir,charsmax(Dir),Fn,charsmax(Fn),"/")
+				}
+				FDir="scripts/plugins/"
+				strcat(FDir,Dir,charsmax(FDir))
+				server_print("Making Last Dir:")
+				server_print(FDir)
+				mkdir(FDir)
+			}
+			new Params4CF[512]
+			
+			Params4CF=""
+			strcat(Params4CF,Author,512)
+			strcat(Params4CF,":",512)
+			strcat(Params4CF,Repo,512)
+			strcat(Params4CF,":",512)
+			if(strcmp(Website,"GitHub")!=0)
+			{
+				strcat(Params4CF,"raw/",512)
+			}
+			else
+			{
+				json_object_get_string(jPURLs,"Proxy",Proxy,charsmax(Proxy))
+			}
+			strcat(Params4CF,Branch,512)
+			strcat(Params4CF,":",512)
+			strcat(Params4CF,FileRepo,512)
+			strcat(Params4CF,"->",512)
+			strcat(Params4CF,FileLocal,512)
+			curl_file(Params4CF)
+			
+		}
+		return true
 	}
 	return false
 }
@@ -142,21 +225,21 @@ public curl_file(input_params[])
 	new param5[128]
 	params=""
 	strcat(params,input_params,512)
-	server_print(params)
+	//server_print(params)
 	split(params,param1,charsmax(param1),param2,charsmax(param2),":")
-	server_print(param1)
+	//server_print(param1)
 	params=""
 	strcat(params,param2,charsmax(param2))
 	split(params,param2,charsmax(param2),param3,charsmax(param3),":")
-	server_print(param2)
+	//server_print(param2)
 	params=""
 	strcat(params,param3,charsmax(param3))
 	split(params,param3,charsmax(param3),param4,charsmax(param4),":")
-	server_print(param3)
+	//server_print(param3)
 	params=""
 	strcat(params,param4,charsmax(param4))
 	split(params,param4,charsmax(param4),param5,charsmax(param5),"->")
-	server_print(param4)
+	//server_print(param4)
 	params=""
 	if(singleFile)
 	{
@@ -191,12 +274,28 @@ public curl_file(input_params[])
 	strcat(url,"/",512)
 	strcat(url,param4,512)
 	
-	server_print("Target URL:")
-	server_print(url)
+	//server_print("Target URL:")
+	//server_print(url)
 	
-	
-	new filepath[128]="scripts/plugins/"
-	strcat(filepath,param5,128)
+	new filepath[128]
+	if(UseGivenInstallPath)
+	{
+		if(lastFile)
+		{
+			filepath="scripts/plugins/"
+			strcat(filepath,param5,128)
+		}
+		else
+		{
+			filepath=""
+			strcat(filepath,param5,128)
+		}
+	}
+	else
+	{
+		filepath="scripts/plugins/"
+		strcat(filepath,param5,128)
+	}
 	
 	new data[1]
 	data[0] = fopen(filepath, "wb")
