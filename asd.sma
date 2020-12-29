@@ -10,6 +10,10 @@ new JSON:jPURLs
 new lastFile
 new singleFile
 
+new Proxy[32]
+new Website[32]
+
+
 public plugin_init()
 {
 	register_plugin("AS Plugins Downloader","0.0","Scrooge")
@@ -40,12 +44,14 @@ public hysd(id)
 public bool:read_json(params[])
 {
 	new JSON:jPURL
+	
 	new Author[32]
 	new Repo[32]
 	new Branch[32]
 	new JSON:Files
 
 	jPURL=json_object_get_value(jPURLs,params)
+	json_object_get_string(jPURL,"Website",Website,charsmax(Website))
 	json_object_get_string(jPURL,"Author",Author,charsmax(Author))
 	json_object_get_string(jPURL,"Repo",Repo,charsmax(Repo))
 	json_object_get_string(jPURL,"Branch",Branch,charsmax(Branch))
@@ -69,11 +75,20 @@ public bool:read_json(params[])
 				lastFile=true
 			}
 			new Params4CF[512]
+			
 			Params4CF=""
 			strcat(Params4CF,Author,512)
 			strcat(Params4CF,":",512)
 			strcat(Params4CF,Repo,512)
 			strcat(Params4CF,":",512)
+			if(strcmp(Website,"GitHub")!=0)
+			{
+				strcat(Params4CF,"raw/",512)
+			}
+			else
+			{
+				json_object_get_string(jPURLs,"Proxy",Proxy,charsmax(Proxy))
+			}
 			strcat(Params4CF,Branch,512)
 			strcat(Params4CF,":",512)
 			strcat(Params4CF,File,512)
@@ -104,6 +119,7 @@ public reload_as()
 	fclose(pList)
 	server_cmd("as_reloadplugins")
 }
+
 
 public curl_file(input_params[])
 {
@@ -138,12 +154,23 @@ public curl_file(input_params[])
 		}
 	}
 	
+	new url[512]
+	if(strcmp(Website,"GitHub")==0)
+	{
+		url="https://https://raw.githubusercontent.com/"
+	}
+	else
+	{
+		url="https://gitee.com/"
+	}
 	
-	new url[512]="https://gitee.com/"
+	
 	strcat(url,param1,512)
 	strcat(url,"/",512)
 	strcat(url,param2,512)
-	strcat(url,"/raw/",512)
+	
+	strcat(url,"/",512)
+	
 	strcat(url,param3,512)
 	strcat(url,"/",512)
 	strcat(url,param4,512)
@@ -156,6 +183,10 @@ public curl_file(input_params[])
 	new CURL:curl = curl_easy_init()
 	curl_easy_setopt(curl, CURLOPT_BUFFERSIZE, CURL_BUFFER_SIZE)
 	curl_easy_setopt(curl, CURLOPT_URL, url)
+	if(strcmp(Website,"GitHub")==0)
+	{
+		curl_easy_setopt(curl, CURLOPT_PROXY, Proxy);
+	}
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, data[0])
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, "write")
 	if(singleFile)
@@ -206,6 +237,3 @@ public complete_and_reload(CURL:curl, CURLcode:code, data[])
 	curl_easy_cleanup(curl)
 	reload_as()
 }
-/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
-*{\\ rtf1\\ ansi\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
-*/
