@@ -62,16 +62,26 @@ public bool:read_json(params[])
 		for(new i = 0; i < fCount; i++)
 		{
 			new File[32]
+			new Dir[32]
+			new Fn[2]
 			json_array_get_string(Files,i,File,charsmax(File))
+			split(File,Dir,charsmax(Dir),Fn,charsmax(Fn),"/")
+			if(strlen(Dir)>0)
+			{
+				server_print("It has dir, now make dir")
+				new FDir[32]="scripts/plugins/"
+				strcat(FDir,Dir,charsmax(FDir))
+				mkdir(FDir)
+			}
 			singleFile=false
 			if(i!=fCount-1)
 			{
-				server_print("Not The Last File")
+				//server_print("Not The Last File")
 				lastFile=false
 			}
 			else
 			{
-				server_print("Is The Last File")
+				//server_print("Is The Last File")
 				lastFile=true
 			}
 			new Params4CF[512]
@@ -125,33 +135,38 @@ public reload_as()
 public curl_file(input_params[])
 {
 	new params[512]
-	new param1[64]
-	new param2[64]
-	new param3[64]
-	new param4[64]
-	new param5[64]
+	new param1[128]
+	new param2[128]
+	new param3[128]
+	new param4[128]
+	new param5[128]
 	params=""
 	strcat(params,input_params,512)
-	split(params,param1,64,param2,64,":")
+	server_print(params)
+	split(params,param1,charsmax(param1),param2,charsmax(param2),":")
+	server_print(param1)
 	params=""
-	strcat(params,param2,64)
-	split(params,param2,64,param3,64,":")
+	strcat(params,param2,charsmax(param2))
+	split(params,param2,charsmax(param2),param3,charsmax(param3),":")
+	server_print(param2)
 	params=""
-	strcat(params,param3,64)
-	split(params,param3,64,param4,64,":")
+	strcat(params,param3,charsmax(param3))
+	split(params,param3,charsmax(param3),param4,charsmax(param4),":")
+	server_print(param3)
 	params=""
-	strcat(params,param4,64)
-	split(params,param4,64,param5,64,"->")
+	strcat(params,param4,charsmax(param4))
+	split(params,param4,charsmax(param4),param5,charsmax(param5),"->")
+	server_print(param4)
 	params=""
 	if(singleFile)
 	{
-		split(param5,Fname,64,params,64,".as")
+		split(param5,Fname,charsmax(Fname),params,charsmax(params),".as")
 	}
 	else
 	{
 		if(lastFile)
 		{
-			split(param5,Fname,64,params,64,".as")
+			split(param5,Fname,charsmax(Fname),params,charsmax(params),".as")
 		}
 	}
 	
@@ -179,6 +194,7 @@ public curl_file(input_params[])
 	server_print("Target URL:")
 	server_print(url)
 	
+	
 	new filepath[128]="scripts/plugins/"
 	strcat(filepath,param5,128)
 	
@@ -189,8 +205,8 @@ public curl_file(input_params[])
 	curl_easy_setopt(curl, CURLOPT_URL, url)
 	if(strcmp(Website,"GitHub")==0)
 	{
-		server_print("Using Proxy:")
-		server_print(Proxy)
+		//server_print("Using Proxy:")
+		//server_print(Proxy)
 		curl_easy_setopt(curl, CURLOPT_PROXY, Proxy);
 	}
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, data[0])
