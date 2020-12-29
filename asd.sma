@@ -63,10 +63,10 @@ public bool:read_json(params[])
 		{
 			new File[32]
 			new Dir[32]
-			new Fn[2]
+			new Fn[32]
 			json_array_get_string(Files,i,File,charsmax(File))
 			split(File,Dir,charsmax(Dir),Fn,charsmax(Fn),"/")
-			if(strlen(Dir)>0)
+			if(strlen(Fn)>0)
 			{
 				server_print("It has dir, now make dir")
 				new FDir[32]="scripts/plugins/"
