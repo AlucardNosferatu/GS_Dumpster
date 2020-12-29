@@ -107,12 +107,12 @@
         "Repo":"AngelScripts",
         "Branch":"master",
         "File":
-        [
-            "Sekiro/cyberpunk2077.spr",
-            "Sekiro/cyberpunk2077.wav",
-            "Sekiro/sekiro_death.spr",
-            "Sekiro/sekiro_death.wav",
-            "Sekiro/sekiro.as"
-        ]
+        {
+            "Sekiro/cyberpunk2077.spr":"sprites/misc/cyberpunk2077.spr",
+            "Sekiro/cyberpunk2077.wav":"sound/misc/cyberpunk2077.wav",
+            "Sekiro/sekiro_death.spr":"sprites/misc/sekiro_death.spr",
+            "Sekiro/sekiro_death.wav":"sound/misc/sekiro_death.wav",
+            "Sekiro/sekiro.as":"Sekiro/sekiro.as"
+        }
     }
 }
