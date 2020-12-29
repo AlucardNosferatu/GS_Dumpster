@@ -37,7 +37,7 @@ public hysd(id)
 	}
 	else if(strcmp(command,"install_auto")==0)
 	{
-		new ret=read_json(params)
+		read_json(params)
 	}
 }
 
@@ -102,6 +102,7 @@ public bool:read_json(params[])
 	{
 		return false
 	}
+	return false
 }
 
 public reload_as()
@@ -157,7 +158,7 @@ public curl_file(input_params[])
 	new url[512]
 	if(strcmp(Website,"GitHub")==0)
 	{
-		url="https://https://raw.githubusercontent.com/"
+		url="https://raw.githubusercontent.com/"
 	}
 	else
 	{
@@ -175,6 +176,9 @@ public curl_file(input_params[])
 	strcat(url,"/",512)
 	strcat(url,param4,512)
 	
+	server_print("Target URL:")
+	server_print(url)
+	
 	new filepath[128]="scripts/plugins/"
 	strcat(filepath,param5,128)
 	
@@ -185,6 +189,8 @@ public curl_file(input_params[])
 	curl_easy_setopt(curl, CURLOPT_URL, url)
 	if(strcmp(Website,"GitHub")==0)
 	{
+		server_print("Using Proxy:")
+		server_print(Proxy)
 		curl_easy_setopt(curl, CURLOPT_PROXY, Proxy);
 	}
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, data[0])

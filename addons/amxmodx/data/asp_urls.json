@@ -20,7 +20,6 @@
         "Branch":"SvenCoop_AngelScripts",
         "File":
         [
-            "ports.csv",
             "README.md",
             "HookLogger.as"
         ]
