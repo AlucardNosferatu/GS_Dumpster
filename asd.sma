@@ -122,21 +122,21 @@ public bool:read_json(params[])
 		new fCount=json_object_get_count(Files)
 		for(new i = 0; i < fCount; i++)
 		{
-			new FileRepo[32]
-			new FileLocal[32]
-			new Dir[32]
-			new Fn[32]
+			new FileRepo[64]
+			new FileLocal[64]
+			new Dir[64]
+			new Fn[64]
 			json_object_get_name(Files,i,FileRepo,charsmax(FileRepo))
 			json_object_get_string(Files,FileRepo,FileLocal,charsmax(FileLocal))
 			
 			
 			
 			singleFile=false
+			server_print(FileLocal)
 			if(i!=fCount-1)
 			{
 				//server_print("Not The Last File")
 				lastFile=false
-				server_print(FileLocal)
 				//FileLocal="sprites/misc/fuck.wav"
 				split(FileLocal,Dir,charsmax(Dir),Fn,charsmax(Fn),"/")
 				//Dir="sprites" Fn="misc/fuck.wav"
