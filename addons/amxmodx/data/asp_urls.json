@@ -10,8 +10,7 @@
         [
             "UREnhanced.as"
         ]
-    }
-    ,
+    },
     "HookLogger":
     {
         "Website":"GitHub",
@@ -22,6 +21,98 @@
         [
             "README.md",
             "HookLogger.as"
+        ]
+    },
+    "DropSomething":
+    {
+        "Website":"GitHub",
+        "Author":"DrAbcrealone",
+        "Repo":"AngelScripts",
+        "Branch":"master",
+        "File":
+        [
+            "DropSomething.as"
+        ]
+    },
+    "Location":
+    {
+        "Website":"GitHub",
+        "Author":"DrAbcrealone",
+        "Repo":"AngelScripts",
+        "Branch":"master",
+        "File":
+        [
+            "Location.as"
+        ]
+    },
+    "PaydayAmmo":
+    {
+        "Website":"GitHub",
+        "Author":"DrAbcrealone",
+        "Repo":"AngelScripts",
+        "Branch":"master",
+        "File":
+        [
+            "PaydayAmmo.as"
+        ]
+    },
+    "TrolledNPC":
+    {
+        "Website":"GitHub",
+        "Author":"DrAbcrealone",
+        "Repo":"AngelScripts",
+        "Branch":"master",
+        "File":
+        [
+            "TrolledNPC.as"
+        ]
+    },
+    "ghostobserver":
+    {
+        "Website":"GitHub",
+        "Author":"DrAbcrealone",
+        "Repo":"AngelScripts",
+        "Branch":"master",
+        "File":
+        [
+            "ghostobserver.as"
+        ]
+    },
+    "lastmanstanding":
+    {
+        "Website":"GitHub",
+        "Author":"DrAbcrealone",
+        "Repo":"AngelScripts",
+        "Branch":"master",
+        "File":
+        [
+            "lastmanstanding.as"
+        ]
+    },
+    "sandstormvoice":
+    {
+        "Website":"GitHub",
+        "Author":"DrAbcrealone",
+        "Repo":"AngelScripts",
+        "Branch":"master",
+        "File":
+        [
+            "sandstormvoice.as"
+        ]
+    },
+    "Sekiro":
+    {
+        "Website":"GitHub",
+        "Author":"DrAbcrealone",
+        "Repo":"AngelScripts",
+        "Branch":"master",
+        "File":
+        [
+            "Sekiro/cyberpunk2077.spr",
+            "Sekiro/cyberpunk2077.wav",
+            "Sekiro/sekiro_death.spr",
+            "Sekiro/sekiro_death.wav",
+            "Sekiro/sekiro.as"
         ]
     }
 }
