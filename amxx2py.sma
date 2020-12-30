@@ -66,7 +66,10 @@ public get_data(){
 	if (socket_is_readable(s))
 	{
 		socket_recv(s, data, charsmax(data))
-		server_print(data)
+		if(strlen(data)>0)
+		{
+			server_print(data)
+		}
 	}
 }
 
@@ -75,15 +78,20 @@ public feed_dicks()
 	new cid=get_user_index("Carol")
 	if(cid!=0)
 	{
+		new hp=get_user_health(cid)
+		new hpstr[8]
+		num_to_str(hp,hpstr,charsmax(hpstr))
+		server_print(hpstr)
+		if(hp<=100)
+		{
+			server_print("should say dirtywords")
+			engclient_cmd(cid, ".fuckfuck")
+		}
 		new float:origin[3]
 		get_user_origin(cid, origin)
-		
-		//new dick[32]
-		//server_print("Make server sucks dicks")
-		//dick="Hey You Suck Dicks?"
 		new output_text[32]
 		format(output_text,charsmax(output_text),"[X:%.2f], [Y:%.2f], [Z:%.2f]", origin[0], origin[1], origin[2])
-		server_print(output_text)
+		//server_print(output_text)
 		socket_send(s, output_text, charsmax(output_text))		
 	}
 }
