@@ -1,17 +1,21 @@
 #include <amxmodx>
 #include <sockets>
+#include <fakemeta>
 
 #define PORT 54500
 #define DEFAULT_LOCAL "127.0.0.1"
 
 new s, error, data[256];
+new data_packet[640]
+new counter
 
 public plugin_init(){
 	
 	register_plugin("Python Interface","0.0","Relaxing/Scrooge")
 	register_srvcmd("cfg_sock", "retry_cfg");
 	register_srvcmd("send", "srvcmd_send");
-
+	counter=0
+	data_packet=""
 }
 
 
@@ -20,7 +24,7 @@ public plugin_cfg(){
 	s = socket_open(DEFAULT_LOCAL, PORT, SOCKET_TCP, error);
 	if (!error){
 		server_print("No error, set task for the sock now")
-		set_task(0.1, "get_data", .flags="b");
+		//set_task(1.0, "get_data", .flags="b");
 		set_task(1.0, "feed_dicks", .flags="b");
 		data = "connected";
 		socket_send(s, data, charsmax(data));       
@@ -75,24 +79,30 @@ public get_data(){
 
 public feed_dicks()
 {	
-	new cid=get_user_index("Carol")
+	new cid=get_user_index("Scrooge")
 	if(cid!=0)
 	{
 		new hp=get_user_health(cid)
 		//server_print("health is %d",hp)
-		if(hp<=100)
+		if(hp<=300)
 		{
 			//server_print("should say dirtywords")
 			engclient_cmd(cid, ".fuckfuck")
 		}
 		new float:origin[3]
-		get_user_origin(cid, origin)
+		pev(cid, pev_origin, origin)
 		new output_text[32]
-		format(output_text,charsmax(output_text),"[X:%.2f], [Y:%.2f], [Z:%.2f]", origin[0], origin[1], origin[2])
-		//server_print(output_text)
-		socket_send(s, output_text, charsmax(output_text))		
+		
+		format(output_text,charsmax(output_text),"X:%.2f,Y:%.2f,Z:%.2f", origin[0], origin[1], origin[2])
+		counter+=1
+		strcat(data_packet,output_text,charsmax(data_packet))
+		strcat(data_packet,"^n",charsmax(data_packet))
+		if(counter==20)
+		{
+			counter=0
+			socket_send(s, data_packet, charsmax(data_packet))
+			data_packet=""
+		}
+		
 	}
 }
-/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
-*{\\ rtf1\\ ansi\\ ansicpg936\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
-*/
