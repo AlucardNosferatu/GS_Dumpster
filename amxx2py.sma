@@ -79,9 +79,7 @@ public feed_dicks()
 	if(cid!=0)
 	{
 		new hp=get_user_health(cid)
-		new hpstr[8]
-		num_to_str(hp,hpstr,charsmax(hpstr))
-		server_print(hpstr)
+		server_print("health is %d",hp)
 		if(hp<=100)
 		{
 			server_print("should say dirtywords")
