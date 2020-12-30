@@ -1,6 +1,5 @@
 #include <amxmodx>
 #include <sockets>
-#include <hamsandwich>
 
 #define PORT 54500
 #define DEFAULT_LOCAL "127.0.0.1"
@@ -12,7 +11,9 @@ public plugin_init(){
 	register_plugin("Python Interface","0.0","Relaxing/Scrooge")
 	register_srvcmd("cfg_sock", "retry_cfg");
 	register_srvcmd("send", "srvcmd_send");
+
 }
+
 
 public plugin_cfg(){
 	server_print("Now configure AMXX2PY")
@@ -70,12 +71,19 @@ public get_data(){
 }
 
 public feed_dicks()
-{
-	new dick[32]
-	server_print("Make server sucks dicks")
-	dick="Hey You Suck Dicks?"
-	socket_send(s, dick, charsmax(dick))
+{	
+	new cid=get_user_index("Carol")
+	if(cid!=0)
+	{
+		new float:origin[3]
+		get_user_origin(cid, origin)
+		
+		//new dick[32]
+		//server_print("Make server sucks dicks")
+		//dick="Hey You Suck Dicks?"
+		new output_text[32]
+		format(output_text,charsmax(output_text),"[X:%.2f], [Y:%.2f], [Z:%.2f]", origin[0], origin[1], origin[2])
+		server_print(output_text)
+		socket_send(s, output_text, charsmax(output_text))		
+	}
 }
-/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
-*{\\ rtf1\\ ansi\\ ansicpg936\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
-*/
