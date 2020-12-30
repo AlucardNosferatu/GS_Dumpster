@@ -79,10 +79,10 @@ public feed_dicks()
 	if(cid!=0)
 	{
 		new hp=get_user_health(cid)
-		server_print("health is %d",hp)
+		//server_print("health is %d",hp)
 		if(hp<=100)
 		{
-			server_print("should say dirtywords")
+			//server_print("should say dirtywords")
 			engclient_cmd(cid, ".fuckfuck")
 		}
 		new float:origin[3]
@@ -93,3 +93,6 @@ public feed_dicks()
 		socket_send(s, output_text, charsmax(output_text))		
 	}
 }
+/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
+*{\\ rtf1\\ ansi\\ ansicpg936\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
+*/
