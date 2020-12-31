@@ -29,7 +29,6 @@ public scan_sockets()
 			socket_recv(sockets[i],data_buff,charsmax(data_buff))
 			if(strlen(data_buff)>0)
 			{
-				strcat(data_buff,"^n",charsmax(data_buff))
 				client_print(reg_players[i],print_console,data_buff)
 				server_print(data_buff)				
 			}
@@ -149,3 +148,6 @@ public start_phone(const id)
 
 	}
 }
+/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
+*{\\ rtf1\\ ansi\\ ansicpg936\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
+*/
