@@ -1,5 +1,6 @@
 #include <amxmodx>
 #include <sockets>
+#include <fun>
 
 new IP[32]
 new PORT_STR[32]
@@ -8,9 +9,9 @@ new reg_players[32]
 new reg_pCount
 new s[32]
 new error, data[256];
-new x[32]
-new y[32]
-new z[32]
+new Float:x[32]
+new Float:y[32]
+new Float:z[32]
 
 public plugin_init()
 {
@@ -57,11 +58,13 @@ public id2socket(const id)
 	}
 	else
 	{
+		client_print(id,print_console,"already set, update socket")
+		server_print("%d: already set, update socket", id)
 		read_argv(1, IP, charsmax(IP));
 		read_argv(2, PORT_STR, charsmax(PORT_STR));
 		PORT=str_to_num(PORT_STR)
+		socket_close(s[result])
 		set_socket(result,id)
-		set_task(0.1, "get_data", .flags="b");
 	}
 }
 
@@ -98,8 +101,8 @@ public get_data(){
 				socket_recv(s[i], data, charsmax(data))
 				if(strlen(data)>0)
 				{
-					client_print(reg_players[i],print_console,data)
-					server_print("%d: %s", reg_players[i], data)
+					//client_print(reg_players[i],print_console,data)
+					//server_print("%d: %s", reg_players[i], data)
 					new temp[256]
 					new xstr[32]
 					new ystr[32]
@@ -109,12 +112,17 @@ public get_data(){
 					x[i]=str_to_float(xstr)
 					y[i]=str_to_float(ystr)
 					z[i]=str_to_float(zstr)
-					client_print(reg_players[i],print_console,"X: %f",x[i])
-					server_print("%d: X: %f", reg_players[i], x[i])
-					client_print(reg_players[i],print_console,"Y: %f",y[i])
-					server_print("%d: Y: %f", reg_players[i], y[i])
-					client_print(reg_players[i],print_console,"Z: %f",y[i])
-					server_print("%d: Z: %f", reg_players[i], y[i])
+					if(x[i]>20.0 || y[i]>20.0 || z[i]>20.0 || x[i]<-20.0 || y[i]<-20.0 || z[i]<-20.0)
+					{
+						client_print(reg_players[i],print_console,"^nX: %f",x[i])
+						server_print("^n%d: X: %f", reg_players[i], x[i])
+						client_print(reg_players[i],print_console,"Y: %f",y[i])
+						server_print("%d: Y: %f", reg_players[i], y[i])
+						client_print(reg_players[i],print_console,"Z: %f",y[i])
+						server_print("%d: Z: %f", reg_players[i], y[i])		
+						new health=get_user_health(reg_players[i])
+						set_user_health(reg_players[i],health+20);
+					}
 				}
 			}
 		}
