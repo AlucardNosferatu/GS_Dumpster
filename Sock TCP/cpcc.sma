@@ -16,19 +16,7 @@ public plugin_init()
 	register_concmd("stop_p", "stop_phone");
 	register_concmd("start_p", "start_phone");
 	init_global()
-	new test_array[7]
-	test_array[0]=12
-	test_array[1]=45
-	test_array[2]=67
-	test_array[3]=8
-	test_array[4]=19
-	test_array[5]=31
-	test_array[6]=12
-
-	new res=ArrayFindValue(test_array,8,charsmax(test_array))
-	server_print("res: %d",res)
-	res=ArrayFindValue(test_array,12,charsmax(test_array))
-	server_print("res: %d",res)
+	set_task()
 }
 
 public init_global()
@@ -49,8 +37,6 @@ public ArrayFindValue(array[], value, size)
 {
 	for(new i=0;i<size;i++)
 	{
-		server_print("target: %d",value)
-		server_print("this: %d",array[i])
 		if(array[i]==value)
 		{
 			return i
@@ -62,6 +48,7 @@ public ArrayFindValue(array[], value, size)
 public set_phone(const id)
 {
 	new result=ArrayFindValue(reg_players,id,charsmax(reg_players))
+	
 	new TEMP_IP[32]
 	new PORT_STR[32]
 	read_argv(1, TEMP_IP, charsmax(TEMP_IP));
@@ -71,9 +58,12 @@ public set_phone(const id)
 	//no reg yet
 		if(reg_pCount<32)
 		{
+			client_print(id,print_console,"set start")
+			server_print("%d: set start", id)
 			IP[reg_pCount]=""
 			strcat(IP[reg_pCount],TEMP_IP,charsmax(IP[]))
 			PORT[reg_pCount]=str_to_num(PORT_STR)
+			reg_players[reg_pCount]=id
 			reg_pCount+=1
 			
 		}
@@ -86,16 +76,18 @@ public set_phone(const id)
 	else
 	{
 	//already reg
+		client_print(id,print_console,"set start")
+		server_print("%d: set start", id)
 		IP[result]=""
 		strcat(IP[result],TEMP_IP,charsmax(IP[]))
 		PORT[result]=str_to_num(PORT_STR)
-
 	}
 }
 
 public stop_phone(const id)
 {
 	new result=ArrayFindValue(reg_players,id,charsmax(reg_players))
+	
 	if(result==-1)
 	{
 	//no reg yet
@@ -105,7 +97,6 @@ public stop_phone(const id)
 	else
 	{
 		socket_close(sockets[result])
-		sockets[result]=-1
 		CanUse[result]=0
 	}
 }
@@ -113,6 +104,7 @@ public stop_phone(const id)
 public start_phone(const id)
 {
 	new result=ArrayFindValue(reg_players,id,charsmax(reg_players))
+	
 	if(result==-1)
 	{
 	//no reg yet
@@ -139,3 +131,6 @@ public start_phone(const id)
 
 	}
 }
+/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
+*{\\ rtf1\\ ansi\\ ansicpg936\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
+*/
