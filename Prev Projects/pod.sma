@@ -3,15 +3,10 @@
 
 
 public plugin_init(){
-	
 	register_plugin("Princess Of Deadpool","0.0","Scrooge")
-	register_srvcmd("cfg_sock", "retry_cfg");
 }
 
-
 public plugin_cfg(){
-	server_print("Now configure AMXX2PY")
-
 	set_task(1.0, "get_buff", .flags="b")
 }
 
