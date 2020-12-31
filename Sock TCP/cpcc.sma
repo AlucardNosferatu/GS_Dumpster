@@ -1,9 +1,11 @@
 #include <amxmodx>
 #include <sockets>
+#include <fun>
 
 new IP[32][32]
 new PORT[32]
 new sockets[32]
+new data_buff[32][128]
 new CanUse[32]
 new reg_players[32]
 new reg_pCount
@@ -17,6 +19,7 @@ public plugin_init()
 	register_concmd("start_p", "start_phone");
 	init_global()
 	set_task(0.1, "scan_sockets", .id=0, .flags="b");
+	set_task(0.1, "check_buff", .id=1, .flags="b");
 }
 
 public scan_sockets()
@@ -25,15 +28,65 @@ public scan_sockets()
 	{
 		if(CanUse[i]==1)
 		{
-			new data_buff[512]
-			socket_recv(sockets[i],data_buff,charsmax(data_buff))
-			if(strlen(data_buff)>0)
+			
+			socket_recv(sockets[i],data_buff[i],charsmax(data_buff[]))
+			if(strlen(data_buff[i])>0)
 			{
-				client_print(reg_players[i],print_console,data_buff)
-				server_print(data_buff)
+				//client_print(reg_players[i],print_console,data_buff[i])
+				//server_print(data_buff[i])
 				new ack[8]="recv^n"
 				socket_send(sockets[i],ack,charsmax(ack))
 			}
+		}
+	}
+}
+
+public Float:get_health_increment(Float:x,Float:y,Float:z)
+{
+	if(x<0)
+	{
+		x=-x
+	}
+	if(y<0)
+	{
+		y=-y
+	}
+	if(z<0)
+	{
+		z=-z
+	}
+	new Float:incr=x
+	incr=incr+y
+	incr=incr+z
+	incr=floatdiv(incr,3.0)
+	return incr
+}
+
+public check_buff()
+{
+	for(new i=0;i<charsmax(CanUse);i++)
+	{
+		if(CanUse[i]==1)
+		{
+			if(strlen(data_buff[i])>0)
+			{
+				new temp[128]
+				new xstr[32]
+				new ystr[32]
+				new zstr[32]
+				split(data_buff[i],xstr,charsmax(xstr),temp,charsmax(temp),"#")
+				split(temp,ystr,charsmax(ystr),zstr,charsmax(zstr),"#")
+				new Float:x=str_to_float(xstr)
+				new Float:y=str_to_float(ystr)
+				new Float:z=str_to_float(zstr)
+				if(x>20.0 || y>20.0 || z>20.0 || x<-20.0 || y<-20.0 || z<-20.0)
+				{
+					new health=get_user_health(reg_players[i])
+					//new Float:increment=get_health_increment(x,y,z)
+					set_user_health(reg_players[i],health+20);
+				}
+			}
+			
 		}
 	}
 }
