@@ -16,7 +16,7 @@ public plugin_init()
 	register_concmd("stop_p", "stop_phone");
 	register_concmd("start_p", "start_phone");
 	init_global()
-	set_task(1.0, "scan_sockets", .id=0, .flags="b");
+	set_task(0.1, "scan_sockets", .id=0, .flags="b");
 }
 
 public scan_sockets()
@@ -30,7 +30,9 @@ public scan_sockets()
 			if(strlen(data_buff)>0)
 			{
 				client_print(reg_players[i],print_console,data_buff)
-				server_print(data_buff)				
+				server_print(data_buff)
+				new ack[8]="recv^n"
+				socket_send(sockets[i],ack,charsmax(ack))
 			}
 		}
 	}
@@ -148,6 +150,3 @@ public start_phone(const id)
 
 	}
 }
-/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
-*{\\ rtf1\\ ansi\\ ansicpg936\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
-*/
