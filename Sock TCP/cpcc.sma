@@ -16,7 +16,25 @@ public plugin_init()
 	register_concmd("stop_p", "stop_phone");
 	register_concmd("start_p", "start_phone");
 	init_global()
-	set_task()
+	set_task(1.0, "scan_sockets", .id=0, .flags="b");
+}
+
+public scan_sockets()
+{
+	for(new i=0;i<charsmax(CanUse);i++)
+	{
+		if(CanUse[i]==1)
+		{
+			new data_buff[512]
+			socket_recv(sockets[i],data_buff,charsmax(data_buff))
+			if(strlen(data_buff)>0)
+			{
+				strcat(data_buff,"^n",charsmax(data_buff))
+				client_print(reg_players[i],print_console,data_buff)
+				server_print(data_buff)				
+			}
+		}
+	}
 }
 
 public init_global()
@@ -119,7 +137,7 @@ public start_phone(const id)
 			client_print(id,print_console,"No error, set task for the sock now")
 			server_print("%d: No error, set task for the sock now",id)
 			CanUse[result]=1
-			new data[32] = "connected";
+			new data[32] = "connected^n";
 			socket_send(sockets[result], data, charsmax(data));
 		}
 		else
@@ -131,6 +149,3 @@ public start_phone(const id)
 
 	}
 }
-/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
-*{\\ rtf1\\ ansi\\ ansicpg936\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
-*/
