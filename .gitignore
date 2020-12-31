@@ -3,3 +3,4 @@
 *.amxx
 .idea
 BOT/Models/
+*.xml
