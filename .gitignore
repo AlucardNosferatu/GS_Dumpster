@@ -1,5 +1,5 @@
 *.wad
 *.bak
 *.amxx
-.idea/
-Models/
+.idea
+BOT/Models/
