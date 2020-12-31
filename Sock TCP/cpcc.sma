@@ -1,31 +1,56 @@
 #include <amxmodx>
 #include <sockets>
-#include <fun>
 
-new IP[32]
-new PORT_STR[32]
-new PORT
+new IP[32][32]
+new PORT[32]
+new sockets[32]
+new CanUse[32]
 new reg_players[32]
 new reg_pCount
-new s[32]
-new error, data[256];
-new Float:x[32]
-new Float:y[32]
-new Float:z[32]
+
 
 public plugin_init()
 {
 	register_plugin("Cell Phone Controlled Crowbar","0.0","Relaxing/Scrooge")
+	register_concmd("set_p", "set_phone");
+	register_concmd("stop_p", "stop_phone");
+	register_concmd("start_p", "start_phone");
+	init_global()
+	new test_array[7]
+	test_array[0]=12
+	test_array[1]=45
+	test_array[2]=67
+	test_array[3]=8
+	test_array[4]=19
+	test_array[5]=31
+	test_array[6]=12
+
+	new res=ArrayFindValue(test_array,8,charsmax(test_array))
+	server_print("res: %d",res)
+	res=ArrayFindValue(test_array,12,charsmax(test_array))
+	server_print("res: %d",res)
+}
+
+public init_global()
+{
+	for(new i=0;i<charsmax(IP);i++)
+	{
+		IP[i]=""
+	}
+	arrayset(PORT,54500,charsmax(PORT))
+	arrayset(sockets,-1,charsmax(sockets))
+	arrayset(CanUse,0,charsmax(CanUse))
+	arrayset(reg_players,-1,charsmax(reg_players))
 	reg_pCount=0
-	register_concmd("set_phone", "id2socket");
-	//register_srvcmd("purge_sock","purge_sock")
 	
 }
 
-public ArrayFindValue(array[], value)
+public ArrayFindValue(array[], value, size)
 {
-	for(new i=0;i<charsmax(array);i++)
+	for(new i=0;i<size;i++)
 	{
+		server_print("target: %d",value)
+		server_print("this: %d",array[i])
 		if(array[i]==value)
 		{
 			return i
@@ -34,21 +59,23 @@ public ArrayFindValue(array[], value)
 	return -1
 }
 
-public id2socket(const id)
+public set_phone(const id)
 {
-	new result=ArrayFindValue(reg_players,id)
-	
+	new result=ArrayFindValue(reg_players,id,charsmax(reg_players))
+	new TEMP_IP[32]
+	new PORT_STR[32]
+	read_argv(1, TEMP_IP, charsmax(TEMP_IP));
+	read_argv(2, PORT_STR, charsmax(PORT_STR));
 	if(result==-1)
 	{
+	//no reg yet
 		if(reg_pCount<32)
 		{
-			read_argv(1, IP, charsmax(IP));
-			read_argv(2, PORT_STR, charsmax(PORT_STR));
-			PORT=str_to_num(PORT_STR)
-			reg_players[reg_pCount]=id
-			set_socket(reg_pCount,id)
+			IP[reg_pCount]=""
+			strcat(IP[reg_pCount],TEMP_IP,charsmax(IP[]))
+			PORT[reg_pCount]=str_to_num(PORT_STR)
 			reg_pCount+=1
-			set_task(0.1, "get_data", .flags="b");
+			
 		}
 		else
 		{
@@ -58,73 +85,57 @@ public id2socket(const id)
 	}
 	else
 	{
-		client_print(id,print_console,"already set, update socket")
-		server_print("%d: already set, update socket", id)
-		read_argv(1, IP, charsmax(IP));
-		read_argv(2, PORT_STR, charsmax(PORT_STR));
-		PORT=str_to_num(PORT_STR)
-		socket_close(s[result])
-		set_socket(result,id)
+	//already reg
+		IP[result]=""
+		strcat(IP[result],TEMP_IP,charsmax(IP[]))
+		PORT[result]=str_to_num(PORT_STR)
+
 	}
 }
 
-public set_socket(s_index,uid)
-{	
-	client_print(uid,print_console,"Now configure CPCC")
-	server_print("%d: Now configure CPCC", uid)
-	client_print(uid,print_console,IP)
-	server_print("%d: %s", uid, IP)
-	client_print(uid,print_console,PORT_STR)
-	server_print("%d: %s", uid, PORT_STR)
-	s[s_index] = socket_open(IP, PORT, SOCKET_TCP, error);
-	if (!error){
-		client_print(uid,print_console,"No error, set task for the sock now")
-		server_print("%d: No error, set task for the sock now",uid)
-		data = "connected";
-		socket_send(s[s_index], data, charsmax(data));
+public stop_phone(const id)
+{
+	new result=ArrayFindValue(reg_players,id,charsmax(reg_players))
+	if(result==-1)
+	{
+	//no reg yet
+		client_print(id,print_console,"haven't set yet")
+		server_print("%d: haven't set yet", id)
 	}
 	else
 	{
-		client_print(uid,print_console,"Error occurs when configuring CPCC^nError Code: %d", error)
-		server_print("%d: Error occurs when configuring CPCC^nError Code: %d", uid, error)
+		socket_close(sockets[result])
+		sockets[result]=-1
+		CanUse[result]=0
 	}
 }
 
-public get_data(){
-	for(new i=0;i<32;i++)
+public start_phone(const id)
+{
+	new result=ArrayFindValue(reg_players,id,charsmax(reg_players))
+	if(result==-1)
 	{
-		//server_print("now for %d", reg_players[i])
-		if(is_user_connected(reg_players[i])==1 || reg_players[i]==0)
-		{
-			if (socket_is_readable(s[i]))
-			{
-				socket_recv(s[i], data, charsmax(data))
-				if(strlen(data)>0)
-				{
-					//client_print(reg_players[i],print_console,data)
-					//server_print("%d: %s", reg_players[i], data)
-					new temp[256]
-					new xstr[32]
-					new ystr[32]
-					new zstr[32]
-					split(data,xstr,charsmax(xstr),temp,charsmax(temp),"#")
-					split(temp,ystr,charsmax(ystr),zstr,charsmax(zstr),"#")
-					x[i]=str_to_float(xstr)
-					y[i]=str_to_float(ystr)
-					z[i]=str_to_float(zstr)
-					if(x[i]>20.0 || y[i]>20.0 || z[i]>20.0 || x[i]<-20.0 || y[i]<-20.0 || z[i]<-20.0)
-					{
-						client_print(reg_players[i],print_console,"^nX: %f",x[i])
-						server_print("^n%d: X: %f", reg_players[i], x[i])
-						client_print(reg_players[i],print_console,"Y: %f",y[i])
-						server_print("%d: Y: %f", reg_players[i], y[i])
-						client_print(reg_players[i],print_console,"Z: %f",y[i])
-						server_print("%d: Z: %f", reg_players[i], y[i])		
-						new health=get_user_health(reg_players[i])
-						set_user_health(reg_players[i],health+20);
-					}
-				}
-			}
+	//no reg yet
+		client_print(id,print_console,"haven't set yet")
+		server_print("%d: haven't set yet", id)
+	}
+	else
+	{
+		new error
+		sockets[result]=socket_open(IP[result],PORT[result],SOCKET_TCP,error)
+		if (!error){
+			client_print(id,print_console,"No error, set task for the sock now")
+			server_print("%d: No error, set task for the sock now",id)
+			CanUse[result]=1
+			new data[32] = "connected";
+			socket_send(sockets[result], data, charsmax(data));
 		}
+		else
+		{
+			client_print(id,print_console,"Error occurs when configuring CPCC^nError Code: %d", error)
+			server_print("%d: Error occurs when configuring CPCC^nError Code: %d", id, error)
+			CanUse[result]=0
+		}
+
 	}
 }
