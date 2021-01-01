@@ -2,6 +2,9 @@
 #include <sockets>
 #include <fun>
 
+new response[32][32]
+new send_dmg[32]
+new dmg[32]
 new IP[32][32]
 new PORT[32]
 new sockets[32]
@@ -11,6 +14,7 @@ new reg_players[32]
 new reg_pCount
 
 
+
 public plugin_init()
 {
 	register_plugin("Cell Phone Controlled Crowbar","0.0","Relaxing/Scrooge")
@@ -18,56 +22,86 @@ public plugin_init()
 	register_concmd("stop_p", "stop_phone");
 	register_concmd("start_p", "start_phone");
 	init_global()
-	set_task(0.1, "scan_sockets", .id=0, .flags="b");
-	set_task(0.1, "check_buff", .id=1, .flags="b");
+	register_event("Damage","player_take_dmg","b","2>0")
+	set_task(0.3, "scan_sockets", .id=0, .flags="b");
+	set_task(0.3, "check_buff", .id=1, .flags="b");
+}
+
+public player_take_dmg(id)
+{
+	new damage = read_data(2)
+	if(damage>0)
+	{
+		new result=ArrayFindValue(reg_players,id,charsmax(reg_players))
+		if(result!=-1)
+		{
+			dmg[result]=dmg[result]+damage
+			send_dmg[result]=true
+	
+		}		
+	}
 }
 
 public scan_sockets()
 {
-	for(new i=0;i<charsmax(CanUse);i++)
+	for(new i=0;i<=charsmax(CanUse);i++)
 	{
 		if(CanUse[i]==1)
 		{
-			
 			socket_recv(sockets[i],data_buff[i],charsmax(data_buff[]))
-			if(strlen(data_buff[i])>0)
+			if(send_dmg[i])
 			{
-				//client_print(reg_players[i],print_console,data_buff[i])
-				//server_print(data_buff[i])
-				new ack[8]="recv^n"
-				socket_send(sockets[i],ack,charsmax(ack))
+				new dStr[8]
+				num_to_str(dmg[i],dStr,charsmax(dStr))
+				response[i]="DMG#"
+				strcat(response[i],dStr,charsmax(response[]))
+				strcat(response[i],"^n",charsmax(response[]))
+				server_print("Now send buffer: %s",response[i])
+			}
+			
+			socket_send(sockets[i],response[i],charsmax(response[]))
+			if(send_dmg[i])
+			{
+				send_dmg[i]=false
+				dmg[i]=0
+				response[i]="recv^n"
 			}
 		}
 	}
 }
 
-public Float:get_health_increment(Float:x,Float:y,Float:z)
+
+
+
+public get_health_increment(Float:xf,Float:yf,Float:zf)
 {
-	if(x<0)
+	if(xf<0)
 	{
-		x=-x
+		xf=-xf
 	}
-	if(y<0)
+	if(yf<0)
 	{
-		y=-y
+		yf=-yf
 	}
-	if(z<0)
+	if(zf<0)
 	{
-		z=-z
+		zf=-zf
 	}
-	new Float:incr=x
-	incr=incr+y
-	incr=incr+z
-	incr=floatdiv(incr,3.0)
-	return incr
+	new Float:incr=xf
+	incr=incr+yf
+	incr=incr+zf
+	incr=floatdiv(incr,2.5)
+	new incr_int=floatround(incr)
+	return incr_int
 }
 
 public check_buff()
 {
-	for(new i=0;i<charsmax(CanUse);i++)
+	for(new i=0;i<=charsmax(CanUse);i++)
 	{
 		if(CanUse[i]==1)
 		{
+			server_print("Now read buffer: %s",data_buff[i])
 			if(strlen(data_buff[i])>0)
 			{
 				new temp[128]
@@ -82,8 +116,8 @@ public check_buff()
 				if(x>20.0 || y>20.0 || z>20.0 || x<-20.0 || y<-20.0 || z<-20.0)
 				{
 					new health=get_user_health(reg_players[i])
-					//new Float:increment=get_health_increment(x,y,z)
-					set_user_health(reg_players[i],health+20);
+					new increment=get_health_increment(x,y,z)
+					set_user_health(reg_players[i],health+increment);
 				}
 			}
 			
@@ -93,13 +127,19 @@ public check_buff()
 
 public init_global()
 {
-	for(new i=0;i<charsmax(IP);i++)
+	for(new i=0;i<=charsmax(IP);i++)
 	{
 		IP[i]=""
 	}
+	for(new i=0;i<=charsmax(response);i++)
+	{
+		response[i]="recv^n"
+	}
+	arrayset(dmg,0,charsmax(dmg))
 	arrayset(PORT,54500,charsmax(PORT))
 	arrayset(sockets,-1,charsmax(sockets))
 	arrayset(CanUse,0,charsmax(CanUse))
+	arrayset(send_dmg,false,charsmax(send_dmg))
 	arrayset(reg_players,-1,charsmax(reg_players))
 	reg_pCount=0
 	
@@ -107,7 +147,7 @@ public init_global()
 
 public ArrayFindValue(array[], value, size)
 {
-	for(new i=0;i<size;i++)
+	for(new i=0;i<=size;i++)
 	{
 		if(array[i]==value)
 		{
