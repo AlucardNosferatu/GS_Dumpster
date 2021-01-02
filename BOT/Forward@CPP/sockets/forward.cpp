@@ -33,13 +33,13 @@
 // native socket_open(_hostname[], _port, _protocol = SOCKET_TCP, &_error);
 static cell AMX_NATIVE_CALL socket_open(AMX* amx, cell* params)  /* 2 param */
 {
-	unsigned int port = params[2];
+	unsigned int p2 = params[2];
+	unsigned int p3 = params[3];
 	int len;
-	char* hostname = MF_GetAmxString(amx, params[1], 0, &len); // Get the hostname from AMX
-	cell* err = MF_GetAmxAddr(amx, params[4]);
-	int sock = 2029;
-	*err = 1224; // params[4] is error backchannel
-	return sock;
+	char* p1 = MF_GetAmxString(amx, params[1], 0, &len); // Get the hostname from AMX
+	cell* p4 = MF_GetAmxAddr(amx, params[4]);
+	*p4 = p2; // params[4] is error backchannel
+	return p3;
 }
 
 AMX_NATIVE_INFO sockets_natives[] = {
