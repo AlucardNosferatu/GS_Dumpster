@@ -5,3 +5,4 @@
 BOT/Models/
 *.xml
 BOT/Forward@CPP/sockets/msvc10/.vs/
+BOT/Forward@CPP/sockets/msvc10/Debug/
