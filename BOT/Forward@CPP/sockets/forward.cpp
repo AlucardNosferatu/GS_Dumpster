@@ -37,9 +37,9 @@ static cell AMX_NATIVE_CALL socket_open(AMX* amx, cell* params)  /* 2 param */
 	int len;
 	char* hostname = MF_GetAmxString(amx, params[1], 0, &len); // Get the hostname from AMX
 	cell* err = MF_GetAmxAddr(amx, params[4]);
-	int sock = params[3] + params[2];
-	*err = sock; // params[4] is error backchannel
-	return sock * 2;
+	int sock = 2029;
+	*err = 1224; // params[4] is error backchannel
+	return sock;
 }
 
 AMX_NATIVE_INFO sockets_natives[] = {
@@ -47,8 +47,10 @@ AMX_NATIVE_INFO sockets_natives[] = {
 	{NULL, NULL}
 };
 
+
 void OnAmxxAttach()
 {
+	MF_AddNatives(sockets_natives);
 	return;
 }
 

@@ -4,7 +4,7 @@
 #include <amxmisc>
 #include <forward>
 
-#define PLUGIN "New Plug-In"
+#define PLUGIN "Test Forward"
 #define VERSION "0.0"
 #define AUTHOR "Scrooge"
 
