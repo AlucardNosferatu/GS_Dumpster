@@ -1,7 +1,0 @@
-﻿cl : 命令行 warning D9035: “Gm”选项已否决，并将在将来的版本中移除
-  amxxmodule.cpp
-  sockets.cpp
-  正在生成代码...
-sockets.obj : warning LNK4075: 忽略“/EDITANDCONTINUE”(由于“/SAFESEH”规范)
-    正在创建库 C:\Users\16413\Desktop\sockets\msvc10\Debug\sockets.lib 和对象 C:\Users\16413\Desktop\sockets\msvc10\Debug\sockets.exp
-  sockets.vcxproj -> C:\Users\16413\Desktop\sockets\msvc10\Debug\sockets_amxx.dll
