@@ -4,5 +4,5 @@
 .idea
 BOT/Models/
 *.xml
-BOT/Forward@CPP/sockets/msvc10/.vs/
-BOT/Forward@CPP/sockets/msvc10/Debug/
+BOT/Forward@CPP/forward/msvc10/.vs/
+BOT/Forward@CPP/forward/msvc10/Debug/
