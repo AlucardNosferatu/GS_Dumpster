@@ -2,7 +2,7 @@
  * Tensor.cpp
  *
  *  Created on: Jun 15, 2019
- *      Author: monky
+ *      Author: Mitom & Scrooge
  */
 
 #include "Tensor.hpp"

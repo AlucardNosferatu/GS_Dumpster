@@ -1,4 +1,4 @@
-#include "utils.hpp"
+#include "cnnmain.hpp"
 
 
 class sample_model
@@ -62,19 +62,26 @@ class sample_model
 
 		Tensor conv1 = semg.forwardConv(conv1Filter, 1, 1, 1, 0, convbias1);
 		conv1.forwardReLu();
+
 		Tensor pool1 = conv1.forwardMaxpool(10, 1);
 
 		Tensor conv2 = pool1.forwardConv(conv2Filter, 1, 1, 1, 0, convbias2);
 		conv2.forwardReLu();
+
 		Tensor pool2 = conv2.forwardMaxpool(2, 1);
+
 		Tensor conv3 = pool2.forwardConv(conv3Filter, 1, 1, 1, 0, convbias3);
 		conv3.forwardReLu();
+
 		Matrix flat = conv3.forwardFlat();
+
 		Matrix fc1 = flat.forwardFullConnect(5 * 8 * 128, 256, fc1weight, fullbias1);
+
 		fc1.batchNormal(bn1_weight, bn1_bias, bn1_running_mean, bn1_running_var);
 		fc1.forwardRelu();
-		//fc1.getShape();
+
 		Matrix fc2 = fc1.forwardFullConnect(256, 10, fc2weight, fullbias2);
+
 		vector<int> c = fc2.softmax();
 	}
 };

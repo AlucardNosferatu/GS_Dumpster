@@ -22,6 +22,47 @@
 // ANN Headers
 #include "cnnmain.hpp"
 
+// INI Reader Headers
+#include "ReadWriteini.hpp"
+
+static cell AMX_NATIVE_CALL load_model(AMX* amx, cell* params)  /* 1 param */
+{
+	int len;
+	const char* ini_path = MF_GetAmxString(amx, params[1], 0, &len);
+	rwini::ReadWriteini* rw = new rwini::ReadWriteini(ini_path);
+	string layer_count_str = rw->FindValue("General", "layer_count");
+	const int layer_count = stoi(layer_count_str);
+	//layer_type:
+	//Conv Pool Flat Dense BN Softmax
+	//Need Nothing:
+	//Flat Softmax
+	//Need Shape:
+	//Conv Pool Dense 
+	for (int i = 0; i < layer_count; i++)
+	{
+		char* layer_key = "";
+		sprintf(layer_key, "layer_%d", i);
+		string layer_type = rw->FindValue(layer_key, "layer_type");
+		if (!layer_type._Equal("Flat") && !layer_type._Equal("Softmax"))
+		{
+			string layer_shape = rw->FindValue(layer_key, "layer_shape");
+			string weight_path = rw->FindValue(layer_key, "weight_path");
+			string bias_path = rw->FindValue(layer_key, "bias_path");
+			string run_means_path = rw->FindValue(layer_key, "run_means_path");
+		}
+		else {
+
+		}
+	}
+	return 0;
+}
+
+static cell AMX_NATIVE_CALL forward_model(AMX* amx, cell* params)  /* 2 param */
+{
+
+	return 0;
+}
+
 // native socket_open(_hostname[], _port, _protocol = SOCKET_TCP, &_error);
 static cell AMX_NATIVE_CALL socket_open(AMX* amx, cell* params)  /* 2 param */
 {
@@ -42,6 +83,8 @@ static cell AMX_NATIVE_CALL socket_open(AMX* amx, cell* params)  /* 2 param */
 
 AMX_NATIVE_INFO forward_natives[] = {
 	{"socket_open", socket_open},
+	{"load_model", load_model},
+	{"forward_model", forward_model},
 	{NULL, NULL}
 };
 
