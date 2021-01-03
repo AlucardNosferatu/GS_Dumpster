@@ -16,7 +16,6 @@ void run()
 		tensor.addLayer(mat);
 	}
 
-
 	Filter filter = Filter(3, 2, 3, 3);
 	vector<double> bias(3);
 	vector<int>::size_type ix = 0;
@@ -55,7 +54,6 @@ void run()
 		cout << "sample " << i << " pred:" << outClass[i] << endl;
 	}
 }
-
 
 void readParams()
 {
@@ -101,7 +99,6 @@ int cnnmain() {
 	//	readParams();
 	//	endTime = clock();
 	//	cout << (endTime-startTime) /  (double)CLOCKS_PER_SEC << endl;
-
 
 	return 0;
 }

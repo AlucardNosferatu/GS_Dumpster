@@ -16,10 +16,13 @@
  * - added socket_send2 to send data containing null bytes (FALUCO)(AMXX v1.65)
  */
 
+#define HAVE_STDINT_H
 
  // AMX Headers
 #include "amxxmodule.h"
 
+// ANN Headers
+#include "utils.hpp"
 
 // native socket_open(_hostname[], _port, _protocol = SOCKET_TCP, &_error);
 static cell AMX_NATIVE_CALL socket_open(AMX* amx, cell* params)  /* 2 param */

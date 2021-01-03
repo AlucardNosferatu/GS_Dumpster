@@ -24,7 +24,6 @@ using namespace std;
 
 void run();
 
-
 void readParams();
 
 int cnnmain();

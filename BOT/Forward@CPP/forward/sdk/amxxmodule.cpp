@@ -1,4 +1,4 @@
-/* AMX Mod X
+﻿/* AMX Mod X
 *
 * by the AMX Mod X Development Team
 *  originally developed by OLO
@@ -43,17 +43,17 @@
 #ifdef USE_METAMOD
 
 enginefuncs_t g_engfuncs;
-globalvars_t  *gpGlobals;
+globalvars_t* gpGlobals;
 
-DLL_FUNCTIONS *g_pFunctionTable;
-DLL_FUNCTIONS *g_pFunctionTable_Post;
-enginefuncs_t *g_pengfuncsTable;
-enginefuncs_t *g_pengfuncsTable_Post;
-NEW_DLL_FUNCTIONS *g_pNewFunctionsTable;
-NEW_DLL_FUNCTIONS *g_pNewFunctionsTable_Post;
+DLL_FUNCTIONS* g_pFunctionTable;
+DLL_FUNCTIONS* g_pFunctionTable_Post;
+enginefuncs_t* g_pengfuncsTable;
+enginefuncs_t* g_pengfuncsTable_Post;
+NEW_DLL_FUNCTIONS* g_pNewFunctionsTable;
+NEW_DLL_FUNCTIONS* g_pNewFunctionsTable_Post;
 
 // GetEntityAPI2 functions
-static DLL_FUNCTIONS g_EntityAPI_Table = 
+static DLL_FUNCTIONS g_EntityAPI_Table =
 {
 #ifdef FN_GameDLLInit
 	FN_GameDLLInit,
@@ -308,7 +308,7 @@ static DLL_FUNCTIONS g_EntityAPI_Table =
 }; // g_EntityAPI2_Table
 
 // GetEntityAPI2_Post functions
-static DLL_FUNCTIONS g_EntityAPI_Post_Table = 
+static DLL_FUNCTIONS g_EntityAPI_Post_Table =
 {
 #ifdef FN_GameDLLInit_Post
 	FN_GameDLLInit_Post,
@@ -562,7 +562,7 @@ static DLL_FUNCTIONS g_EntityAPI_Post_Table =
 #endif
 }; // g_EntityAPI2_Table
 
-static enginefuncs_t g_EngineFuncs_Table = 
+static enginefuncs_t g_EngineFuncs_Table =
 {
 #ifdef FN_PrecacheModel
 	FN_PrecacheModel,
@@ -2012,7 +2012,7 @@ static enginefuncs_t g_EngineFuncs_Post_Table =
 }; // g_EngineFuncs_Post_Table
 
 
-static NEW_DLL_FUNCTIONS g_NewFuncs_Table = 
+static NEW_DLL_FUNCTIONS g_NewFuncs_Table =
 {
 #ifdef FN_OnFreeEntPrivateData
 	FN_OnFreeEntPrivateData,
@@ -2032,7 +2032,7 @@ static NEW_DLL_FUNCTIONS g_NewFuncs_Table =
 };
 
 
-static NEW_DLL_FUNCTIONS g_NewFuncs_Post_Table = 
+static NEW_DLL_FUNCTIONS g_NewFuncs_Post_Table =
 {
 #ifdef FN_OnFreeEntPrivateData_Post
 	FN_OnFreeEntPrivateData_Post,
@@ -2053,9 +2053,9 @@ static NEW_DLL_FUNCTIONS g_NewFuncs_Post_Table =
 
 // Global variables from metamod.  These variable names are referenced by
 // various macros.
-meta_globals_t *gpMetaGlobals;		// metamod globals
-gamedll_funcs_t *gpGamedllFuncs;	// gameDLL function tables
-mutil_funcs_t *gpMetaUtilFuncs;		// metamod utility functions
+meta_globals_t* gpMetaGlobals;		// metamod globals
+gamedll_funcs_t* gpGamedllFuncs;	// gameDLL function tables
+mutil_funcs_t* gpMetaUtilFuncs;		// metamod utility functions
 
 
 plugin_info_t Plugin_info = {
@@ -2104,126 +2104,126 @@ C_DLLEXPORT int GetEntityAPI_Post(DLL_FUNCTIONS *pFunctionTable, int interfaceVe
 }
 */
 
-C_DLLEXPORT int GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion)
+C_DLLEXPORT int GetEntityAPI2(DLL_FUNCTIONS* pFunctionTable, int* interfaceVersion)
 {
 	LOG_DEVELOPER(PLID, "called: GetEntityAPI2; version=%d", *interfaceVersion);
-	if(!pFunctionTable) {
+	if (!pFunctionTable) {
 		LOG_ERROR(PLID, "GetEntityAPI2 called with null pFunctionTable");
 		return(FALSE);
 	}
-	else if(*interfaceVersion != INTERFACE_VERSION) {
-		LOG_ERROR(PLID, 
-				"GetEntityAPI2 version mismatch; requested=%d ours=%d", 
-				*interfaceVersion, INTERFACE_VERSION);
+	else if (*interfaceVersion != INTERFACE_VERSION) {
+		LOG_ERROR(PLID,
+			"GetEntityAPI2 version mismatch; requested=%d ours=%d",
+			*interfaceVersion, INTERFACE_VERSION);
 		//! Tell engine what version we had, so it can figure out who is 
 		//! out of date.
 		*interfaceVersion = INTERFACE_VERSION;
 		return(FALSE);
 	}
 	memcpy(pFunctionTable, &g_EntityAPI_Table, sizeof(DLL_FUNCTIONS));
-	g_pFunctionTable=pFunctionTable;
+	g_pFunctionTable = pFunctionTable;
 	return(TRUE);
 }
 
-C_DLLEXPORT int GetEntityAPI2_Post(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion)
+C_DLLEXPORT int GetEntityAPI2_Post(DLL_FUNCTIONS* pFunctionTable, int* interfaceVersion)
 {
 	LOG_DEVELOPER(PLID, "called: GetEntityAPI2_Post; version=%d", *interfaceVersion);
-	if(!pFunctionTable) {
+	if (!pFunctionTable) {
 		LOG_ERROR(PLID, "GetEntityAPI2_Post called with null pFunctionTable");
 		return(FALSE);
 	}
-	else if(*interfaceVersion != INTERFACE_VERSION) {
+	else if (*interfaceVersion != INTERFACE_VERSION) {
 		LOG_ERROR(PLID, "GetEntityAPI2_Post version mismatch; requested=%d ours=%d", *interfaceVersion, INTERFACE_VERSION);
 		//! Tell engine what version we had, so it can figure out who is out of date.
 		*interfaceVersion = INTERFACE_VERSION;
 		return(FALSE);
 	}
-	memcpy( pFunctionTable, &g_EntityAPI_Post_Table, sizeof( DLL_FUNCTIONS ) );
-	g_pFunctionTable_Post=pFunctionTable;
+	memcpy(pFunctionTable, &g_EntityAPI_Post_Table, sizeof(DLL_FUNCTIONS));
+	g_pFunctionTable_Post = pFunctionTable;
 	return(TRUE);
 }
 
-C_DLLEXPORT int GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *interfaceVersion)
+C_DLLEXPORT int GetEngineFunctions(enginefuncs_t* pengfuncsFromEngine, int* interfaceVersion)
 {
-	LOG_DEVELOPER(PLID, "called: GetEngineFunctions; version=%d", 
-			*interfaceVersion);
-	if(!pengfuncsFromEngine) {
-		LOG_ERROR(PLID, 
-				"GetEngineFunctions called with null pengfuncsFromEngine");
+	LOG_DEVELOPER(PLID, "called: GetEngineFunctions; version=%d",
+		*interfaceVersion);
+	if (!pengfuncsFromEngine) {
+		LOG_ERROR(PLID,
+			"GetEngineFunctions called with null pengfuncsFromEngine");
 		return(FALSE);
 	}
-	else if(*interfaceVersion != ENGINE_INTERFACE_VERSION) {
-		LOG_ERROR(PLID, 
-				"GetEngineFunctions version mismatch; requested=%d ours=%d", 
-				*interfaceVersion, ENGINE_INTERFACE_VERSION);
+	else if (*interfaceVersion != ENGINE_INTERFACE_VERSION) {
+		LOG_ERROR(PLID,
+			"GetEngineFunctions version mismatch; requested=%d ours=%d",
+			*interfaceVersion, ENGINE_INTERFACE_VERSION);
 		// Tell metamod what version we had, so it can figure out who is 
 		// out of date.
 		*interfaceVersion = ENGINE_INTERFACE_VERSION;
 		return(FALSE);
 	}
 	memcpy(pengfuncsFromEngine, &g_EngineFuncs_Table, sizeof(enginefuncs_t));
-	g_pengfuncsTable=pengfuncsFromEngine;
+	g_pengfuncsTable = pengfuncsFromEngine;
 	return TRUE;
 }
 
-C_DLLEXPORT int GetEngineFunctions_Post(enginefuncs_t *pengfuncsFromEngine, int *interfaceVersion)
+C_DLLEXPORT int GetEngineFunctions_Post(enginefuncs_t* pengfuncsFromEngine, int* interfaceVersion)
 {
 	LOG_DEVELOPER(PLID, "called: GetEngineFunctions_Post; version=%d", *interfaceVersion);
-	if(!pengfuncsFromEngine) {
+	if (!pengfuncsFromEngine) {
 		LOG_ERROR(PLID, "GetEngineFunctions_Post called with null pengfuncsFromEngine");
 		return(FALSE);
 	}
-	else if(*interfaceVersion != ENGINE_INTERFACE_VERSION) {
+	else if (*interfaceVersion != ENGINE_INTERFACE_VERSION) {
 		LOG_ERROR(PLID, "GetEngineFunctions_Post version mismatch; requested=%d ours=%d", *interfaceVersion, ENGINE_INTERFACE_VERSION);
 		// Tell metamod what version we had, so it can figure out who is out of date.
 		*interfaceVersion = ENGINE_INTERFACE_VERSION;
 		return(FALSE);
 	}
 	memcpy(pengfuncsFromEngine, &g_EngineFuncs_Post_Table, sizeof(enginefuncs_t));
-	g_pengfuncsTable_Post=pengfuncsFromEngine;
+	g_pengfuncsTable_Post = pengfuncsFromEngine;
 	return TRUE;
 
 }
 
-C_DLLEXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS *pNewFunctionTable, 
-		int *interfaceVersion) 
+C_DLLEXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS* pNewFunctionTable,
+	int* interfaceVersion)
 {
-	LOG_DEVELOPER(PLID, "called: GetNewDLLFunctions; version=%d", 
-			*interfaceVersion);
-	if(!pNewFunctionTable) {
-		LOG_ERROR(PLID, 
-				"GetNewDLLFunctions called with null pNewFunctionTable");
+	LOG_DEVELOPER(PLID, "called: GetNewDLLFunctions; version=%d",
+		*interfaceVersion);
+	if (!pNewFunctionTable) {
+		LOG_ERROR(PLID,
+			"GetNewDLLFunctions called with null pNewFunctionTable");
 		return(FALSE);
 	}
-	else if(*interfaceVersion != NEW_DLL_FUNCTIONS_VERSION) {
-		LOG_ERROR(PLID, 
-				"GetNewDLLFunctions version mismatch; requested=%d ours=%d", 
-				*interfaceVersion, NEW_DLL_FUNCTIONS_VERSION);
+	else if (*interfaceVersion != NEW_DLL_FUNCTIONS_VERSION) {
+		LOG_ERROR(PLID,
+			"GetNewDLLFunctions version mismatch; requested=%d ours=%d",
+			*interfaceVersion, NEW_DLL_FUNCTIONS_VERSION);
 		//! Tell engine what version we had, so it can figure out who is 
 		//! out of date.
 		*interfaceVersion = NEW_DLL_FUNCTIONS_VERSION;
 		return(FALSE);
 	}
 	memcpy(pNewFunctionTable, &g_NewFuncs_Table, sizeof(NEW_DLL_FUNCTIONS));
-	g_pNewFunctionsTable=pNewFunctionTable;
+	g_pNewFunctionsTable = pNewFunctionTable;
 	return TRUE;
 }
 
-C_DLLEXPORT int GetNewDLLFunctions_Post( NEW_DLL_FUNCTIONS *pNewFunctionTable, int *interfaceVersion ) 
+C_DLLEXPORT int GetNewDLLFunctions_Post(NEW_DLL_FUNCTIONS* pNewFunctionTable, int* interfaceVersion)
 {
 	LOG_DEVELOPER(PLID, "called: GetNewDLLFunctions_Post; version=%d", *interfaceVersion);
-	if(!pNewFunctionTable) {
+	if (!pNewFunctionTable) {
 		LOG_ERROR(PLID, "GetNewDLLFunctions_Post called with null pNewFunctionTable");
 		return(FALSE);
 	}
-	else if(*interfaceVersion != NEW_DLL_FUNCTIONS_VERSION) {
+	else if (*interfaceVersion != NEW_DLL_FUNCTIONS_VERSION) {
 		LOG_ERROR(PLID, "GetNewDLLFunctions_Post version mismatch; requested=%d ours=%d", *interfaceVersion, NEW_DLL_FUNCTIONS_VERSION);
 		//! Tell engine what version we had, so it can figure out who is out of date.
 		*interfaceVersion = NEW_DLL_FUNCTIONS_VERSION;
 		return(FALSE);
 	}
 	memcpy(pNewFunctionTable, &g_NewFuncs_Post_Table, sizeof(NEW_DLL_FUNCTIONS));
-	g_pNewFunctionsTable_Post=pNewFunctionTable;
+	g_pNewFunctionsTable_Post = pNewFunctionTable;
 	return TRUE;
 }
 
@@ -2240,14 +2240,14 @@ static META_FUNCTIONS g_MetaFunctions_Table =
 	GetEngineFunctions_Post
 };
 
-C_DLLEXPORT int Meta_Query(const char *ifvers, plugin_info_t **pPlugInfo, mutil_funcs_t *pMetaUtilFuncs)
+C_DLLEXPORT int Meta_Query(const char* ifvers, plugin_info_t** pPlugInfo, mutil_funcs_t* pMetaUtilFuncs)
 {
-	if ((int) CVAR_GET_FLOAT("developer") != 0)
-		UTIL_LogPrintf("[%s] dev: called: Meta_Query; version=%s, ours=%s\n", 
-				Plugin_info.logtag, ifvers, Plugin_info.ifvers);
+	if ((int)CVAR_GET_FLOAT("developer") != 0)
+		UTIL_LogPrintf("[%s] dev: called: Meta_Query; version=%s, ours=%s\n",
+			Plugin_info.logtag, ifvers, Plugin_info.ifvers);
 
 	// Check for valid pMetaUtilFuncs before we continue.
-	if(!pMetaUtilFuncs) {
+	if (!pMetaUtilFuncs) {
 		UTIL_LogPrintf("[%s] ERROR: Meta_Query called with null pMetaUtilFuncs\n", Plugin_info.logtag);
 		return(FALSE);
 	}
@@ -2257,27 +2257,27 @@ C_DLLEXPORT int Meta_Query(const char *ifvers, plugin_info_t **pPlugInfo, mutil_
 	*pPlugInfo = &Plugin_info;
 
 	// Check for interface version compatibility.
-	if(!FStrEq(ifvers, Plugin_info.ifvers)) {
-		int mmajor=0, mminor=0, pmajor=0, pminor=0;
+	if (!FStrEq(ifvers, Plugin_info.ifvers)) {
+		int mmajor = 0, mminor = 0, pmajor = 0, pminor = 0;
 		LOG_MESSAGE(PLID, "WARNING: meta-interface version mismatch; requested=%s ours=%s",
-				Plugin_info.logtag, ifvers);
+			Plugin_info.logtag, ifvers);
 		// If plugin has later interface version, it's incompatible (update
 		// metamod).
 		sscanf(ifvers, "%d:%d", &mmajor, &mminor);
 		sscanf(META_INTERFACE_VERSION, "%d:%d", &pmajor, &pminor);
-		if(pmajor > mmajor || (pmajor==mmajor && pminor > mminor)) {
+		if (pmajor > mmajor || (pmajor == mmajor && pminor > mminor)) {
 			LOG_ERROR(PLID, "metamod version is too old for this module; update metamod");
 			return(FALSE);
 		}
 		// If plugin has older major interface version, it's incompatible
 		// (update plugin).
-		else if(pmajor < mmajor) {
+		else if (pmajor < mmajor) {
 			LOG_ERROR(PLID, "metamod version is incompatible with this module; please find a newer version of this module");
 			return(FALSE);
 		}
 		// Minor interface is older, but this is guaranteed to be backwards
 		// compatible, so we warn, but we still accept it.
-		else if(pmajor==mmajor && pminor < mminor)
+		else if (pmajor == mmajor && pminor < mminor)
 			LOG_MESSAGE(PLID, "WARNING: metamod version is newer than expected; consider finding a newer version of this module");
 		else
 			LOG_ERROR(PLID, "unexpected version comparison; metavers=%s, mmajor=%d, mminor=%d; plugvers=%s, pmajor=%d, pminor=%d", ifvers, mmajor, mminor, META_INTERFACE_VERSION, pmajor, pminor);
@@ -2291,24 +2291,24 @@ C_DLLEXPORT int Meta_Query(const char *ifvers, plugin_info_t **pPlugInfo, mutil_
 }
 
 
-C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, meta_globals_t *pMGlobals, gamedll_funcs_t *pGamedllFuncs)
+C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS* pFunctionTable, meta_globals_t* pMGlobals, gamedll_funcs_t* pGamedllFuncs)
 {
-	if(now > Plugin_info.loadable) {
+	if (now > Plugin_info.loadable) {
 		LOG_ERROR(PLID, "Can't load module right now");
 		return(FALSE);
 	}
-	if(!pMGlobals) {
+	if (!pMGlobals) {
 		LOG_ERROR(PLID, "Meta_Attach called with null pMGlobals");
 		return(FALSE);
 	}
-	gpMetaGlobals=pMGlobals;
-	if(!pFunctionTable) {
+	gpMetaGlobals = pMGlobals;
+	if (!pFunctionTable) {
 		LOG_ERROR(PLID, "Meta_Attach called with null pFunctionTable");
 		return(FALSE);
 	}
 
 	memcpy(pFunctionTable, &g_MetaFunctions_Table, sizeof(META_FUNCTIONS));
-	gpGamedllFuncs=pGamedllFuncs;
+	gpGamedllFuncs = pGamedllFuncs;
 
 	// Let's go.
 
@@ -2321,7 +2321,7 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
 C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason)
 {
-	if(now > Plugin_info.unloadable && reason != PNL_CMD_FORCED) {
+	if (now > Plugin_info.unloadable && reason != PNL_CMD_FORCED) {
 		LOG_ERROR(PLID, "Can't unload plugin right now");
 		return(FALSE);
 	}
@@ -2336,12 +2336,12 @@ C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason)
 
 #if defined(__linux__) || defined(__APPLE__)
 // linux prototype
-C_DLLEXPORT void GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals ) {
+C_DLLEXPORT void GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t* pGlobals) {
 
 #else
 #ifdef _MSC_VER
 // MSVC: Simulate __stdcall calling convention
-C_DLLEXPORT __declspec(naked) void GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals )
+C_DLLEXPORT __declspec(naked) void GiveFnptrsToDll(enginefuncs_t * pengfuncsFromEngine, globalvars_t * pGlobals)
 {
 	__asm			// Prolog
 	{
@@ -2360,7 +2360,7 @@ C_DLLEXPORT __declspec(naked) void GiveFnptrsToDll( enginefuncs_t* pengfuncsFrom
 #else	// _MSC_VER
 #ifdef __GNUC__
 // GCC can also work with this
-C_DLLEXPORT void __stdcall GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals )
+C_DLLEXPORT void __stdcall GiveFnptrsToDll(enginefuncs_t * pengfuncsFromEngine, globalvars_t * pGlobals)
 {
 #else	// __GNUC__
 // compiler not known
@@ -2370,47 +2370,47 @@ C_DLLEXPORT void __stdcall GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, 
 #endif // __linux__
 
 	// ** Function core <--
-	memcpy(&g_engfuncs, pengfuncsFromEngine, sizeof(enginefuncs_t));
-	gpGlobals = pGlobals;
-	// NOTE!  Have to call logging function _after_ copying into g_engfuncs, so
-	// that g_engfuncs.pfnAlertMessage() can be resolved properly, heh. :)
-	// UTIL_LogPrintf("[%s] dev: called: GiveFnptrsToDll\n", Plugin_info.logtag);
-	// --> ** Function core
+memcpy(&g_engfuncs, pengfuncsFromEngine, sizeof(enginefuncs_t));
+gpGlobals = pGlobals;
+// NOTE!  Have to call logging function _after_ copying into g_engfuncs, so
+// that g_engfuncs.pfnAlertMessage() can be resolved properly, heh. :)
+// UTIL_LogPrintf("[%s] dev: called: GiveFnptrsToDll\n", Plugin_info.logtag);
+// --> ** Function core
 
 #ifdef _MSC_VER
 	// Epilog
-	if (sizeof(int*) == 8)
-	{	// 64 bit
-		__asm
-		{
-			// Pop registers
-			pop	edi
-			pop	esi
-			pop	ebx
-			// Restore stack frame pointer
-			mov	esp, ebp
-			// Restore ebp
-			pop	ebp
-			// 2 * sizeof(int*) = 16 on 64 bit
-			ret 16
-		}
+if (sizeof(int*) == 8)
+{	// 64 bit
+	__asm
+	{
+		// Pop registers
+		pop	edi
+		pop	esi
+		pop	ebx
+		// Restore stack frame pointer
+		mov	esp, ebp
+		// Restore ebp
+		pop	ebp
+		// 2 * sizeof(int*) = 16 on 64 bit
+		ret 16
 	}
-	else
-	{	// 32 bit
-		__asm
-		{
-			// Pop registers
-			pop	edi
-			pop	esi
-			pop	ebx
-			// Restore stack frame pointer
-			mov	esp, ebp
-			// Restore ebp
-			pop	ebp
-			// 2 * sizeof(int*) = 8 on 32 bit
-			ret 8
-		}
+}
+else
+{	// 32 bit
+	__asm
+	{
+		// Pop registers
+		pop	edi
+		pop	esi
+		pop	ebx
+		// Restore stack frame pointer
+		mov	esp, ebp
+		// Restore ebp
+		pop	ebp
+		// 2 * sizeof(int*) = 8 on 32 bit
+		ret 8
 	}
+}
 #endif // #ifdef _MSC_VER
 }
 
@@ -2420,7 +2420,7 @@ C_DLLEXPORT void __stdcall GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, 
 
 // *** Globals ***
 // Module info
-static amxx_module_info_s g_ModuleInfo = 
+static amxx_module_info_s g_ModuleInfo =
 {
 	MODULE_NAME,
 	MODULE_AUTHOR,
@@ -2519,7 +2519,7 @@ PFN_REGISTERFUNCTIONEX		g_fn_RegisterFunctionEx;
 PFN_MESSAGE_BLOCK			g_fn_MessageBlock;
 
 // *** Exports ***
-C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo)
+C_DLLEXPORT int AMXX_Query(int* interfaceVersion, amxx_module_info_s * moduleInfo)
 {
 	// check parameters
 	if (!interfaceVersion || !moduleInfo)
@@ -2548,7 +2548,7 @@ C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo
 // request optional function
 #define REQFUNC_OPT(name, fptr, type) fptr = (type)reqFnptrFunc(name)
 
-C_DLLEXPORT int AMXX_CheckGame(const char *game)
+C_DLLEXPORT int AMXX_CheckGame(const char* game)
 {
 #ifdef FN_AMXX_CHECKGAME
 	return FN_AMXX_CHECKGAME(game);
@@ -2583,7 +2583,7 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("FindAmxScriptByName", g_fn_FindAmxScriptByName, PFN_FIND_AMXSCRIPT_BYNAME);
 	REQFUNC("LoadAmxScript", g_fn_LoadAmxScript, PFN_LOAD_AMXSCRIPT);
 	REQFUNC("UnloadAmxScript", g_fn_UnloadAmxScript, PFN_UNLOAD_AMXSCRIPT);
-    REQFUNC("GetAmxScriptName", g_fn_GetAmxScriptName, PFN_GET_AMXSCRIPTNAME);
+	REQFUNC("GetAmxScriptName", g_fn_GetAmxScriptName, PFN_GET_AMXSCRIPTNAME);
 
 	// String / mem in amx scripts support
 	REQFUNC("SetAmxString", g_fn_SetAmxString, PFN_SET_AMXSTRING);
@@ -2616,14 +2616,14 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("IsPlayerValid", g_fn_IsPlayerValid, PFN_IS_PLAYER_VALID);
 	REQFUNC("GetPlayerName", g_fn_GetPlayerName, PFN_GET_PLAYER_NAME);
 	REQFUNC("GetPlayerIP", g_fn_GetPlayerIP, PFN_GET_PLAYER_IP);
-	REQFUNC("IsPlayerInGame", g_fn_IsPlayerIngame, PFN_IS_PLAYER_INGAME);		
-	REQFUNC("IsPlayerBot", g_fn_IsPlayerBot, PFN_IS_PLAYER_BOT);	
+	REQFUNC("IsPlayerInGame", g_fn_IsPlayerIngame, PFN_IS_PLAYER_INGAME);
+	REQFUNC("IsPlayerBot", g_fn_IsPlayerBot, PFN_IS_PLAYER_BOT);
 	REQFUNC("IsPlayerAuthorized", g_fn_IsPlayerAuthorized, PFN_IS_PLAYER_AUTHORIZED);
 	REQFUNC("GetPlayerTime", g_fn_GetPlayerTime, PFN_GET_PLAYER_TIME);
 	REQFUNC("GetPlayerPlayTime", g_fn_GetPlayerPlayTime, PFN_GET_PLAYER_PLAYTIME);
 	REQFUNC("GetPlayerCurweapon", g_fn_GetPlayerCurweapon, PFN_GET_PLAYER_CURWEAPON);
 	REQFUNC("GetPlayerTeamID", g_fn_GetPlayerTeamID, PFN_GET_PLAYER_TEAMID);
-	REQFUNC("GetPlayerTeam",g_fn_GetPlayerTeam, PFN_GET_PLAYER_TEAM);
+	REQFUNC("GetPlayerTeam", g_fn_GetPlayerTeam, PFN_GET_PLAYER_TEAM);
 	REQFUNC("GetPlayerDeaths", g_fn_GetPlayerDeaths, PFN_GET_PLAYER_DEATHS);
 	REQFUNC("GetPlayerMenu", g_fn_GetPlayerMenu, PFN_GET_PLAYER_MENU);
 	REQFUNC("GetPlayerKeys", g_fn_GetPlayerKeys, PFN_GET_PLAYER_KEYS);
@@ -2700,7 +2700,7 @@ C_DLLEXPORT void AMXX_PluginsUnloading()
 }
 
 // Advanced MF functions
-void MF_Log(const char *fmt, ...)
+void MF_Log(const char* fmt, ...)
 {
 	char msg[3072];
 	va_list arglst;
@@ -2711,7 +2711,7 @@ void MF_Log(const char *fmt, ...)
 	g_fn_Log("[%s] %s", MODULE_LOGTAG, msg);
 }
 
-void MF_LogError(AMX *amx, int err, const char *fmt, ...)
+void MF_LogError(AMX * amx, int err, const char* fmt, ...)
 {
 	char msg[3072];
 	va_list arglst;
@@ -2808,21 +2808,21 @@ void ValidateMacros_DontCallThis_Smiley()
 #undef realloc
 #undef free
 
-const		unsigned int	m_alloc_unknown        = 0;
-const		unsigned int	m_alloc_new            = 1;
-const		unsigned int	m_alloc_new_array      = 2;
-const		unsigned int	m_alloc_malloc         = 3;
-const		unsigned int	m_alloc_calloc         = 4;
-const		unsigned int	m_alloc_realloc        = 5;
-const		unsigned int	m_alloc_delete         = 6;
-const		unsigned int	m_alloc_delete_array   = 7;
-const		unsigned int	m_alloc_free           = 8;
+const		unsigned int	m_alloc_unknown = 0;
+const		unsigned int	m_alloc_new = 1;
+const		unsigned int	m_alloc_new_array = 2;
+const		unsigned int	m_alloc_malloc = 3;
+const		unsigned int	m_alloc_calloc = 4;
+const		unsigned int	m_alloc_realloc = 5;
+const		unsigned int	m_alloc_delete = 6;
+const		unsigned int	m_alloc_delete_array = 7;
+const		unsigned int	m_alloc_free = 8;
 
-const char *g_Mem_CurrentFilename = "??";
+const char* g_Mem_CurrentFilename = "??";
 int g_Mem_CurrentLine = 0;
-const char *g_Mem_CurrentFunc = "??";
+const char* g_Mem_CurrentFunc = "??";
 
-const char *Mem_MakeSourceFile(const char *sourceFile)
+const char* Mem_MakeSourceFile(const char* sourceFile)
 {
 	static char buffer[512];
 	static size_t pos = 0;
@@ -2836,7 +2836,7 @@ const char *Mem_MakeSourceFile(const char *sourceFile)
 	}
 
 	// convert from absolute path to [modulename]filename
-	const char *ptr = strrchr(sourceFile, '\\');
+	const char* ptr = strrchr(sourceFile, '\\');
 	if (ptr)
 		ptr++;
 	else
@@ -2851,7 +2851,7 @@ const char *Mem_MakeSourceFile(const char *sourceFile)
 	return buffer;
 }
 
-void Mem_SetOwner(const char *filename, int line, const char *function)
+void Mem_SetOwner(const char* filename, int line, const char* function)
 {
 	g_Mem_CurrentFilename = filename;
 	g_Mem_CurrentLine = line;
@@ -2864,8 +2864,8 @@ void Mem_ResetGlobals()
 }
 
 // raw (re/de)allocators
-void *	Mem_Allocator(const char *sourceFile, const unsigned int sourceLine, const char *sourceFunc,
-			     const unsigned int allocationType, const size_t reportedSize)
+void* Mem_Allocator(const char* sourceFile, const unsigned int sourceLine, const char* sourceFunc,
+	const unsigned int allocationType, const size_t reportedSize)
 {
 	if (g_fn_Allocator)
 		return g_fn_Allocator(Mem_MakeSourceFile(sourceFile), sourceLine, sourceFunc, allocationType, reportedSize);
@@ -2873,8 +2873,8 @@ void *	Mem_Allocator(const char *sourceFile, const unsigned int sourceLine, cons
 		return malloc(reportedSize);
 }
 
-void *	Mem_Reallocator(const char *sourceFile, const unsigned int sourceLine, const char *sourceFunc,
-			       const unsigned int reallocationType, const size_t reportedSize, void *reportedAddress)
+void* Mem_Reallocator(const char* sourceFile, const unsigned int sourceLine, const char* sourceFunc,
+	const unsigned int reallocationType, const size_t reportedSize, void* reportedAddress)
 {
 	if (g_fn_Reallocator)
 		return g_fn_Reallocator(Mem_MakeSourceFile(sourceFile), sourceLine, sourceFunc, reallocationType, reportedSize, reportedAddress);
@@ -2882,8 +2882,8 @@ void *	Mem_Reallocator(const char *sourceFile, const unsigned int sourceLine, co
 		return realloc(reportedAddress, reportedSize);
 }
 
-void	Mem_Deallocator(const char *sourceFile, const unsigned int sourceLine, const char *sourceFunc,
-			      const unsigned int deallocationType, void *reportedAddress)
+void	Mem_Deallocator(const char* sourceFile, const unsigned int sourceLine, const char* sourceFunc,
+	const unsigned int deallocationType, void* reportedAddress)
 {
 	// If you you get user breakpoint here, something failed :)
 	//  - invalid pointer
@@ -2902,11 +2902,11 @@ void	Mem_Deallocator(const char *sourceFile, const unsigned int sourceLine, cons
 }
 
 // new and delete operators
-void	*operator new(size_t reportedSize)
+void* operator new(size_t reportedSize)
 {
 	if (reportedSize == 0)
 		reportedSize = 1;
-	void *ptr = Mem_Allocator(g_Mem_CurrentFilename, g_Mem_CurrentLine, g_Mem_CurrentFunc, m_alloc_new, reportedSize);
+	void* ptr = Mem_Allocator(g_Mem_CurrentFilename, g_Mem_CurrentLine, g_Mem_CurrentFunc, m_alloc_new, reportedSize);
 	// :TODO: Handler support ?
 	if (ptr)
 		return ptr;
@@ -2915,11 +2915,11 @@ void	*operator new(size_t reportedSize)
 	return NULL;
 }
 
-void	*operator new[](size_t reportedSize)
+void* operator new[](size_t reportedSize)
 {
 	if (reportedSize == 0)
 		reportedSize = 1;
-	void *ptr = Mem_Allocator(g_Mem_CurrentFilename, g_Mem_CurrentLine, g_Mem_CurrentFunc, m_alloc_new_array, reportedSize);
+	void* ptr = Mem_Allocator(g_Mem_CurrentFilename, g_Mem_CurrentLine, g_Mem_CurrentFunc, m_alloc_new_array, reportedSize);
 	// :TODO: Handler support ?
 	if (ptr)
 		return ptr;
@@ -2929,11 +2929,11 @@ void	*operator new[](size_t reportedSize)
 }
 
 // Microsoft memory tracking operators
-void	*operator new(size_t reportedSize, const char *sourceFile, int sourceLine)
+void* operator new(size_t reportedSize, const char* sourceFile, int sourceLine)
 {
 	if (reportedSize == 0)
 		reportedSize = 1;
-	void *ptr = Mem_Allocator(g_Mem_CurrentFilename, g_Mem_CurrentLine, g_Mem_CurrentFunc, m_alloc_new, reportedSize);
+	void* ptr = Mem_Allocator(g_Mem_CurrentFilename, g_Mem_CurrentLine, g_Mem_CurrentFunc, m_alloc_new, reportedSize);
 	// :TODO: Handler support ?
 	if (ptr)
 		return ptr;
@@ -2941,11 +2941,11 @@ void	*operator new(size_t reportedSize, const char *sourceFile, int sourceLine)
 	// allocation failed
 	return NULL;
 }
-void	*operator new[](size_t reportedSize, const char *sourceFile, int sourceLine)
+void* operator new[](size_t reportedSize, const char* sourceFile, int sourceLine)
 {
 	if (reportedSize == 0)
 		reportedSize = 1;
-	void *ptr = Mem_Allocator(g_Mem_CurrentFilename, g_Mem_CurrentLine, g_Mem_CurrentFunc, m_alloc_new_array, reportedSize);
+	void* ptr = Mem_Allocator(g_Mem_CurrentFilename, g_Mem_CurrentLine, g_Mem_CurrentFunc, m_alloc_new_array, reportedSize);
 	// :TODO: Handler support ?
 	if (ptr)
 		return ptr;
@@ -2954,7 +2954,7 @@ void	*operator new[](size_t reportedSize, const char *sourceFile, int sourceLine
 	return NULL;
 }
 
-void	operator delete(void *reportedAddress)
+void	operator delete(void* reportedAddress)
 {
 	if (!reportedAddress)
 		return;
@@ -2962,7 +2962,7 @@ void	operator delete(void *reportedAddress)
 	Mem_Deallocator(g_Mem_CurrentFilename, g_Mem_CurrentLine, g_Mem_CurrentFunc, m_alloc_delete, reportedAddress);
 }
 
-void	operator delete[](void *reportedAddress)
+void	operator delete[](void* reportedAddress)
 {
 	if (!reportedAddress)
 		return;
@@ -2973,21 +2973,21 @@ void	operator delete[](void *reportedAddress)
 #else
 
 #if !defined NO_ALLOC_OVERRIDES && !defined MEMORY_TEST && !defined WIN32
-void * operator new(size_t size) {
-	return(calloc(1, size)); 
+void* operator new(size_t size) {
+	return(calloc(1, size));
 }
 
-void * operator new[](size_t size) {
-	return(calloc(1, size)); 
+void* operator new[](size_t size) {
+	return(calloc(1, size));
 }
 
-void operator delete(void * ptr) {
-	if(ptr)
+void operator delete(void* ptr) {
+	if (ptr)
 		free(ptr);
 }
 
-void operator delete[](void * ptr) {
-	if(ptr)
+void operator delete[](void* ptr) {
+	if (ptr)
 		free(ptr);
 }
 #endif
@@ -3006,9 +3006,9 @@ void operator delete[](void * ptr) {
 /***
 *
 *	Copyright (c) 1999, 2000 Valve LLC. All rights reserved.
-*	
-*	This product contains software technology licensed from Id 
-*	Software, Inc. ("Id Technology").  Id Technology (c) 1996 Id Software, Inc. 
+*
+*	This product contains software technology licensed from Id
+*	Software, Inc. ("Id Technology").  Id Technology (c) 1996 Id Software, Inc.
 *	All Rights Reserved.
 *
 *   Use, distribution, and modification of this source code and/or resulting
@@ -3033,105 +3033,105 @@ void operator delete[](void * ptr) {
 
 #include "osdep.h"			// win32 vsnprintf, etc
 
-char* UTIL_VarArgs( char *format, ... )
+char* UTIL_VarArgs(char* format, ...)
 {
 	va_list		argptr;
 	static char		string[1024];
-	
-	va_start (argptr, format);
-	vsnprintf (string, sizeof(string), format, argptr);
-	va_end (argptr);
+
+	va_start(argptr, format);
+	vsnprintf(string, sizeof(string), format, argptr);
+	va_end(argptr);
 
 	return string;
 }
-	
+
 
 //=========================================================
 // UTIL_LogPrintf - Prints a logged message to console.
 // Preceded by LOG: ( timestamp ) < message >
 //=========================================================
-void UTIL_LogPrintf( const char *fmt, ... )
+void UTIL_LogPrintf(const char* fmt, ...)
 {
 	va_list			argptr;
 	static char		string[1024];
-	
-	va_start ( argptr, fmt );
-	vsnprintf ( string, sizeof(string), fmt, argptr );
-	va_end   ( argptr );
+
+	va_start(argptr, fmt);
+	vsnprintf(string, sizeof(string), fmt, argptr);
+	va_end(argptr);
 
 	// Print to server console
-	ALERT( at_logged, "%s", string );
+	ALERT(at_logged, "%s", string);
 }
 
 
-void UTIL_HudMessage(CBaseEntity *pEntity, const hudtextparms_t &textparms, 
-		const char *pMessage)
+void UTIL_HudMessage(CBaseEntity * pEntity, const hudtextparms_t & textparms,
+	const char* pMessage)
 {
-	if ( !pEntity )
+	if (!pEntity)
 		return;
 
-	MESSAGE_BEGIN( MSG_ONE, SVC_TEMPENTITY, NULL, ENT(pEntity->pev) );
-		WRITE_BYTE( TE_TEXTMESSAGE );
-		WRITE_BYTE( textparms.channel & 0xFF );
+	MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, NULL, ENT(pEntity->pev));
+	WRITE_BYTE(TE_TEXTMESSAGE);
+	WRITE_BYTE(textparms.channel & 0xFF);
 
-		WRITE_SHORT( FixedSigned16( textparms.x, 1<<13 ) );
-		WRITE_SHORT( FixedSigned16( textparms.y, 1<<13 ) );
-		WRITE_BYTE( textparms.effect );
+	WRITE_SHORT(FixedSigned16(textparms.x, 1 << 13));
+	WRITE_SHORT(FixedSigned16(textparms.y, 1 << 13));
+	WRITE_BYTE(textparms.effect);
 
-		WRITE_BYTE( textparms.r1 );
-		WRITE_BYTE( textparms.g1 );
-		WRITE_BYTE( textparms.b1 );
-		WRITE_BYTE( textparms.a1 );
+	WRITE_BYTE(textparms.r1);
+	WRITE_BYTE(textparms.g1);
+	WRITE_BYTE(textparms.b1);
+	WRITE_BYTE(textparms.a1);
 
-		WRITE_BYTE( textparms.r2 );
-		WRITE_BYTE( textparms.g2 );
-		WRITE_BYTE( textparms.b2 );
-		WRITE_BYTE( textparms.a2 );
+	WRITE_BYTE(textparms.r2);
+	WRITE_BYTE(textparms.g2);
+	WRITE_BYTE(textparms.b2);
+	WRITE_BYTE(textparms.a2);
 
-		WRITE_SHORT( FixedUnsigned16( textparms.fadeinTime, 1<<8 ) );
-		WRITE_SHORT( FixedUnsigned16( textparms.fadeoutTime, 1<<8 ) );
-		WRITE_SHORT( FixedUnsigned16( textparms.holdTime, 1<<8 ) );
+	WRITE_SHORT(FixedUnsigned16(textparms.fadeinTime, 1 << 8));
+	WRITE_SHORT(FixedUnsigned16(textparms.fadeoutTime, 1 << 8));
+	WRITE_SHORT(FixedUnsigned16(textparms.holdTime, 1 << 8));
 
-		if ( textparms.effect == 2 )
-			WRITE_SHORT( FixedUnsigned16( textparms.fxTime, 1<<8 ) );
-		
-		if ( strlen( pMessage ) < 512 )
-		{
-			WRITE_STRING( pMessage );
-		}
-		else
-		{
-			char tmp[512];
-			strncpy( tmp, pMessage, 511 );
-			tmp[511] = 0;
-			WRITE_STRING( tmp );
-		}
+	if (textparms.effect == 2)
+		WRITE_SHORT(FixedUnsigned16(textparms.fxTime, 1 << 8));
+
+	if (strlen(pMessage) < 512)
+	{
+		WRITE_STRING(pMessage);
+	}
+	else
+	{
+		char tmp[512];
+		strncpy(tmp, pMessage, 511);
+		tmp[511] = 0;
+		WRITE_STRING(tmp);
+	}
 	MESSAGE_END();
 }
 
-short FixedSigned16( float value, float scale )
+short FixedSigned16(float value, float scale)
 {
 	int output;
 
-	output = (int) (value * scale);
+	output = (int)(value * scale);
 
-	if ( output > 32767 )
+	if (output > 32767)
 		output = 32767;
 
-	if ( output < -32768 )
+	if (output < -32768)
 		output = -32768;
 
 	return (short)output;
 }
 
-unsigned short FixedUnsigned16( float value, float scale )
+unsigned short FixedUnsigned16(float value, float scale)
 {
 	int output;
 
-	output = (int) (value * scale);
-	if ( output < 0 )
+	output = (int)(value * scale);
+	if (output < 0)
 		output = 0;
-	if ( output > 0xFFFF )
+	if (output > 0xFFFF)
 		output = 0xFFFF;
 
 	return (unsigned short)output;
