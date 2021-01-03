@@ -46,7 +46,7 @@ void load()
 }
 
 
-void predict(double[100][8] p)      // the slot signal
+void predict(double** p)      // the slot signal
 {
 
 	//CNNs                       CNNPrediction

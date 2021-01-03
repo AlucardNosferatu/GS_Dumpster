@@ -19,7 +19,6 @@
 
  // AMX Headers
 #include "amxxmodule.h"
-#include "cnnmain.hpp"
 
 
 // native socket_open(_hostname[], _port, _protocol = SOCKET_TCP, &_error);
