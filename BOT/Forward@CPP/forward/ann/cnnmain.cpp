@@ -8,51 +8,35 @@ Description:矩阵类
 
 #include "cnnmain.hpp"
 
-void run()
+vector<int> run()
 {
 	Tensor tensor = Tensor(2, 4, 4);
 	for (int i = 0; i < 2; i++) {
 		Matrix mat = Matrix(4, 4, (i + 1));
-		tensor.addLayer(mat);
 	}
 
 	Filter filter = Filter(3, 2, 3, 3);
 	vector<double> bias(3);
 	vector<int>::size_type ix = 0;
-	for (ix; ix < 10; ++ix)
+	for (ix; ix < bias.size(); ++ix)
 	{
-
 		bias[ix] = 2.0; //下标操作  
-
 	}
-
 	Tensor tensor1 = tensor.forwardConv(filter, 1, 1, 1, 1, bias);
 	tensor1.getLayer(0).setValue(0, 0, -22.0);
-
-	cout << "----------------------" << endl;
-	tensor1.showTensor();
-	//	Tensor maxTensor = tensor1.forwardMaxpool(2,2);
-	//	maxTensor.getLayer(0).showMatrix();
-	//	maxTensor.getLayer(1).showMatrix();
-	//	maxTensor.getLayer(2).showMatrix();
-	cout << "----------------------" << endl;
 	tensor1.forwardReLu();
-	tensor1.showTensor();
-	tensor1.forwardFlat().showMatrix();
 
 	Matrix weight = Matrix(48, 10, 1);
 	weight.setValue(1, 1, 0.2);
 	weight.setValue(5, 5, 33);
 	Matrix out = Matrix::multiply(tensor1.forwardFlat(), weight);
-	cout << "=====================" << endl;
 	out.dotMatCoefficient(0.001);
-	out.showMatrix();
 	vector<int> outClass = out.softmax();
-	out.showMatrix();
 
 	for (size_t i = 0; i < outClass.size(); i++) {
 		cout << "sample " << i << " pred:" << outClass[i] << endl;
 	}
+	return outClass;
 }
 
 void readParams()

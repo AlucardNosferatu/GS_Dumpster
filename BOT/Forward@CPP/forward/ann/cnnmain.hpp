@@ -22,7 +22,7 @@
 using namespace std;
 
 
-void run();
+vector<int> run();
 
 void readParams();
 

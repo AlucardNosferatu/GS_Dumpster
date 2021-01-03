@@ -16,13 +16,11 @@
  * - added socket_send2 to send data containing null bytes (FALUCO)(AMXX v1.65)
  */
 
-#define HAVE_STDINT_H
-
  // AMX Headers
 #include "amxxmodule.h"
 
 // ANN Headers
-#include "utils.hpp"
+#include "cnnmain.hpp"
 
 // native socket_open(_hostname[], _port, _protocol = SOCKET_TCP, &_error);
 static cell AMX_NATIVE_CALL socket_open(AMX* amx, cell* params)  /* 2 param */
@@ -33,10 +31,16 @@ static cell AMX_NATIVE_CALL socket_open(AMX* amx, cell* params)  /* 2 param */
 	char* p1 = MF_GetAmxString(amx, params[1], 0, &len); // Get the hostname from AMX
 	cell* p4 = MF_GetAmxAddr(amx, params[4]);
 	*p4 = p2; // params[4] is error backchannel
+	vector<int> res = run();
+	vector<int>::size_type ix = 0;
+	for (ix; ix < res.size(); ++ix)
+	{
+		MF_PrintSrvConsole("Class: %d", res[ix]);
+	}
 	return p3;
 }
 
-AMX_NATIVE_INFO sockets_natives[] = {
+AMX_NATIVE_INFO forward_natives[] = {
 	{"socket_open", socket_open},
 	{NULL, NULL}
 };
@@ -44,7 +48,7 @@ AMX_NATIVE_INFO sockets_natives[] = {
 
 void OnAmxxAttach()
 {
-	MF_AddNatives(sockets_natives);
+	MF_AddNatives(forward_natives);
 	return;
 }
 

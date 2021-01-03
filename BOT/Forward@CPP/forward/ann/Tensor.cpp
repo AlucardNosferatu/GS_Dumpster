@@ -80,7 +80,9 @@ Tensor Tensor::forwardConv(const Filter& filter, int stride_row, int stride_col,
 
 		//get per matrix -> Tensor(1,row,col)
 		for (int d = 0; d < filterDepth; d++) {
-			outMat.sumMat(this->layers[d].singleMatConv(filter.getFilter(f).getLayer(d), stride_row, stride_col, pad_row, pad_col));
+			Matrix FilterLayer = filter.getFilter(f).getLayer(d);
+			Matrix M = this->layers[d].singleMatConv(FilterLayer, stride_row, stride_col, pad_row, pad_col);
+			outMat.sumMat(M);
 		}
 		//TODO load bias
 		Matrix biasMat = Matrix(outRow, outCol, bias[f]);
