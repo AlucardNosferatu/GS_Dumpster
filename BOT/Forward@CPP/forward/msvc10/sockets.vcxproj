@@ -55,7 +55,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\;..\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;..\sdk;..\tinyxml;..\ann;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SOCKETS_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -97,6 +97,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\ann\cnnmain.cpp" />
+    <ClCompile Include="..\ann\Filter.cpp" />
+    <ClCompile Include="..\ann\mainwindow.cpp" />
+    <ClCompile Include="..\ann\Matrix.cpp" />
+    <ClCompile Include="..\ann\Tensor.cpp" />
+    <ClCompile Include="..\ann\utils.cpp" />
     <ClCompile Include="..\forward.cpp" />
     <ClCompile Include="..\sdk\amxxmodule.cpp" />
   </ItemGroup>

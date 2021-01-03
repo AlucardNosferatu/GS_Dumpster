@@ -6,6 +6,7 @@
  * Codebase from Ivan, -g-s-ivan@web.de (AMX 0.9.3)
  * Modification by Olaf Reusch, kenterfie@hlsw.de (AMXX 0.16, AMX 0.96)
  * Modification by David Anderson, dvander@tcwonline.org (AMXx 0.20)
+ * Modification by Scrooge2029, 1641367382@qq.com (AMXx 1.82)
  *
  * Bugs/Fixes
  *
@@ -15,19 +16,10 @@
  * - added socket_send2 to send data containing null bytes (FALUCO)(AMXX v1.65)
  */
 
-#include <stdlib.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <string.h>
 
- /* Windows */
-#include <winsock.h>
-#include <io.h>
-#define socklen_t int
-
-
-// AMX Headers
+ // AMX Headers
 #include "amxxmodule.h"
+#include "cnnmain.hpp"
 
 
 // native socket_open(_hostname[], _port, _protocol = SOCKET_TCP, &_error);
