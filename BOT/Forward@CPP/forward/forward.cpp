@@ -35,7 +35,7 @@ static cell AMX_NATIVE_CALL socket_open(AMX* amx, cell* params)  /* 2 param */
 	vector<int>::size_type ix = 0;
 	for (ix; ix < res.size(); ++ix)
 	{
-		MF_PrintSrvConsole("Class: %d", res[ix]);
+		MF_PrintSrvConsole("Class: %d\n", res[ix]);
 	}
 	return p3;
 }

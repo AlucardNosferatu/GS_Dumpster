@@ -13,6 +13,7 @@ vector<int> run()
 	Tensor tensor = Tensor(2, 4, 4);
 	for (int i = 0; i < 2; i++) {
 		Matrix mat = Matrix(4, 4, (i + 1));
+		tensor.addLayer(mat);
 	}
 
 	Filter filter = Filter(3, 2, 3, 3);
