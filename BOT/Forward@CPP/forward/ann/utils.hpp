@@ -11,7 +11,7 @@ Description:工具
 #include "sEMG.hpp"
 #include "Matrix.hpp"
 #include "Filter.hpp"
-#include "tinyxml/tinyxml.h"
+#include "tinyxml.h"
 
 int getFileRowCount(string file);
 
@@ -21,16 +21,16 @@ vector<string> split(string srcStr, const string& delim);
 
 Matrix loadEMGData(string file);
 
-Filter parseFilterWeight(const char * path, int fsize, int depth, int row, int col);
+Filter parseFilterWeight(const char* path, int fsize, int depth, int row, int col);
 
 double strToDouble(string str);
 
 string intToString(int num);
 
-Matrix parseFullConnWeight(const char * path, int row, int col);
+Matrix parseFullConnWeight(const char* path, int row, int col);
 
-vector<double> parseBias(const char * path, int num);
+vector<double> parseBias(const char* path, int num);
 
-void emgDataToMat(Matrix & res, string path);
+void emgDataToMat(Matrix& res, string path);
 
 #endif /* UTILS_HPP_ */

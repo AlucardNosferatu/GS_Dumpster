@@ -5,35 +5,8 @@ Date:2019-05-30
 Description:矩阵类
 **************************************************/
 
-//#include <iostream>
-//#include <fstream>
-//#include <string>
-//#include <vector>
-//#include <regex>
-//#include <random>
-//#include <time.h>
-//#include <ctime>
-
-//#include "Matrix.hpp"
-//#include "Tensor.hpp"
-//#include "Filter.hpp"
-//#include "utils.hpp"
-
-//#include "tinyxml/tinyxml.h"
-
-//#define TIXML_USE_STL
-
-//using namespace std;
 
 #include "cnnmain.hpp"
-
-double strToDouble(string str)
-{
-	double result;
-	istringstream is(str);
-	is >> result;
-	return result;
-}
 
 void run()
 {
@@ -45,8 +18,16 @@ void run()
 
 
 	Filter filter = Filter(3, 2, 3, 3);
+	vector<double> bias(3);
+	vector<int>::size_type ix = 0;
+	for (ix; ix < 10; ++ix)
+	{
 
-	Tensor tensor1 = tensor.forwardConv(filter, 1, 1, 1, 1);
+		bias[ix] = 2.0; //下标操作  
+
+	}
+
+	Tensor tensor1 = tensor.forwardConv(filter, 1, 1, 1, 1, bias);
 	tensor1.getLayer(0).setValue(0, 0, -22.0);
 
 	cout << "----------------------" << endl;

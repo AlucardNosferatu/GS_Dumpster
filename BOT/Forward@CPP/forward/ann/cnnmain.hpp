@@ -1,4 +1,4 @@
-#ifndef CNNMAIN_HPP
+﻿#ifndef CNNMAIN_HPP
 #define CNNMAIN_HPP
 
 #include <iostream>
@@ -15,20 +15,18 @@
 #include "Filter.hpp"
 #include "utils.hpp"
 
-#include "tinyxml/tinyxml.h"
+#include "tinyxml.h"
 
 #define TIXML_USE_STL
 
 using namespace std;
 
 
-double strToDouble(string str);
-
 void run();
 
 
 void readParams();
 
-int cnnmain() ;
+int cnnmain();
 
 #endif // CNNMAIN_HPP
