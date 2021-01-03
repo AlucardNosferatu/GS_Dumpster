@@ -116,7 +116,7 @@ Others:			注意：matA的shape是不等于matB的shape，不是点乘
 Matrix Matrix::multiply(const Matrix& matA, const Matrix& matB)
 {
 	if (matA.col != matB.row) {
-		cout << "矩阵A列不等于矩阵B行" << endl;
+		cout << "矩阵A列不等于矩阵B行." << endl;
 		//abort();
 	}
 	Matrix outMat = Matrix(matA.row, matB.col);
@@ -223,7 +223,7 @@ void Matrix::sumMat(const Matrix& mat)
 	//    cout << col << "," << mat.col << endl;
 	if (this->row != mat.row || this->col != mat.col) {
 		cout << "Matrix::sumMat(const Matrix & mat)" << endl;
-		cout << "矩阵size不匹配" << endl;
+		cout << "矩阵size不匹配." << endl;
 		cout << row << "," << mat.row << endl;
 		cout << col << "," << mat.col << endl;
 	}
@@ -250,7 +250,7 @@ void Matrix::forwardRelu()
 Matrix Matrix::forwardFullConnect(int inputSize, int outputSize, const Matrix& wMat, const vector<double>& bias)
 {
 	if (inputSize != wMat.getRow() || outputSize != wMat.getCol()) {
-		cout << "forwardFullConnect() 连接参数不对！" << endl;
+		cout << "forwardFullConnect() 连接参数不对！." << endl;
 	}
 	Matrix outMat = Matrix(1, outputSize);
 	outMat = multiply(Matrix(p, row, col), wMat);
@@ -311,7 +311,7 @@ void Matrix::batchNormal(const vector<double>& weight, const vector<double>& bai
 		|| this->getCol() != bais.size()
 		|| this->getCol() != mean.size()
 		|| this->getCol() != var.size()) {
-		cout << "输入的bn参数数量不匹配" << endl;
+		cout << "输入的bn参数数量不匹配." << endl;
 		exit(0);
 	}
 	for (int i = 0; i < this->getCol(); i++) {
@@ -324,35 +324,35 @@ string Matrix::printAction(int gst)
 {
 	string out = "";
 	switch (gst) {
-	case 0: cout << "放松";
-		out = "放松";
+	case 0: cout << "放松.";
+		out = "放松.";
 		break;
-	case 1: cout << "握拳";
-		out = "握拳";
+	case 1: cout << "握拳.";
+		out = "握拳.";
 		break;
-	case 2: cout << "上挥";
-		out = "上挥";
+	case 2: cout << "上挥.";
+		out = "上挥.";
 		break;
-	case 3: cout << "下挥";
-		out = "下挥";
+	case 3: cout << "下挥.";
+		out = "下挥.";
 		break;
-	case 4: cout << "左挥";
-		out = "左挥";
+	case 4: cout << "左挥.";
+		out = "左挥.";
 		break;
-	case 5: cout << "右挥";
-		out = "右挥";
+	case 5: cout << "右挥.";
+		out = "右挥.";
 		break;
-	case 6: cout << "一";
-		out = "一";
+	case 6: cout << "一.";
+		out = "一.";
 		break;
-	case 7: cout << "二";
-		out = "二";
+	case 7: cout << "二.";
+		out = "二.";
 		break;
-	case 8: cout << "五";
-		out = "五";
+	case 8: cout << "五.";
+		out = "五.";
 		break;
-	case 9: cout << "六";
-		out = "六";
+	case 9: cout << "六.";
+		out = "六.";
 		break;
 	}
 	return out;
