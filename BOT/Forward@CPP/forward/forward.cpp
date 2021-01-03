@@ -25,8 +25,13 @@
 // INI Reader Headers
 #include "ReadWriteini.hpp"
 
+
+vector<void*> model;
+vector<string> layer_types;
+
 static cell AMX_NATIVE_CALL load_model(AMX* amx, cell* params)  /* 1 param */
 {
+	model.clear();
 	int len;
 	const char* ini_path = MF_GetAmxString(amx, params[1], 0, &len);
 	rwini::ReadWriteini* rw = new rwini::ReadWriteini(ini_path);
@@ -34,24 +39,98 @@ static cell AMX_NATIVE_CALL load_model(AMX* amx, cell* params)  /* 1 param */
 	const int layer_count = stoi(layer_count_str);
 	//layer_type:
 	//Conv Pool Flat Dense BN Softmax
+
 	//Need Nothing:
 	//Flat Softmax
+
 	//Need Shape:
-	//Conv Pool Dense 
+	//Conv Dense Pool
+
+	//Need Weight:
+	//Conv Dense BN
+
+	//Need More Weight:
+	//BN
+
+
 	for (int i = 0; i < layer_count; i++)
 	{
 		char* layer_key = "";
 		sprintf(layer_key, "layer_%d", i);
 		string layer_type = rw->FindValue(layer_key, "layer_type");
-		if (!layer_type._Equal("Flat") && !layer_type._Equal("Softmax"))
-		{
-			string layer_shape = rw->FindValue(layer_key, "layer_shape");
-			string weight_path = rw->FindValue(layer_key, "weight_path");
-			string bias_path = rw->FindValue(layer_key, "bias_path");
-			string run_means_path = rw->FindValue(layer_key, "run_means_path");
-		}
-		else {
+		layer_types.push_back(layer_type);
 
+		if (!layer_type._Equal("Flat") && !layer_type._Equal("Softmax"))//Conv Pool Dense BN
+		{
+			if (!layer_type._Equal("BN"))//Conv Pool Dense
+			{
+				string layer_shape = rw->FindValue(layer_key, "layer_shape");
+				vector<string> value_str = split(layer_shape, "#");
+				vector<int> value;
+				vector<int>::size_type ix = 0;
+				for (ix; ix < value_str.size(); ++ix)
+				{
+					value.push_back(stoi(value_str[ix]));
+				}
+
+				if (!layer_type._Equal("Pool"))//Conv & Dense
+				{
+					vector<void*> shape_and_weight;
+					shape_and_weight.push_back((void*)&value);
+
+					string weight_path = rw->FindValue(layer_key, "weight_path");
+					string bias_path = rw->FindValue(layer_key, "bias_path");
+
+					vector<vector<double>> layer_weights;
+					char* temp = "";
+
+					strcpy(temp, weight_path.c_str());
+					vector<double> bn_weight = parseBias(temp, 256);
+					layer_weights.push_back(bn_weight);
+
+					strcpy(temp, bias_path.c_str());
+					vector<double> bn_bias = parseBias(temp, 256);
+					layer_weights.push_back(bn_bias);
+
+
+				}
+				else//Pool
+				{
+					model.push_back((void*)&value);
+				}
+			}
+			else//BN
+			{
+				string weight_path = rw->FindValue(layer_key, "weight_path");
+				string bias_path = rw->FindValue(layer_key, "bias_path");
+				string run_mean_path = rw->FindValue(layer_key, "run_mean_path");
+				string run_var_path = rw->FindValue(layer_key, "run_var_path");
+
+				vector<vector<double>> bn;
+				char* temp = "";
+
+				strcpy(temp, weight_path.c_str());
+				vector<double> bn_weight = parseBias(temp, 256);
+				bn.push_back(bn_weight);
+
+				strcpy(temp, bias_path.c_str());
+				vector<double> bn_bias = parseBias(temp, 256);
+				bn.push_back(bn_bias);
+
+				strcpy(temp, run_mean_path.c_str());
+				vector<double> bn_running_mean = parseBias(temp, 256);
+				bn.push_back(bn_running_mean);
+
+				strcpy(temp, run_var_path.c_str());
+				vector<double> bn_running_var = parseBias(temp, 256);
+				bn.push_back(bn_running_var);
+
+				model.push_back((void*)&bn);
+			}
+		}
+		else//Flat & Softmax 
+		{
+			model.push_back((void*)&layer_type);
 		}
 	}
 	return 0;
@@ -59,7 +138,6 @@ static cell AMX_NATIVE_CALL load_model(AMX* amx, cell* params)  /* 1 param */
 
 static cell AMX_NATIVE_CALL forward_model(AMX* amx, cell* params)  /* 2 param */
 {
-
 	return 0;
 }
 

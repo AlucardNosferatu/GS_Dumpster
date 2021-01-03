@@ -12,7 +12,7 @@ vector<int> run()
 {
 	Tensor tensor = Tensor(2, 4, 4);
 	for (int i = 0; i < 2; i++) {
-		Matrix mat = Matrix(4, 4, (i + 1));
+		const Matrix mat = Matrix(4, 4, (i + 1));
 		tensor.addLayer(mat);
 	}
 
@@ -43,17 +43,17 @@ vector<int> run()
 void readParams()
 {
 	TiXmlDocument mydoc("conv1_0_weight_1.xml");//xml文档对象
-	bool loadOk = mydoc.LoadFile();//加载文档
+	const bool loadOk = mydoc.LoadFile();//加载文档
 	if (!loadOk)
 	{
 		cout << "could not load the test file.Error:" << mydoc.ErrorDesc() << endl;
 		exit(1);
 	}
 
-	int fsize = 128;
-	int depth = 64;
-	int row = 3;
-	int col = 1;
+	const int fsize = 128;
+	const int depth = 64;
+	const int row = 3;
+	const int col = 1;
 
 	Filter filter = Filter(fsize, depth, row, col);
 	TiXmlElement* rootElem = mydoc.RootElement();	// filter
