@@ -124,7 +124,6 @@ public:
 		string layer_shape = rw->FindValue(layer_key, "layer_shape");
 		string weight_path = rw->FindValue(layer_key, "weight_path");
 		string bias_path = rw->FindValue(layer_key, "bias_path");
-		string forward_params = rw->FindValue(layer_key, "forward_params");
 
 		vector<string> value = split(layer_shape, "%");
 		string temp;
@@ -139,7 +138,7 @@ public:
 		temp += bias_path;
 		layer_bias = parseBias(temp.c_str(), stoi(value[1]));
 
-		vector<string> value_str = split(forward_params, "%");
+		vector<string> value_str = split(layer_shape, "%");
 		vector<int>::size_type ix = 0;
 		for (ix; ix < value_str.size(); ++ix)
 		{
@@ -194,6 +193,7 @@ static cell AMX_NATIVE_CALL load_model(AMX* amx, cell* params)  /* 1 param */
 	{
 		string layer_key = "layer_";
 		layer_key += to_string(i);
+		MF_PrintSrvConsole("Now loading:%s\n", layer_key.c_str());
 		string layer_type = rw->FindValue(layer_key, "layer_type");
 		layer_types.push_back(layer_type);
 
@@ -230,6 +230,7 @@ static cell AMX_NATIVE_CALL load_model(AMX* amx, cell* params)  /* 1 param */
 			return -1;
 		}
 	}
+	MF_PrintSrvConsole("Loaded.\n");
 	return 0;
 }
 
@@ -251,7 +252,6 @@ static cell AMX_NATIVE_CALL forward_model(AMX* amx, cell* params)  /* 3 param */
 	return 0;
 }
 
-// native socket_open(_hostname[], _port, _protocol = SOCKET_TCP, &_error);
 static cell AMX_NATIVE_CALL test_forward(AMX* amx, cell* params)  /* 2 param */
 {
 	const unsigned int p2 = params[2];
@@ -275,7 +275,6 @@ AMX_NATIVE_INFO forward_natives[] = {
 	{"forward_model", forward_model},
 	{NULL, NULL}
 };
-
 
 void OnAmxxAttach()
 {
