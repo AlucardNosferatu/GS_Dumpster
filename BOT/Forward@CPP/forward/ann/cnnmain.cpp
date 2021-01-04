@@ -63,7 +63,7 @@ void readParams()
 
 		Tensor tensor = Tensor(row, col);
 		for (TiXmlElement* matElem = tensonElem->FirstChildElement(); matElem != NULL; matElem = matElem->NextSiblingElement()) { // matrix
-			Matrix mat = Matrix(row, col);
+			const Matrix mat = Matrix(row, col);
 			int row = 0;
 			for (TiXmlElement* rowElem = matElem->FirstChildElement(); rowElem != NULL; rowElem = rowElem->NextSiblingElement()) { // row
 				mat.getPtr()[row][0] = strToDouble(rowElem->FirstChild()->Value());

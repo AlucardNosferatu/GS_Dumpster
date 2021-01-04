@@ -28,6 +28,8 @@
 
 vector<void*> model;
 vector<string> layer_types;
+int input_scount;
+int input_slength;
 
 
 
@@ -197,16 +199,20 @@ static cell AMX_NATIVE_CALL load_model(AMX* amx, cell* params)  /* 1 param */
 	return 0;
 }
 
-static cell AMX_NATIVE_CALL forward_model(AMX* amx, cell* params)  /* 2 param */
+static cell AMX_NATIVE_CALL forward_model(AMX* amx, cell* params)  /* 3 param */
 {
-	int slice_count = params[1];
-	int slice_length = params[2];
-	for (int i = 0; i < slice_count; i++)
+	input_scount = params[1];
+	input_slength = params[2];
+	static double** t_double = new double* [input_scount];
+	for (int i = 0; i < input_scount; i++)
 	{
-		cell* input_tensor_slice;
-		input_tensor_slice = MF_GetAmxAddr(amx, params[3 + i]);
-		double* t_slice = (double*)input_tensor_slice;
-
+		const cell* input_tensor_slice = MF_GetAmxAddr(amx, params[3 + i]);
+		t_double[i] = new double[input_slength];
+		for (int j = 0; j < input_slength; j++)
+		{
+			float element = amx_ctof(input_tensor_slice[j]);
+			t_double[i][j] = static_cast<double>(element);
+		}
 	}
 	return 0;
 }
@@ -214,10 +220,10 @@ static cell AMX_NATIVE_CALL forward_model(AMX* amx, cell* params)  /* 2 param */
 // native socket_open(_hostname[], _port, _protocol = SOCKET_TCP, &_error);
 static cell AMX_NATIVE_CALL test_forward(AMX* amx, cell* params)  /* 2 param */
 {
-	unsigned int p2 = params[2];
-	unsigned int p3 = params[3];
+	const unsigned int p2 = params[2];
+	const unsigned int p3 = params[3];
 	int len;
-	char* p1 = MF_GetAmxString(amx, params[1], 0, &len); // Get the hostname from AMX
+	const char* p1 = MF_GetAmxString(amx, params[1], 0, &len); // Get the hostname from AMX
 	cell* p4 = MF_GetAmxAddr(amx, params[4]);
 	*p4 = p2; // params[4] is error backchannel
 	vector<int> res = run();
