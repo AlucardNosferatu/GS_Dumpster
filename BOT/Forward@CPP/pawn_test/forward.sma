@@ -19,5 +19,5 @@ public start_test()
 	new err
 	new res=test_forward("useless string", 2029, 1224, err)
 	server_print("Test module: %d %d",err,res)
-	
+	load_model("Test/Test.ini")
 }

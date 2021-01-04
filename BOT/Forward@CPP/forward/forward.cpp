@@ -26,12 +26,15 @@
 #include "ReadWriteini.hpp"
 
 
+#include  <direct.h>  
+#include  <stdio.h>
+
 vector<void*> model;
 vector<string> layer_types;
 int input_scount;
 int input_slength;
 
-
+static const string model_path = "svencoop/addons/amxmodx/data/models/";
 
 static vector<vector<double>> init_BN(rwini::ReadWriteini* rw, string layer_key)
 {
@@ -42,22 +45,30 @@ static vector<vector<double>> init_BN(rwini::ReadWriteini* rw, string layer_key)
 	string run_var_path = rw->FindValue(layer_key, "run_var_path");
 
 	static vector<vector<double>> bn;
-	char* temp = "";
+	string temp;
 
-	strcpy(temp, weight_path.c_str());
-	static vector<double> bn_weight = parseBias(temp, stoi(weight_dims));
+	temp = "";
+	temp += model_path;
+	temp += weight_path;
+	static vector<double> bn_weight = parseBias(temp.c_str(), stoi(weight_dims));
 	bn.push_back(bn_weight);
 
-	strcpy(temp, bias_path.c_str());
-	static vector<double> bn_bias = parseBias(temp, stoi(weight_dims));
+	temp = "";
+	temp += model_path;
+	temp += bias_path;
+	static vector<double> bn_bias = parseBias(temp.c_str(), stoi(weight_dims));
 	bn.push_back(bn_bias);
 
-	strcpy(temp, run_mean_path.c_str());
-	static vector<double> bn_running_mean = parseBias(temp, stoi(weight_dims));
+	temp = "";
+	temp += model_path;
+	temp += run_mean_path;
+	static vector<double> bn_running_mean = parseBias(temp.c_str(), stoi(weight_dims));
 	bn.push_back(bn_running_mean);
 
-	strcpy(temp, run_var_path.c_str());
-	static vector<double> bn_running_var = parseBias(temp, stoi(weight_dims));
+	temp = "";
+	temp += model_path;
+	temp += run_var_path;
+	static vector<double> bn_running_var = parseBias(temp.c_str(), stoi(weight_dims));
 	bn.push_back(bn_running_var);
 
 	return bn;
@@ -76,18 +87,23 @@ static vector<void*> init_Conv(rwini::ReadWriteini* rw, string layer_key)
 	static vector<double> layer_bias;
 	static vector<int> layer_params;
 
-	vector<string> value = split(layer_shape, "#");
-	char* temp = "";
-	strcpy(temp, weight_path.c_str());
+	vector<string> value = split(layer_shape, "%");
+	string temp;
+
+	temp = "";
+	temp += model_path;
+	temp += weight_path;
 	layer_weights = Filter(stoi(value[0]), stoi(value[1]), stoi(value[2]), stoi(value[3]));
-	layer_weights = parseFilterWeight(temp, stoi(value[0]), stoi(value[1]), stoi(value[2]), stoi(value[3]));
+	layer_weights = parseFilterWeight(temp.c_str(), stoi(value[0]), stoi(value[1]), stoi(value[2]), stoi(value[3]));
 	weights_and_params.push_back((void*)&layer_weights);
 
-	strcpy(temp, bias_path.c_str());
-	layer_bias = parseBias(temp, stoi(value[0]));
+	temp = "";
+	temp += model_path;
+	temp += bias_path;
+	layer_bias = parseBias(temp.c_str(), stoi(value[0]));
 	weights_and_params.push_back((void*)&layer_bias);
 
-	vector<string> value_str = split(forward_params, "#");
+	vector<string> value_str = split(forward_params, "%");
 	vector<int>::size_type ix = 0;
 	for (ix; ix < value_str.size(); ++ix)
 	{
@@ -111,17 +127,22 @@ static vector<void*> init_Dense(rwini::ReadWriteini* rw, string layer_key)
 	static vector<double> layer_bias;
 	static vector<int> layer_params;
 
-	vector<string> value = split(layer_shape, "#");
-	char* temp = "";
-	strcpy(temp, weight_path.c_str());
-	layer_weights = parseFullConnWeight(temp, stoi(value[0]), stoi(value[1]));
+	vector<string> value = split(layer_shape, "%");
+	string temp;
+
+	temp = "";
+	temp += model_path;
+	temp += weight_path;
+	layer_weights = parseFullConnWeight(temp.c_str(), stoi(value[0]), stoi(value[1]));
 	weights_and_params.push_back((void*)&layer_weights);
 
-	strcpy(temp, bias_path.c_str());
-	layer_bias = parseBias(temp, stoi(value[1]));
+	temp = "";
+	temp += model_path;
+	temp += bias_path;
+	layer_bias = parseBias(temp.c_str(), stoi(value[1]));
 	weights_and_params.push_back((void*)&layer_bias);
 
-	vector<string> value_str = split(forward_params, "#");
+	vector<string> value_str = split(forward_params, "%");
 	vector<int>::size_type ix = 0;
 	for (ix; ix < value_str.size(); ++ix)
 	{
@@ -137,7 +158,7 @@ static vector<int> init_Pool(rwini::ReadWriteini* rw, string layer_key)
 	string forward_params = rw->FindValue(layer_key, "forward_params");
 	static vector<int> value;
 
-	vector<string> value_str = split(forward_params, "#");
+	vector<string> value_str = split(forward_params, "%");
 	vector<int>::size_type ix = 0;
 	for (ix; ix < value_str.size(); ++ix)
 	{
@@ -150,16 +171,26 @@ static cell AMX_NATIVE_CALL load_model(AMX* amx, cell* params)  /* 1 param */
 {
 	model.clear();
 	int len;
+	//char working_path[MAX_PATH];
+	//getcwd(working_path, MAX_PATH);
+	//MF_PrintSrvConsole(working_path);
+	//MF_PrintSrvConsole("\n");
 	const char* ini_path = MF_GetAmxString(amx, params[1], 0, &len);
-	rwini::ReadWriteini* rw = new rwini::ReadWriteini(ini_path);
+	string ini_path_str = ini_path;
+
+	string prefix = "";
+	prefix += model_path;
+	prefix += ini_path_str;
+
+	rwini::ReadWriteini* rw = new rwini::ReadWriteini(prefix.c_str());
 	string layer_count_str = rw->FindValue("General", "layer_count");
 	const int layer_count = stoi(layer_count_str);
 	//layer_type:
 	//BN Conv Dense Flat Pool Softmax
 	for (int i = 0; i < layer_count; i++)
 	{
-		char* layer_key = "";
-		sprintf(layer_key, "layer_%d", i);
+		string layer_key = "layer_";
+		layer_key += to_string(i);
 		string layer_type = rw->FindValue(layer_key, "layer_type");
 		layer_types.push_back(layer_type);
 
