@@ -199,6 +199,15 @@ static cell AMX_NATIVE_CALL load_model(AMX* amx, cell* params)  /* 1 param */
 
 static cell AMX_NATIVE_CALL forward_model(AMX* amx, cell* params)  /* 2 param */
 {
+	int slice_count = params[1];
+	int slice_length = params[2];
+	for (int i = 0; i < slice_count; i++)
+	{
+		cell* input_tensor_slice;
+		input_tensor_slice = MF_GetAmxAddr(amx, params[3 + i]);
+		double* t_slice = (double*)input_tensor_slice;
+
+	}
 	return 0;
 }
 
