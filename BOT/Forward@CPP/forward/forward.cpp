@@ -194,7 +194,7 @@ static cell AMX_NATIVE_CALL load_model(AMX* amx, cell* params)  /* 1 param */
 		string layer_key = "layer_";
 		layer_key += to_string(i);
 		string layer_type = rw->FindValue(layer_key, "layer_type");
-		MF_PrintSrvConsole("Now loading: %s: layer_type\n", layer_key.c_str(), layer_type.c_str());
+		MF_PrintSrvConsole("Now loading: %s: %s\n", layer_key.c_str(), layer_type.c_str());
 		layer_types.push_back(layer_type);
 
 		if (layer_type._Equal("BN"))
