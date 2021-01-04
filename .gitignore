@@ -2,7 +2,7 @@
 *.bak
 *.amxx
 .idea
-BOT/Models/
 *.xml
 BOT/Forward@CPP/forward/msvc10/.vs/
 BOT/Forward@CPP/forward/msvc10/Debug/
+BOT/addons/amxmodx/data/models/
