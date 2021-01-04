@@ -212,7 +212,7 @@ static cell AMX_NATIVE_CALL forward_model(AMX* amx, cell* params)  /* 2 param */
 }
 
 // native socket_open(_hostname[], _port, _protocol = SOCKET_TCP, &_error);
-static cell AMX_NATIVE_CALL socket_open(AMX* amx, cell* params)  /* 2 param */
+static cell AMX_NATIVE_CALL test_forward(AMX* amx, cell* params)  /* 2 param */
 {
 	unsigned int p2 = params[2];
 	unsigned int p3 = params[3];
@@ -230,7 +230,7 @@ static cell AMX_NATIVE_CALL socket_open(AMX* amx, cell* params)  /* 2 param */
 }
 
 AMX_NATIVE_INFO forward_natives[] = {
-	{"socket_open", socket_open},
+	{"test_forward", test_forward},
 	{"load_model", load_model},
 	{"forward_model", forward_model},
 	{NULL, NULL}

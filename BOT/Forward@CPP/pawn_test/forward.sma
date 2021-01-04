@@ -17,7 +17,7 @@ public plugin_init() {
 public start_test()
 {
 	new err
-	new res=socket_open("127.0.0.1", 2029, 1224, err)
+	new res=test_forward("useless string", 2029, 1224, err)
 	server_print("Test module: %d %d",err,res)
 	
 }
