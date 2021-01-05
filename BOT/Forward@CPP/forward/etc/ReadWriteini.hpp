@@ -604,7 +604,7 @@ rwini::ReadWriteini::ReadWriteini(const char* inipath) noexcept(false)
 			continue;
 		}
 		bool emptystr = true;
-		for (char tempCheck : tempData)
+		for (const char tempCheck : tempData)
 		{
 			if (tempCheck == ' ')
 			{
@@ -629,7 +629,7 @@ rwini::ReadWriteini::ReadWriteini(const char* inipath) noexcept(false)
 		{
 			continue;
 		}
-		for (char tempCh : tempData)
+		for (const char tempCh : tempData)
 		{
 			if (*lineType != LineType::refuse && tempCh == ' ')
 			{
@@ -731,13 +731,13 @@ bool rwini::ReadWriteini::Writeini()
 		for (auto&& j : i.second)
 		{
 			iniFile << j.first << "=" << j.second.front() << std::endl;
-			for (int k = 1; k < j.second.size(); k++)
+			for (unsigned int k = 1; k < j.second.size(); k++)
 			{
-				if (j.second[k].front() != ';')
+				if (j.second.at(k).front() != ';')
 				{
 					iniFile << ";";
 				}
-				iniFile << j.second[k] << std::endl;
+				iniFile << j.second.at(k) << std::endl;
 			}
 		}
 		iniFile << std::endl;

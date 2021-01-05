@@ -17,8 +17,10 @@ public plugin_init() {
 public start_test()
 {
 	new out_class[10]
+	new flatten_input[800]
+	for
 	load_model("Test/Test.ini")
-	forward_model(out_class,charsmax(out_class),100,8,)
+	forward_model(out_class,charsmax(out_class),100,8,flatten_input)
 }
 /* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
 *{\\ rtf1\\ ansi\\ ansicpg936\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }

@@ -7,7 +7,10 @@
 
 #include "Tensor.hpp"
 
-Tensor::Tensor() {}
+Tensor::Tensor()
+{
+
+}
 
 Tensor::Tensor(int row, int col)
 {
@@ -31,7 +34,7 @@ void Tensor::addLayer(Matrix layer)
 
 Matrix Tensor::getLayer(int index) const
 {
-	return this->layers[index];
+	return this->layers.at(index);
 }
 
 int Tensor::getRow() const
@@ -58,19 +61,19 @@ void Tensor::showTensor()
 {
 	getShape();
 	for (int d = 0; d < depth; d++) {
-		layers[d].showMatrix();
+		layers.at(d).showMatrix();
 	}
 }
 
 Tensor Tensor::forwardConv(const Filter& filter, int stride_row, int stride_col, int pad_row, int pad_col, const vector<double>& bias)
 {
-	int filterSize = filter.getSize();
-	int filterDepth = filter.getDepth();
-	int filterRow = filter.getRow();
-	int filterCol = filter.getCol();
+	const int filterSize = filter.getSize();
+	const int filterDepth = filter.getDepth();
+	const int filterRow = filter.getRow();
+	const int filterCol = filter.getCol();
 
-	int outRow = ceil((this->row + 2 * pad_row - filterRow) / stride_row + 1);
-	int outCol = ceil((this->col + 2 * pad_col - filterCol) / stride_col + 1);
+	const int outRow = ceil((this->row + 2 * pad_row - filterRow) / stride_row + 1);
+	const int outCol = ceil((this->col + 2 * pad_col - filterCol) / stride_col + 1);
 
 	Tensor outTensor = Tensor(outRow, outCol);
 
@@ -80,12 +83,12 @@ Tensor Tensor::forwardConv(const Filter& filter, int stride_row, int stride_col,
 
 		//get per matrix -> Tensor(1,row,col)
 		for (int d = 0; d < filterDepth; d++) {
-			Matrix FilterLayer = filter.getFilter(f).getLayer(d);
-			Matrix M = this->layers[d].singleMatConv(FilterLayer, stride_row, stride_col, pad_row, pad_col);
+			const Matrix FilterLayer = filter.getFilter(f).getLayer(d);
+			const Matrix M = this->layers.at(d).singleMatConv(FilterLayer, stride_row, stride_col, pad_row, pad_col);
 			outMat.sumMat(M);
 		}
 		//TODO load bias
-		Matrix biasMat = Matrix(outRow, outCol, bias[f]);
+		const Matrix biasMat = Matrix(outRow, outCol, bias.at(f));
 		outMat.sumMat(biasMat);
 
 		outTensor.addLayer(outMat);
@@ -100,8 +103,8 @@ void Tensor::forwardReLu()
 		double value = 0.0;
 		for (int i = 0; i < row; i++) {
 			for (int j = 0; j < col; j++) {
-				value = this->layers[d].getValue(i, j);
-				this->layers[d].setValue(i, j, value > 0 ? value : 0);
+				value = this->layers.at(d).getValue(i, j);
+				this->layers.at(d).setValue(i, j, value > 0 ? value : 0);
 			}
 		}
 
@@ -112,15 +115,15 @@ void Tensor::forwardReLu()
 //默认是pool_box是不重叠的，也就是步长和box是一致的
 Tensor Tensor::forwardMaxpool(int box_row, int box_col)
 {
-	int depth = this->depth;
-	int outRow = row / box_row;
-	int outCol = col / box_col;
+	const int depth = this->depth;
+	const int outRow = row / box_row;
+	const int outCol = col / box_col;
 
 	Tensor poolTensor = Tensor(0, outRow, outCol);
 
 	for (int d = 0; d < depth; d++) {
-		double** p = this->layers[d].getPtr();
-		Matrix maxMat = Matrix(outRow, outCol);
+		double** p = this->layers.at(d).getPtr();
+		const Matrix maxMat = Matrix(outRow, outCol);
 		int maxRowIndex = 0;
 		int maxColIndex = 0;
 
@@ -156,7 +159,7 @@ Matrix Tensor::forwardFlat()
 	for (int d = 0; d < depth; d++) {
 		for (int i = 0; i < row; i++) {
 			for (int j = 0; j < col; j++) {
-				outMat.setValue(0, index, layers[d].getValue(i, j));
+				outMat.setValue(0, index, layers.at(d).getValue(i, j));
 				index++;
 			}
 		}

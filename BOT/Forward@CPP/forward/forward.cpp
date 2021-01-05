@@ -27,8 +27,8 @@
 
 vector<void*> model;
 vector<string> layer_types;
-int input_scount;
-int input_slength;
+int input_slice;
+int input_length;
 
 const string model_path = "svencoop/addons/amxmodx/data/models/";
 
@@ -238,26 +238,25 @@ static cell AMX_NATIVE_CALL forward_model(AMX* amx, cell* params)  /* 3 param */
 {
 	cell* out_class = MF_GetAmxAddr(amx, params[1]);
 	cell out_dims = params[2];
-	input_scount = params[3];
-	input_slength = params[4];
-	Matrix InputMat = Matrix(input_scount, input_slength, 0);
-	for (int i = 0; i < input_scount; i++)
+	input_slice = params[3];
+	input_length = params[4];
+
+	Matrix InputMat = Matrix(input_slice, input_length / input_slice, 0);
+
+	const cell* input_tensor_slice = MF_GetAmxAddr(amx, params[5]);
+	for (int i = 0; i < input_length; i++)
 	{
-		const cell* input_tensor_slice = MF_GetAmxAddr(amx, params[5 + i]);
-		for (int j = 0; j < input_slength; j++)
-		{
-			float element = amx_ctof(input_tensor_slice[j]);
-			InputMat.setValue(i, j, static_cast<double>(element));
-		}
+		const float element = amx_ctof(input_tensor_slice[i]);
+		InputMat.setValue(input_length % input_slice, input_length / input_slice, static_cast<double>(element));
 	}
 
-	Tensor InputTensor = Tensor(0, input_scount, input_slength);
+	Tensor InputTensor = Tensor(0, input_slice, input_length / input_slice);
 	InputTensor.addLayer(InputMat);
 
 	Tensor TempTensor = InputTensor;
 	Matrix TempMatrix = InputMat;
 	bool TensorOrMatrix = true;
-	for (int i = 0; i < layer_types.size(); i++)
+	for (unsigned int i = 0; i < layer_types.size(); i++)
 	{
 		if (TensorOrMatrix)
 		{
@@ -319,8 +318,9 @@ static cell AMX_NATIVE_CALL forward_model(AMX* amx, cell* params)  /* 3 param */
 			else if (layer_types.at(i)._Equal("Softmax"))
 			{
 				vector<int> class_vec = TempMatrix.softmax();
-				if (class_vec.size() < out_dims)
-					out_dims = class_vec.size();
+				const int cv_dims = static_cast<int>(class_vec.size());
+				if (cv_dims < out_dims)
+					out_dims = cv_dims;
 				for (int j = 0; j < out_dims; j++)
 				{
 					out_class[j] = class_vec.at(j);
@@ -348,7 +348,7 @@ static cell AMX_NATIVE_CALL test_forward(AMX* amx, cell* params)  /* 2 param */
 	vector<int>::size_type ix = 0;
 	for (ix; ix < res.size(); ++ix)
 	{
-		MF_PrintSrvConsole("Class: %d\n", res[ix]);
+		MF_PrintSrvConsole("Class: %d\n", res.at(ix));
 	}
 	return p3;
 }
