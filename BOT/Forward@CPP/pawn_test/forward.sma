@@ -35,5 +35,10 @@ public test_output()
 			flatten_input[i]=floatdiv(float(i),2.0)
 		}
 	}
-	forward_model(out_class,charsmax(out_class)+1,100,charsmax(flatten_input)+1,flatten_input)
+	new actual_od=forward_model(out_class,charsmax(out_class)+1,100,charsmax(flatten_input)+1,flatten_input)
+	for(new i=0;i<actual_od;i++)
+	{
+		server_print("Output: %d Index: %d ValidDims: %d^n",out_class[i],i,actual_od)
+	}
+	
 }

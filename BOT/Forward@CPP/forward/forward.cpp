@@ -323,7 +323,7 @@ static cell AMX_NATIVE_CALL forward_model(AMX* amx, cell* params)  /* 3 param */
 				{
 					out_class[j] = class_vec.at(j);
 				}
-				return 0;
+				return out_dims;
 			}
 			else
 			{
