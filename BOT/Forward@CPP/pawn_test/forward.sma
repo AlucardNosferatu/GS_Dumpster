@@ -16,8 +16,10 @@ public plugin_init() {
 
 public start_test()
 {
-	new err
-	new res=test_forward("useless string", 2029, 1224, err)
-	server_print("Test module: %d %d",err,res)
+	new out_class[10]
 	load_model("Test/Test.ini")
+	forward_model(out_class,charsmax(out_class),100,8,)
 }
+/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
+*{\\ rtf1\\ ansi\\ ansicpg936\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
+*/

@@ -30,7 +30,7 @@ vector<string> layer_types;
 int input_scount;
 int input_slength;
 
-static const string model_path = "svencoop/addons/amxmodx/data/models/";
+const string model_path = "svencoop/addons/amxmodx/data/models/";
 
 class BN_Layer
 {
@@ -96,19 +96,19 @@ public:
 		temp = "";
 		temp += model_path;
 		temp += weight_path;
-		layer_weights = Filter(stoi(value[0]), stoi(value[1]), stoi(value[2]), stoi(value[3]));
-		layer_weights = parseFilterWeight(temp.c_str(), stoi(value[0]), stoi(value[1]), stoi(value[2]), stoi(value[3]));
+		layer_weights = Filter(stoi(value.at(0)), stoi(value.at(1)), stoi(value.at(2)), stoi(value.at(3)));
+		layer_weights = parseFilterWeight(temp.c_str(), stoi(value.at(0)), stoi(value.at(1)), stoi(value.at(2)), stoi(value.at(3)));
 
 		temp = "";
 		temp += model_path;
 		temp += bias_path;
-		layer_bias = parseBias(temp.c_str(), stoi(value[0]));
+		layer_bias = parseBias(temp.c_str(), stoi(value.at(0)));
 
 		vector<string> value_str = split(forward_params, "%");
 		vector<int>::size_type ix = 0;
 		for (ix; ix < value_str.size(); ++ix)
 		{
-			layer_params.push_back(stoi(value_str[ix]));
+			layer_params.push_back(stoi(value_str.at(ix)));
 		}
 	}
 };
@@ -131,18 +131,18 @@ public:
 		temp = "";
 		temp += model_path;
 		temp += weight_path;
-		layer_weights = parseFullConnWeight(temp.c_str(), stoi(value[0]), stoi(value[1]));
+		layer_weights = parseFullConnWeight(temp.c_str(), stoi(value.at(0)), stoi(value.at(1)));
 
 		temp = "";
 		temp += model_path;
 		temp += bias_path;
-		layer_bias = parseBias(temp.c_str(), stoi(value[1]));
+		layer_bias = parseBias(temp.c_str(), stoi(value.at(1)));
 
 		vector<string> value_str = split(layer_shape, "%");
 		vector<int>::size_type ix = 0;
 		for (ix; ix < value_str.size(); ++ix)
 		{
-			layer_params.push_back(stoi(value_str[ix]));
+			layer_params.push_back(stoi(value_str.at(ix)));
 		}
 	}
 };
@@ -156,17 +156,17 @@ static vector<int> Pool_Layer(rwini::ReadWriteini* rw, string layer_key)
 	vector<int>::size_type ix = 0;
 	for (ix; ix < value_str.size(); ++ix)
 	{
-		value.push_back(stoi(value_str[ix]));
+		value.push_back(stoi(value_str.at(ix)));
 	}
 	return value;
 }
 
 static void release_layers()
 {
-	int l_Count = layer_types.size();
+	const int l_Count = layer_types.size();
 	for (int i = 0; i < l_Count; i++)
 	{
-		delete model[i];
+		delete model.at(i);
 	}
 }
 
@@ -236,20 +236,104 @@ static cell AMX_NATIVE_CALL load_model(AMX* amx, cell* params)  /* 1 param */
 
 static cell AMX_NATIVE_CALL forward_model(AMX* amx, cell* params)  /* 3 param */
 {
-	input_scount = params[1];
-	input_slength = params[2];
-	static double** t_double = new double* [input_scount];
+	cell* out_class = MF_GetAmxAddr(amx, params[1]);
+	cell out_dims = params[2];
+	input_scount = params[3];
+	input_slength = params[4];
+	Matrix InputMat = Matrix(input_scount, input_slength, 0);
 	for (int i = 0; i < input_scount; i++)
 	{
-		const cell* input_tensor_slice = MF_GetAmxAddr(amx, params[3 + i]);
-		t_double[i] = new double[input_slength];
+		const cell* input_tensor_slice = MF_GetAmxAddr(amx, params[5 + i]);
 		for (int j = 0; j < input_slength; j++)
 		{
 			float element = amx_ctof(input_tensor_slice[j]);
-			t_double[i][j] = static_cast<double>(element);
+			InputMat.setValue(i, j, static_cast<double>(element));
 		}
 	}
-	return 0;
+
+	Tensor InputTensor = Tensor(0, input_scount, input_slength);
+	InputTensor.addLayer(InputMat);
+
+	Tensor TempTensor = InputTensor;
+	Matrix TempMatrix = InputMat;
+	bool TensorOrMatrix = true;
+	for (int i = 0; i < layer_types.size(); i++)
+	{
+		if (TensorOrMatrix)
+		{
+			if (layer_types.at(i)._Equal("Conv"))
+			{
+				Conv_Layer* Conv = (Conv_Layer*)model.at(i);
+				TempTensor = TempTensor.forwardConv(
+					Conv->layer_weights,
+					Conv->layer_params.at(0),
+					Conv->layer_params.at(1),
+					Conv->layer_params.at(2),
+					Conv->layer_params.at(3),
+					Conv->layer_bias
+				);
+				TempTensor.forwardReLu();
+				TensorOrMatrix = true;
+			}
+			else if (layer_types.at(i)._Equal("Pool"))
+			{
+				const vector<int>* Pool = (vector<int>*)model.at(i);
+				TempTensor = TempTensor.forwardMaxpool(Pool->at(0), Pool->at(1));
+				TensorOrMatrix = true;
+			}
+			else if (layer_types.at(i)._Equal("Flat"))
+			{
+				TempMatrix = TempTensor.forwardFlat();
+				TensorOrMatrix = false;
+			}
+			else
+			{
+				return -1;
+			}
+		}
+		else
+		{
+			if (layer_types.at(i)._Equal("Dense"))
+			{
+				Dense_Layer* Dense = (Dense_Layer*)model.at(i);
+				TempMatrix = TempMatrix.forwardFullConnect(
+					Dense->layer_params.at(0),
+					Dense->layer_params.at(1),
+					Dense->layer_weights,
+					Dense->layer_bias
+				);
+				TensorOrMatrix = false;
+			}
+			else if (layer_types.at(i)._Equal("BN"))
+			{
+				BN_Layer* BN = (BN_Layer*)model.at(i);
+				TempMatrix.batchNormal(
+					BN->bn.at(0),
+					BN->bn.at(1),
+					BN->bn.at(2),
+					BN->bn.at(3)
+				);
+				TempMatrix.forwardRelu();
+				TensorOrMatrix = false;
+			}
+			else if (layer_types.at(i)._Equal("Softmax"))
+			{
+				vector<int> class_vec = TempMatrix.softmax();
+				if (class_vec.size() < out_dims)
+					out_dims = class_vec.size();
+				for (int j = 0; j < out_dims; j++)
+				{
+					out_class[j] = class_vec.at(j);
+				}
+				return 0;
+			}
+			else
+			{
+				return -1;
+			}
+		}
+	}
+	return -1;
 }
 
 static cell AMX_NATIVE_CALL test_forward(AMX* amx, cell* params)  /* 2 param */
