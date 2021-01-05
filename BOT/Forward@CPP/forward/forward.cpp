@@ -80,11 +80,8 @@ public:
 	Filter layer_weights;
 	vector<double> layer_bias;
 	vector<int> layer_params;
-	Conv_Layer(rwini::ReadWriteini* rw, string layer_key) {
-
-		layer_bias.clear();
-		layer_params.clear();
-
+	Conv_Layer(rwini::ReadWriteini* rw, string layer_key)
+	{
 		string layer_shape = rw->FindValue(layer_key, "layer_shape");
 		string weight_path = rw->FindValue(layer_key, "weight_path");
 		string bias_path = rw->FindValue(layer_key, "bias_path");
@@ -147,19 +144,20 @@ public:
 	}
 };
 
-static vector<int> Pool_Layer(rwini::ReadWriteini* rw, string layer_key)
-{
-	string forward_params = rw->FindValue(layer_key, "forward_params");
+class Pool_Layer {
+public:
 	vector<int> value;
-
-	vector<string> value_str = split(forward_params, "%");
-	vector<int>::size_type ix = 0;
-	for (ix; ix < value_str.size(); ++ix)
+	Pool_Layer(rwini::ReadWriteini* rw, string layer_key)
 	{
-		value.push_back(stoi(value_str.at(ix)));
+		string forward_params = rw->FindValue(layer_key, "forward_params");
+		vector<string>value_str = split(forward_params, "%");
+		vector<int>::size_type ix = 0;
+		for (ix; ix < value_str.size(); ++ix)
+		{
+			value.push_back(stoi(value_str.at(ix)));
+		}
 	}
-	return value;
-}
+};
 
 static void release_layers()
 {
@@ -200,7 +198,7 @@ static cell AMX_NATIVE_CALL load_model(AMX* amx, cell* params)  /* 1 param */
 		if (layer_type._Equal("BN"))
 		{
 			BN_Layer* BN = new BN_Layer(rw, layer_key);
-			model.push_back((void*)&BN);
+			model.push_back((void*)BN);
 		}
 		else if (layer_type._Equal("Conv"))
 		{
@@ -210,7 +208,7 @@ static cell AMX_NATIVE_CALL load_model(AMX* amx, cell* params)  /* 1 param */
 		else if (layer_type._Equal("Dense"))
 		{
 			Dense_Layer* Dense = new Dense_Layer(rw, layer_key);
-			model.push_back((void*)&Dense);
+			model.push_back((void*)Dense);
 		}
 		else if (layer_type._Equal("Flat"))
 		{
@@ -218,8 +216,8 @@ static cell AMX_NATIVE_CALL load_model(AMX* amx, cell* params)  /* 1 param */
 		}
 		else if (layer_type._Equal("Pool"))
 		{
-			vector<int> Pool = Pool_Layer(rw, layer_key);
-			model.push_back((void*)&Pool);
+			Pool_Layer* Pool = new Pool_Layer(rw, layer_key);
+			model.push_back((void*)Pool);
 		}
 		else if (layer_type._Equal("Softmax"))
 		{
@@ -276,8 +274,8 @@ static cell AMX_NATIVE_CALL forward_model(AMX* amx, cell* params)  /* 3 param */
 			}
 			else if (layer_types.at(i)._Equal("Pool"))
 			{
-				const vector<int>* Pool = (vector<int>*)model.at(i);
-				TempTensor = TempTensor.forwardMaxpool(Pool->at(0), Pool->at(1));
+				Pool_Layer* Pool = (Pool_Layer*)model.at(i);
+				TempTensor = TempTensor.forwardMaxpool(Pool->value.at(0), Pool->value.at(1));
 				TensorOrMatrix = true;
 			}
 			else if (layer_types.at(i)._Equal("Flat"))
