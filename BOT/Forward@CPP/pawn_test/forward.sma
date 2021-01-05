@@ -17,11 +17,18 @@ public plugin_init() {
 public start_test()
 {
 	new out_class[10]
-	new flatten_input[800]
-	for
+	new Float:flatten_input[800]
+	for(new i=0;i<800;i++)
+	{
+		if(i<400)
+		{
+			flatten_input[i]=floatmul(float(i),2.0)
+		}
+		else
+		{
+			flatten_input[i]=floatdiv(float(i),2.0)
+		}
+	}
 	load_model("Test/Test.ini")
 	forward_model(out_class,charsmax(out_class),100,8,flatten_input)
 }
-/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
-*{\\ rtf1\\ ansi\\ ansicpg936\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
-*/
