@@ -247,7 +247,7 @@ static cell AMX_NATIVE_CALL forward_model(AMX* amx, cell* params)  /* 3 param */
 	for (int i = 0; i < input_length; i++)
 	{
 		const float element = amx_ctof(input_tensor_slice[i]);
-		InputMat.setValue(input_length % input_slice, input_length / input_slice, static_cast<double>(element));
+		InputMat.setValue(i % input_slice, i / input_slice, static_cast<double>(element));
 	}
 
 	Tensor InputTensor = Tensor(0, input_slice, input_length / input_slice);

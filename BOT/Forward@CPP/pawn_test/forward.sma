@@ -11,10 +11,16 @@
 
 public plugin_init() {
 	register_plugin(PLUGIN, VERSION, AUTHOR)
-	register_concmd("forward","start_test")
+	register_concmd("l_model","test_load")
+	register_concmd("f_model","test_output")
 }
 
-public start_test()
+public test_load()
+{
+	load_model("Test/Test.ini")
+}
+
+public test_output()
 {
 	new out_class[10]
 	new Float:flatten_input[800]
@@ -29,6 +35,5 @@ public start_test()
 			flatten_input[i]=floatdiv(float(i),2.0)
 		}
 	}
-	load_model("Test/Test.ini")
-	forward_model(out_class,charsmax(out_class),100,8,flatten_input)
+	forward_model(out_class,charsmax(out_class)+1,100,charsmax(flatten_input)+1,flatten_input)
 }
