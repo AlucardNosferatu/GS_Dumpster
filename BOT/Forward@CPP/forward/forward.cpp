@@ -239,7 +239,7 @@ static cell AMX_NATIVE_CALL load_model(AMX* amx, cell* params)  /* 1 param */
 static cell AMX_NATIVE_CALL forward_model(AMX* amx, cell* params)  /* 3 param */
 {
 	cell* out_class = MF_GetAmxAddr(amx, params[1]);
-	const cell out_dims = params[2];
+	cell out_dims = params[2];
 	input_slice = params[3];
 	input_length = params[4];
 
@@ -353,6 +353,8 @@ static cell AMX_NATIVE_CALL forward_model(AMX* amx, cell* params)  /* 3 param */
 				out_vec.push_back(out_mat[i][j]);
 			}
 		}
+		if (out_dims > out_vec.size())
+			out_dims = out_vec.size();
 		for (int i = 0; i < out_dims; i++)
 		{
 			out_class[i] = amx_ftoc(static_cast<float>(out_vec.at(i)));

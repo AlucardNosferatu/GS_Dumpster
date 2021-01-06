@@ -17,16 +17,16 @@ public plugin_init() {
 
 public test_load()
 {
-	load_model("Test/Test.ini")
+	load_model("TTD/TTD.ini")
 }
 
 public test_output()
 {
-	new Float:out_class[10]
-	new Float:flatten_input[800]
-	for(new i=0;i<800;i++)
+	new Float:out_class[8]
+	new Float:flatten_input[16]
+	for(new i=0;i<16;i++)
 	{
-		if(i<400)
+		if(i<8)
 		{
 			flatten_input[i]=floatmul(float(i),2.0)
 		}
@@ -35,7 +35,7 @@ public test_output()
 			flatten_input[i]=floatdiv(float(i),2.0)
 		}
 	}
-	new od_count=forward_model(out_class,charsmax(out_class)+1,100,charsmax(flatten_input)+1,flatten_input)
+	new od_count=forward_model(out_class,charsmax(out_class)+1,1,charsmax(flatten_input)+1,flatten_input)
 	new Float:total_dims=1.0
 	for(new i=0;i<od_count;i++)
 	{
