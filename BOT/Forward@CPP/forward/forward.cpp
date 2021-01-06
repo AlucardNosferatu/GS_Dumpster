@@ -353,24 +353,11 @@ static cell AMX_NATIVE_CALL forward_model(AMX* amx, cell* params)  /* 3 param */
 				out_vec.push_back(out_mat[i][j]);
 			}
 		}
-
-		const int dv_dims = out_vec.size();
-		if (dv_dims <= out_dims)
+		for (int i = 0; i < out_dims; i++)
 		{
-			for (int i = 0; i < dv_dims; i++)
-			{
-				out_class[i] = amx_ftoc(static_cast<float>(out_vec.at(i)));
-			}
-			return 2;
+			out_class[i] = amx_ftoc(static_cast<float>(out_vec.at(i)));
 		}
-		else
-		{
-			for (int i = 0; i < out_dims; i++)
-			{
-				out_class[i] = amx_ftoc(static_cast<float>(out_vec.at(i)));
-			}
-			return 2;
-		}
+		return 2;
 	}
 	return -1;
 }
