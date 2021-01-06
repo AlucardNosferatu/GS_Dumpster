@@ -188,8 +188,8 @@ double Matrix::dotProduct(const Matrix& filterMat)
 //Tensor的其中一个mat与filter其中一个mat做卷积操作
 Matrix Matrix::singleMatConv(const Matrix& filterMat, int stride_row, int stride_col, int pad_row, int pad_col)
 {
-	int filterRow = filterMat.getRow();
-	int filterCol = filterMat.getCol();
+	const int filterRow = filterMat.getRow();
+	const int filterCol = filterMat.getCol();
 
 	Matrix padMat;
 	padMat = Matrix(this->p, this->row, this->col).addPadding(pad_row, pad_col);
@@ -236,13 +236,43 @@ void Matrix::sumMat(const Matrix& mat)
 	//return Matrix(this->p, row, col);
 }
 
-void Matrix::forwardRelu()
+void Matrix::forwardReLu()
 {
 	double value = 0.0;
 	for (int i = 0; i < row; i++) {
 		for (int j = 0; j < col; j++) {
 			value = this->p[i][j];
 			this->p[i][j] = value > 0 ? value : 0;
+		}
+	}
+}
+
+
+void Matrix::forwardSigmoid()
+{
+	double value = 0.0;
+	for (int i = 0; i < row; i++) {
+		for (int j = 0; j < col; j++) {
+			value = this->p[i][j];
+			this->p[i][j] = 1.0 / (exp(-value) + 1.0);
+		}
+	}
+}
+
+
+void Matrix::forwardSoftmax()
+{
+	double sum = 0;
+	for (int i = 0; i < row; i++) {
+		for (int j = 0; j < col; j++) {
+			p[i][j] = exp(p[i][j]);
+			sum += p[i][j];
+		}
+	}
+	//可以省略概率转换，直接输出类别，还是输出概率吧，更直观
+	for (int i = 0; i < row; i++) {
+		for (int j = 0; j < col; j++) {
+			p[i][j] = p[i][j] / sum;
 		}
 	}
 }
@@ -257,66 +287,23 @@ Matrix Matrix::forwardFullConnect(int inputSize, int outputSize, const Matrix& w
 	outMat = multiply(Matrix(p, row, col), wMat);
 	//add bias
 	for (int i = 0; i < outMat.getCol(); i++) {
-		outMat.setValue(0, i, (bias[i] + outMat.getValue(0, i)));
+		outMat.setValue(0, i, (bias.at(i) + outMat.getValue(0, i)));
 	}
 	return outMat;
 }
 
-//softmax分类
-vector<int> Matrix::softmax()
-{
-	vector<int> outClass;
-	/*
-	vector<int> rowSum;
-	for(int i=0; i<row; i++){
-		double sum = 0;
-		for(int j=0; j<col; j++){
-			p[i][j] = exp(p[i][j]);
-			cout << p[i][j] << " ";
-			sum += p[i][j];
-		}
-		rowSum.push_back(sum);
-	}
-	//可以省略概率转换，直接输出类别，还是输出概率吧，更直观
-	for(int i=0; i<row; i++){
-		for(int j=0; j<col; j++){
-			p[i][j] = double(p[i][j])/rowSum[i];
-		}
-	}*/
 
-	for (int i = 0; i < row; i++) {
-		double max = 0;
-		int maxIndex = 0;
-		for (int j = 0; j < col; j++) {
-			// cout << p[i][j] << ", ";
-			if (max <= p[i][j]) {
-				max = p[i][j];
-				maxIndex = j;
-			}
-		}
-		outClass.push_back(maxIndex);
-
-	}
-	cout << "motion: " << outClass[0] << " ";
-	string out = printAction(outClass[0]);
-
-
-	cout << endl;
-	return outClass;
-}
-
-
-void Matrix::batchNormal(const vector<double>& weight, const vector<double>& bais, const vector<double>& mean, const vector<double>& var)
+void Matrix::batchNormal(const vector<double>& weight, const vector<double>& bias, const vector<double>& mean, const vector<double>& var)
 {
 	if (this->getCol() != weight.size()
-		|| this->getCol() != bais.size()
+		|| this->getCol() != bias.size()
 		|| this->getCol() != mean.size()
 		|| this->getCol() != var.size()) {
 		cout << "输入的bn参数数量不匹配." << endl;
 		exit(0);
 	}
 	for (int i = 0; i < this->getCol(); i++) {
-		this->p[0][i] = (p[0][i] - mean[i]) * weight[i] / sqrt(var[i] + 0.000000001) + bais[i];
+		this->p[0][i] = (p[0][i] - mean.at(i)) * weight.at(i) / sqrt(var.at(i) + 0.000000001) + bias.at(i);
 	}
 }
 

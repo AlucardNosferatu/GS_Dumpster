@@ -69,8 +69,8 @@ Matrix loadEMGData(string file)
 	ifstream infile;
 	infile.open(file.data());
 	//assert(infile.is_open());
-	int rowCount = getFileRowCount(file);
-	int colCount = getFileColCount(file);
+	const int rowCount = getFileRowCount(file);
+	const int colCount = getFileColCount(file);
 
 	Matrix mat = Matrix(rowCount, colCount);
 	double** matPtr = mat.getPtr();
@@ -81,7 +81,7 @@ Matrix loadEMGData(string file)
 	{
 		vector<string> ret = split(s, " ");
 		for (size_t i = 0; i < ret.size(); i++) {
-			matPtr[rowIndex][i] = strToDouble(ret[i].c_str());
+			matPtr[rowIndex][i] = strToDouble(ret.at(i).c_str());
 		}
 		rowIndex++;
 	}
@@ -92,7 +92,7 @@ Matrix loadEMGData(string file)
 Filter parseFilterWeight(const char* path, int fsize, int depth, int row, int col)
 {
 	TiXmlDocument mydoc(path);//xml文档对象
-	bool loadOk = mydoc.LoadFile();//加载文档
+	const bool loadOk = mydoc.LoadFile();//加载文档
 	if (!loadOk)
 	{
 		cout << "could not load the test file.Error:" << mydoc.ErrorDesc() << endl;
@@ -141,7 +141,7 @@ string intToString(int num)
 Matrix parseFullConnWeight(const char* path, int row, int col)
 {
 	TiXmlDocument mydoc(path);//xml文档对象
-	bool loadOk = mydoc.LoadFile();//加载文档
+	const bool loadOk = mydoc.LoadFile();//加载文档
 	if (!loadOk)
 	{
 		cout << "could not load the test file.Error:" << mydoc.ErrorDesc() << endl;
@@ -153,7 +153,7 @@ Matrix parseFullConnWeight(const char* path, int row, int col)
 	//Filter filter = Filter(fsize,depth,row,col);
 	TiXmlElement* rootElem = mydoc.RootElement();
 	TiXmlElement* mElem = rootElem;//  mat
-	int fcount = 0;
+	const int fcount = 0;
 	int rowIndex = 0;
 	int colIndex = 0;
 	string result;
@@ -174,7 +174,7 @@ Matrix parseFullConnWeight(const char* path, int row, int col)
 vector<double> parseBias(const char* path, int num)
 {
 	TiXmlDocument mydoc(path);//xml文档对象
-	bool loadOk = mydoc.LoadFile();//加载文档
+	const bool loadOk = mydoc.LoadFile();//加载文档
 	if (!loadOk)
 	{
 		cout << "could not load the test file.Error:" << mydoc.ErrorDesc() << endl;
@@ -183,14 +183,14 @@ vector<double> parseBias(const char* path, int num)
 	vector<double> outBias(num);
 	TiXmlElement* rootElem = mydoc.RootElement();
 	TiXmlElement* mElem = rootElem;
-	int fcount = 0;
-	int rowIndex = 0;
+	const int fcount = 0;
+	const int rowIndex = 0;
 	int colIndex = 0;
 	string result;
 	stringstream input(mElem->FirstChild()->Value());
 	while (input >> result) {
 		//cout << result << endl;
-		outBias[colIndex] = strToDouble(result);
+		outBias.at(colIndex) = strToDouble(result);
 		colIndex++;
 	}
 	//input.close();
@@ -203,8 +203,8 @@ void emgDataToMat(Matrix& res, string path)
 	infile.open(path.data());   //将文件流对象与文件连接起来
 	assert(infile.is_open());   //若失败,则输出错误消息,并终止程序运行
 
-	int rowCount = getFileRowCount(path);
-	int colCount = getFileColCount(path);
+	const int rowCount = getFileRowCount(path);
+	const int colCount = getFileColCount(path);
 
 	res = Matrix(rowCount, colCount);
 

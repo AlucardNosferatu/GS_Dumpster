@@ -8,7 +8,7 @@ Description:矩阵类
 
 #include "cnnmain.hpp"
 
-vector<int> run()
+void run()
 {
 	Tensor tensor = Tensor(2, 4, 4);
 	for (int i = 0; i < 2; i++) {
@@ -32,12 +32,7 @@ vector<int> run()
 	weight.setValue(5, 5, 33);
 	Matrix out = Matrix::multiply(tensor1.forwardFlat(), weight);
 	out.dotMatCoefficient(0.001);
-	vector<int> outClass = out.softmax();
-
-	for (size_t i = 0; i < outClass.size(); i++) {
-		cout << "sample " << i << " pred:" << outClass[i] << endl;
-	}
-	return outClass;
+	out.forwardSoftmax();
 }
 
 void readParams()

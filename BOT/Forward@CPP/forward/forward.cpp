@@ -235,7 +235,7 @@ static cell AMX_NATIVE_CALL load_model(AMX* amx, cell* params)  /* 1 param */
 static cell AMX_NATIVE_CALL forward_model(AMX* amx, cell* params)  /* 3 param */
 {
 	cell* out_class = MF_GetAmxAddr(amx, params[1]);
-	cell out_dims = params[2];
+	const cell out_dims = params[2];
 	input_slice = params[3];
 	input_length = params[4];
 
@@ -310,26 +310,52 @@ static cell AMX_NATIVE_CALL forward_model(AMX* amx, cell* params)  /* 3 param */
 					BN->bn.at(2),
 					BN->bn.at(3)
 				);
-				TempMatrix.forwardRelu();
+				TempMatrix.forwardReLu();
 				TensorOrMatrix = false;
 			}
 			else if (layer_types.at(i)._Equal("Softmax"))
 			{
-				vector<int> class_vec = TempMatrix.softmax();
-				const int cv_dims = static_cast<int>(class_vec.size());
-				if (cv_dims < out_dims)
-					out_dims = cv_dims;
-				for (int j = 0; j < out_dims; j++)
-				{
-					out_class[j] = class_vec.at(j);
-				}
-				return out_dims;
+				TempMatrix.forwardSoftmax();
+				TensorOrMatrix = false;
 			}
 			else
 			{
 				return -1;
 			}
 		}
+	}
+	if (TensorOrMatrix)
+	{
+		return -3;
+	}
+	else
+	{
+		double** out_mat = TempMatrix.getPtr();
+		const int row = TempMatrix.getRow();
+		const int col = TempMatrix.getCol();
+
+		vector<double> out_vec;
+		out_vec.push_back(static_cast<double>(row));
+		out_vec.push_back(static_cast<double>(col));
+		for (int i = 0; i < row; i++)
+		{
+			for (int j = 0; j < col; j++)
+			{
+				out_vec.push_back(out_mat[i][j]);
+			}
+		}
+
+		const int dv_dims = out_vec.size();
+		if (dv_dims <= out_dims)
+		{
+			for (int i = 0; i < dv_dims; i++)
+			{
+				out_class[i] = amx_ftoc(static_cast<float>(out_vec.at(i)));
+			}
+			return 2;
+		}
+		else
+			return -2;
 	}
 	return -1;
 }
@@ -342,12 +368,6 @@ static cell AMX_NATIVE_CALL test_forward(AMX* amx, cell* params)  /* 2 param */
 	const char* p1 = MF_GetAmxString(amx, params[1], 0, &len); // Get the hostname from AMX
 	cell* p4 = MF_GetAmxAddr(amx, params[4]);
 	*p4 = p2; // params[4] is error backchannel
-	vector<int> res = run();
-	vector<int>::size_type ix = 0;
-	for (ix; ix < res.size(); ++ix)
-	{
-		MF_PrintSrvConsole("Class: %d\n", res.at(ix));
-	}
 	return p3;
 }
 

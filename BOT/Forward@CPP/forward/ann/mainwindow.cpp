@@ -78,10 +78,10 @@ class sample_model
 		Matrix fc1 = flat.forwardFullConnect(5 * 8 * 128, 256, fc1weight, fullbias1);
 
 		fc1.batchNormal(bn1_weight, bn1_bias, bn1_running_mean, bn1_running_var);
-		fc1.forwardRelu();
+		fc1.forwardReLu();
 
 		Matrix fc2 = fc1.forwardFullConnect(256, 10, fc2weight, fullbias2);
 
-		vector<int> c = fc2.softmax();
+		fc2.forwardSoftmax();
 	}
 };

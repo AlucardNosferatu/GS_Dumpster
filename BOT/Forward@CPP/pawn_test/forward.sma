@@ -22,7 +22,7 @@ public test_load()
 
 public test_output()
 {
-	new out_class[10]
+	new Float:out_class[10]
 	new Float:flatten_input[800]
 	for(new i=0;i<800;i++)
 	{
@@ -35,10 +35,15 @@ public test_output()
 			flatten_input[i]=floatdiv(float(i),2.0)
 		}
 	}
-	new actual_od=forward_model(out_class,charsmax(out_class)+1,100,charsmax(flatten_input)+1,flatten_input)
-	for(new i=0;i<actual_od;i++)
+	new od_count=forward_model(out_class,charsmax(out_class)+1,100,charsmax(flatten_input)+1,flatten_input)
+	new total_dims=1
+	for(new i=0;i<od_count;i++)
 	{
-		server_print("Output: %d Index: %d ValidDims: %d^n",out_class[i],i,actual_od)
+		total_dims*=out_class[i]
+		server_print("Dim: %d Index: %d DimCount: %d^n",out_class[i],i,od_count)
 	}
-	
+	for(new i=od_count;i<od_count+total_dims;i++)
+	{
+		server_print("Value: %d Index: %d ValueCount: %d^n",out_class[i],i,total_dims)
+	}
 }
