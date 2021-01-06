@@ -223,6 +223,10 @@ static cell AMX_NATIVE_CALL load_model(AMX* amx, cell* params)  /* 1 param */
 		{
 			model.push_back((void*)&layer_type);
 		}
+		else if (layer_type._Equal("Sigmoid"))
+		{
+			model.push_back((void*)&layer_type);
+		}
 		else
 		{
 			return -1;
@@ -316,6 +320,11 @@ static cell AMX_NATIVE_CALL forward_model(AMX* amx, cell* params)  /* 3 param */
 			else if (layer_types.at(i)._Equal("Softmax"))
 			{
 				TempMatrix.forwardSoftmax();
+				TensorOrMatrix = false;
+			}
+			else if (layer_types.at(i)._Equal("Sigmoid"))
+			{
+				TempMatrix.forwardSigmoid();
 				TensorOrMatrix = false;
 			}
 			else
