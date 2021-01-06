@@ -36,14 +36,15 @@ public test_output()
 		}
 	}
 	new od_count=forward_model(out_class,charsmax(out_class)+1,100,charsmax(flatten_input)+1,flatten_input)
-	new total_dims=1
+	new Float:total_dims=1.0
 	for(new i=0;i<od_count;i++)
 	{
-		total_dims*=out_class[i]
-		server_print("Dim: %d Index: %d DimCount: %d^n",out_class[i],i,od_count)
+		total_dims=floatmul(out_class[i],total_dims)
+		server_print("Dim: %f Index: %d DimCount: %d^n",out_class[i],i,od_count)
 	}
-	for(new i=od_count;i<od_count+total_dims;i++)
+	new td_int=floatround(total_dims)
+	for(new i=od_count;i<od_count+td_int;i++)
 	{
-		server_print("Value: %d Index: %d ValueCount: %d^n",out_class[i],i,total_dims)
+		server_print("Value: %f Index: %d ValueCount: %d^n",out_class[i],i,td_int)
 	}
 }

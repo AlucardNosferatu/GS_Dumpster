@@ -364,7 +364,13 @@ static cell AMX_NATIVE_CALL forward_model(AMX* amx, cell* params)  /* 3 param */
 			return 2;
 		}
 		else
-			return -2;
+		{
+			for (int i = 0; i < out_dims; i++)
+			{
+				out_class[i] = amx_ftoc(static_cast<float>(out_vec.at(i)));
+			}
+			return 2;
+		}
 	}
 	return -1;
 }
