@@ -33,7 +33,7 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
             g_Utility.TraceLine(vecSrc, vecEnd, dont_ignore_monsters, dont_ignore_glass, pPlayer.edict(), tr);
             if(arrMonsters[i].edict()==tr.pHit)
             {
-                
+                //TODO
             }
         }
     }
