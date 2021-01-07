@@ -4,7 +4,7 @@ import tensorflow as tf
 import xml.etree.ElementTree as ET
 from tqdm import tqdm
 from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Dense, Input
+from tensorflow.keras.layers import Dense, Input, Activation
 
 
 def build_model():
@@ -16,7 +16,7 @@ def build_model():
     x = D1(input_layer)
     x = D2(x)
     x = D3(x)
-    x = O(x)
+    x= O(x)
     b_model = Model(inputs=input_layer, outputs=x)
     return b_model
 
@@ -94,10 +94,21 @@ def build_and_train():
     model.save('addons/amxmodx/data/models/TTD.h5')
 
 
+def load_and_train():
+    batch_count = 10000
+    batch_size = 32
+    x, y = gen_data_batch(batch_count, batch_size)
+    model = tf.keras.models.load_model('addons/amxmodx/data/models/TTD.h5')
+    model.fit(x=x, y=y, batch_size=batch_size, epochs=10)
+    tf.keras.utils.plot_model(model, show_shapes=True)
+    weight_to_xml(model)
+    model.save('addons/amxmodx/data/models/TTD.h5')
+
+
 def load_and_test():
     model = tf.keras.models.load_model('addons/amxmodx/data/models/TTD.h5')
     for i in range(10):
-        x, y = gen_data_batch(1, 32)
+        x, y = gen_data_batch(1, 2)
         y_ = model.predict(x)
         print(y)
         print(y_)
@@ -105,5 +116,5 @@ def load_and_test():
 
 
 if __name__ == "__main__":
-    build_and_train()
+    # load_and_train()
     load_and_test()

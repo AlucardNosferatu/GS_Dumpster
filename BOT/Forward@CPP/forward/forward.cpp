@@ -210,6 +210,10 @@ static cell AMX_NATIVE_CALL load_model(AMX* amx, cell* params)  /* 1 param */
 			Dense_Layer* Dense = new Dense_Layer(rw, layer_key);
 			model.push_back((void*)Dense);
 		}
+		else if (layer_type._Equal("ReLu"))
+		{
+			model.push_back((void*)&layer_type);
+		}
 		else if (layer_type._Equal("Flat"))
 		{
 			model.push_back((void*)&layer_type);
@@ -273,6 +277,10 @@ static cell AMX_NATIVE_CALL forward_model(AMX* amx, cell* params)  /* 3 param */
 					Conv->layer_params.at(3),
 					Conv->layer_bias
 				);
+				TensorOrMatrix = true;
+			}
+			else if (layer_types.at(i)._Equal("ReLu"))
+			{
 				TempTensor.forwardReLu();
 				TensorOrMatrix = true;
 			}
@@ -303,6 +311,11 @@ static cell AMX_NATIVE_CALL forward_model(AMX* amx, cell* params)  /* 3 param */
 					Dense->layer_weights,
 					Dense->layer_bias
 				);
+				TensorOrMatrix = false;
+			}
+			else if (layer_types.at(i)._Equal("ReLu"))
+			{
+				TempMatrix.forwardReLu();
 				TensorOrMatrix = false;
 			}
 			else if (layer_types.at(i)._Equal("BN"))

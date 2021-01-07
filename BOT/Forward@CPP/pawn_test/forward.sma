@@ -26,14 +26,7 @@ public test_output()
 	new Float:flatten_input[16]
 	for(new i=0;i<16;i++)
 	{
-		if(i<8)
-		{
-			flatten_input[i]=floatmul(float(i),2.0)
-		}
-		else
-		{
-			flatten_input[i]=floatdiv(float(i),2.0)
-		}
+		flatten_input[i]=0.0
 	}
 	new od_count=forward_model(out_class,charsmax(out_class)+1,1,charsmax(flatten_input)+1,flatten_input)
 	new Float:total_dims=1.0
