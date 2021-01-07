@@ -263,7 +263,26 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
                 total_distance+=dist;
             }
         }
+        int ping;
+        int loss;
+        const edict_t@ c_edict_pp = pPlayer.edict();
+        g_EngineFuncs.GetPlayerStats(c_edict_pp, ping, loss);
 
+        File@ fHandle;
+        @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+".txt" , OpenFile::APPEND);
+        if( fHandle !is null ) 
+        {
+            fHandle.Write("==================================================\n");
+            fHandle.Write("Player: "+authid_pp+" is scanning...\n");
+            fHandle.Write("PING: "+string(ping)+"\n");
+            fHandle.Write("Packet Loss: "+string(loss)+"\n");
+            fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
+            fHandle.Write("Nearby Monsters: "+string(mCount)+"\n");
+            fHandle.Write("Average health: "+string(total_health/mCount)+"\n");
+            fHandle.Write("Average Distance: "+string(total_distance/mCount)+"\n");
+            fHandle.Write("==================================================\n");
+        }
+        fHandle.Close();
 
 
     }
