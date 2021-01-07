@@ -1,6 +1,7 @@
 array<string> players_in_server;
 dictionary fired_primary;
 dictionary fired_secondary;
+dictionary RadarP;
 
 void PluginInit()
 {
@@ -12,6 +13,7 @@ void PluginInit()
     g_Hooks.RegisterHook(Hooks::Game::MapChange, @MapChangeH);
     g_Hooks.RegisterHook(Hooks::Player::PlayerSpawn, @PlayerSpawnH);
     g_Hooks.RegisterHook(Hooks::Player::PlayerKilled, @PlayerKilledH);
+    g_Hooks.RegisterHook(Hooks::Player::PlayerPostThink, @PlayerPostThinkH);
     g_Hooks.RegisterHook(Hooks::Player::PlayerTakeDamage, @PlayerTakeDamageH);
     g_Hooks.RegisterHook(Hooks::Weapon::WeaponPrimaryAttack, @WeaponPrimaryAttackH);
     g_Hooks.RegisterHook(Hooks::Weapon::WeaponSecondaryAttack, @WeaponSecondaryAttackH);
@@ -147,6 +149,8 @@ HookReturnCode PlayerSpawnH(CBasePlayer@ pPlayer)
     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "New player: "+authid_pp+"\n");
     authid_pp=authid_pp.Replace(":","");
 
+    RadarP.set(authid_pp,666);
+
     int ping;
     int loss;
     const edict_t@ c_edict_pp = pPlayer.edict();
@@ -188,6 +192,8 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Fucked player: "+authid_pp+"\n");
     authid_pp=authid_pp.Replace(":","");
 
+    RadarP.set(authid_pp,0);
+
     int ping;
     int loss;
     const edict_t@ c_edict_pp = pPlayer.edict();
@@ -223,6 +229,44 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
         fHandle.Write("==================================================\n");
     }
     fHandle.Close();
+    return HOOK_CONTINUE;
+}
+
+HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
+{
+    edict_t@ edict_pp = pPlayer.edict();
+    string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
+    authid_pp=authid_pp.Replace(":","");
+    if(RadarP.exists(authid_pp) and int(RadarP[authid_pp])>100)
+    {
+        Vector vecSrc = pPlayer.pev.origin;
+        Math.MakeVectors(pPlayer.pev.angles);
+        Math.VecToAngles(pPlayer.pev.velocity);
+        
+        float total_health=0.0;
+        float total_distance=0.0;
+        int mCount=0;
+
+        uint maxCount = 256;
+        array<CBaseEntity@> arrMonsters(maxCount + 1);
+        mCount=g_EntityFuncs.MonstersInSphere(arrMonsters, vecSrc, 512.0);
+        arrMonsters.resize(mCount);
+        for(int i=0;i<mCount;i++)
+        {
+            TraceResult tr;
+            Vector vecEnd=arrMonsters[i].pev.origin;
+            g_Utility.TraceLine(vecSrc, vecEnd, dont_ignore_monsters, dont_ignore_glass, pPlayer.edict(), tr);
+            if(arrMonsters[i].edict()==tr.pHit)
+            {
+                total_health+=arrMonsters[i].pev.health;
+                float dist=(vecSrc-vecEnd).Length();
+                total_distance+=dist;
+            }
+        }
+
+
+
+    }
     return HOOK_CONTINUE;
 }
 
