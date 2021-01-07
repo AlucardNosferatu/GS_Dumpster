@@ -2,6 +2,9 @@ array<string> players_in_server;
 dictionary fired_primary;
 dictionary fired_secondary;
 dictionary RadarP;
+array<Vector> GraveYards;
+int GYMax;
+int NewestGYIndex;
 
 void PluginInit()
 {
@@ -17,7 +20,53 @@ void PluginInit()
     g_Hooks.RegisterHook(Hooks::Player::PlayerTakeDamage, @PlayerTakeDamageH);
     g_Hooks.RegisterHook(Hooks::Weapon::WeaponPrimaryAttack, @WeaponPrimaryAttackH);
     g_Hooks.RegisterHook(Hooks::Weapon::WeaponSecondaryAttack, @WeaponSecondaryAttackH);
-    
+    init_GraveYard();
+}
+
+void init_GraveYard()
+{
+    GYMax=8;
+    int CurrentGYC=GraveYards.length();
+    if(CurrentGYC!=0)
+    {
+        GraveYards.removeRange(0, CurrentGYC);
+    }
+    NewestGYIndex=0;
+}
+
+float min_of_fArray(array<float> fArray)
+{
+    float minF=999.0;
+    for(int i=0;i<fArray.length();i++)
+    {
+        if(i==0)
+        {
+            minF=fArray[i];
+        }
+        else
+        {
+            if(fArray[i]<minF)
+            {
+                minF=fArray[i];
+            }
+        }
+    }
+    return minF;
+}
+
+void merge_GraveYards(int indexGY,Vector vecDie)
+{
+    Vector midPoint=(GraveYards[indexGY]+vecDie)/2;
+    GraveYards[indexGY]=midPoint;
+}
+
+void dig_NewGrave(Vector vecDie)
+{
+    if(NewestGYIndex<GYMax)
+    {
+        GraveYards.insertLast(vecDie);
+        NewestGYIndex+=1;
+    }
 }
 
 HookReturnCode PlayerDisconnectH(CBasePlayer@ pPlayer)
@@ -105,6 +154,9 @@ HookReturnCode PlayerSayH(SayParameters@ pParams)
 
 HookReturnCode MapChangeH()
 {
+
+    init_GraveYard();
+
     DateTime datetime=DateTime();
     string dt_str;
     datetime.ToString(dt_str);
@@ -199,6 +251,25 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
     const edict_t@ c_edict_pp = pPlayer.edict();
     g_EngineFuncs.GetPlayerStats(c_edict_pp, ping, loss);
 
+    int CurrentGYC=GraveYards.length();
+    array<float> distances(CurrentGYC);
+    Vector vecDie=pPlayer.pev.origin;
+
+    for(int i=0;i<CurrentGYC;i++)
+    {
+        distacnes[i]=(vecDie-GraveYards[i]).Length();
+    }
+    if(distances.length>0 and min_of_fArray(distances)<32.0)
+    {
+        int indexGY=distances.find(min_of_fArray(distances));
+        merge_GraveYards(indexGY,vecDie);
+    }
+    else
+    {
+        dig_NewGrave(vecDie);
+    }
+
+
     File@ fHandle;
     @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+".txt" , OpenFile::APPEND);
     if( fHandle !is null ) 
@@ -263,6 +334,7 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
                 total_distance+=dist;
             }
         }
+        
         int ping;
         int loss;
         const edict_t@ c_edict_pp = pPlayer.edict();
