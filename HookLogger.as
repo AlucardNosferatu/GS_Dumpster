@@ -307,7 +307,6 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
     }
     fHandle.Close();
 
-    File@ fHandle;
     @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+".txt" , OpenFile::APPEND);
     if( fHandle !is null ) 
     {
