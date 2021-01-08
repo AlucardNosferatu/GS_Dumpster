@@ -5,15 +5,17 @@ dictionary RadarP;
 array<Vector> GraveYards;
 int GYMax;
 int NewestGYIndex;
+dictionary sample_count;
 
 void PluginInit()
 {
     g_Module.ScriptInfo.SetAuthor("Scrooge2029");
     g_Module.ScriptInfo.SetContactInfo("1641367382@qq.com");
     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "I love Carol forever and ever!\n");
-    g_Hooks.RegisterHook(Hooks::Player::ClientDisconnect, @PlayerDisconnectH);
-    g_Hooks.RegisterHook(Hooks::Player::ClientSay, @PlayerSayH);
     g_Hooks.RegisterHook(Hooks::Game::MapChange, @MapChangeH);
+    g_Hooks.RegisterHook(Hooks::Player::ClientSay, @ClientSayH);
+    g_Hooks.RegisterHook(Hooks::Player::ClientDisconnect, @ClientDisconnectH);
+    g_Hooks.RegisterHook(Hooks::Player::ClientPutInServer, @ClientPutInServerH);
     g_Hooks.RegisterHook(Hooks::Player::PlayerSpawn, @PlayerSpawnH);
     g_Hooks.RegisterHook(Hooks::Player::PlayerKilled, @PlayerKilledH);
     g_Hooks.RegisterHook(Hooks::Player::PlayerPostThink, @PlayerPostThinkH);
@@ -37,7 +39,7 @@ void init_GraveYard()
 float min_of_fArray(array<float> fArray)
 {
     float minF=999.0;
-    for(int i=0;i<fArray.length();i++)
+    for(uint i=0;i<fArray.length();i++)
     {
         if(i==0)
         {
@@ -69,47 +71,45 @@ void dig_NewGrave(Vector vecDie)
     }
 }
 
-HookReturnCode PlayerDisconnectH(CBasePlayer@ pPlayer)
+HookReturnCode MapChangeH()
 {
+
+    init_GraveYard();
+
     DateTime datetime=DateTime();
     string dt_str;
     datetime.ToString(dt_str);
 
-    edict_t@ edict_pp = pPlayer.edict();
-    string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
-    authid_pp=authid_pp.Replace(":","");
-
-    int ping;
-    int loss;
-    const edict_t@ c_edict_pp = pPlayer.edict();
-    g_EngineFuncs.GetPlayerStats(c_edict_pp, ping, loss);
-
-	File@ fHandle;
-    @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+".txt" , OpenFile::APPEND);
-    if( fHandle !is null ) 
+    int pCount=g_PlayerFuncs.GetNumPlayers();
+    int pCount2=players_in_server.length();
+    if(pCount!=pCount2)
     {
-        fHandle.Write("==================================================\n");
-        fHandle.Write(dt_str+"\n\n");
-        fHandle.Write("Player: "+authid_pp+" ejected!\n");
-        fHandle.Write("PING: "+string(ping)+"\n");
-        fHandle.Write("Packet Loss: "+string(loss)+"\n");
-        fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
-        fHandle.Write("He/She/It died: "+pPlayer.m_iDeaths+" time!\n");
-        fHandle.Write("Current players in map: "+string(g_PlayerFuncs.GetNumPlayers())+"\n");
-        fHandle.Write("==================================================\n");
+        g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "WARNING! PlayerCount Mismatch!\n");
     }
-    fHandle.Close();
-	
-    int index = players_in_server.find(authid_pp);
-    if(index!=-1)
+    for(int n=0;n<pCount2;n++)
     {
-        players_in_server.removeAt(index);
-    }
+        string authid_pp=players_in_server[n];
 
+        File@ fHandle;
+        @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+".txt" , OpenFile::APPEND);
+        if( fHandle !is null ) 
+        {
+            fHandle.Write("==================================================\n");
+            fHandle.Write(dt_str+"\n\n");
+            fHandle.Write("Map changed to: "+g_Engine.mapname+"\n");
+            if(pCount!=pCount2)
+            {
+                fHandle.Write("WARNING! PlayerCount Mismatch!\n");
+            }
+            fHandle.Write("==================================================\n");
+        }
+        fHandle.Close();
+    }
+		
 	return HOOK_CONTINUE;
 }
 
-HookReturnCode PlayerSayH(SayParameters@ pParams)
+HookReturnCode ClientSayH(SayParameters@ pParams)
 {
     DateTime datetime=DateTime();
     string dt_str;
@@ -152,42 +152,54 @@ HookReturnCode PlayerSayH(SayParameters@ pParams)
 	return HOOK_CONTINUE;
 }
 
-HookReturnCode MapChangeH()
+HookReturnCode ClientDisconnectH(CBasePlayer@ pPlayer)
 {
-
-    init_GraveYard();
-
     DateTime datetime=DateTime();
     string dt_str;
     datetime.ToString(dt_str);
 
-    int pCount=g_PlayerFuncs.GetNumPlayers();
-    int pCount2=players_in_server.length();
-    if(pCount!=pCount2)
-    {
-        g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "WARNING! PlayerCount Mismatch!\n");
-    }
-    for(int n=0;n<pCount2;n++)
-    {
-        string authid_pp=players_in_server[n];
+    edict_t@ edict_pp = pPlayer.edict();
+    string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
+    authid_pp=authid_pp.Replace(":","");
 
-        File@ fHandle;
-        @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+".txt" , OpenFile::APPEND);
-        if( fHandle !is null ) 
-        {
-            fHandle.Write("==================================================\n");
-            fHandle.Write(dt_str+"\n\n");
-            fHandle.Write("Map changed to: "+g_Engine.mapname+"\n");
-            if(pCount!=pCount2)
-            {
-                fHandle.Write("WARNING! PlayerCount Mismatch!\n");
-            }
-            fHandle.Write("==================================================\n");
-        }
-        fHandle.Close();
+    int ping;
+    int loss;
+    const edict_t@ c_edict_pp = pPlayer.edict();
+    g_EngineFuncs.GetPlayerStats(c_edict_pp, ping, loss);
+
+	File@ fHandle;
+    @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+".txt" , OpenFile::APPEND);
+    if( fHandle !is null ) 
+    {
+        fHandle.Write("==================================================\n");
+        fHandle.Write(dt_str+"\n\n");
+        fHandle.Write("Player: "+authid_pp+" ejected!\n");
+        fHandle.Write("PING: "+string(ping)+"\n");
+        fHandle.Write("Packet Loss: "+string(loss)+"\n");
+        fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
+        fHandle.Write("He/She/It died: "+pPlayer.m_iDeaths+" time!\n");
+        fHandle.Write("Current players in map: "+string(g_PlayerFuncs.GetNumPlayers())+"\n");
+        fHandle.Write("==================================================\n");
     }
-		
+    fHandle.Close();
+	
+    int index = players_in_server.find(authid_pp);
+    if(index!=-1)
+    {
+        players_in_server.removeAt(index);
+    }
+
 	return HOOK_CONTINUE;
+}
+
+HookReturnCode ClientPutInServerH(CBasePlayer@ pPlayer)
+{
+    edict_t@ edict_pp = pPlayer.edict();
+    string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
+    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "New player: "+authid_pp+"\n");
+    authid_pp=authid_pp.Replace(":","");
+    RadarP.set(authid_pp,666);
+    return HOOK_CONTINUE;
 }
 
 HookReturnCode PlayerSpawnH(CBasePlayer@ pPlayer)
@@ -257,9 +269,9 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
 
     for(int i=0;i<CurrentGYC;i++)
     {
-        distacnes[i]=(vecDie-GraveYards[i]).Length();
+        distances[i]=(vecDie-GraveYards[i]).Length();
     }
-    if(distances.length>0 and min_of_fArray(distances)<32.0)
+    if(distances.length()>0 and min_of_fArray(distances)<32.0)
     {
         int indexGY=distances.find(min_of_fArray(distances));
         merge_GraveYards(indexGY,vecDie);
@@ -317,46 +329,76 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
         float total_health=0.0;
         float total_distance=0.0;
         int mCount=0;
-
+        int valid_mCount=0;
         uint maxCount = 256;
         array<CBaseEntity@> arrMonsters(maxCount + 1);
         mCount=g_EntityFuncs.MonstersInSphere(arrMonsters, vecSrc, 512.0);
         arrMonsters.resize(mCount);
+        string all_enemies="";
         for(int i=0;i<mCount;i++)
         {
-            TraceResult tr;
-            Vector vecEnd=arrMonsters[i].pev.origin;
-            g_Utility.TraceLine(vecSrc, vecEnd, dont_ignore_monsters, dont_ignore_glass, pPlayer.edict(), tr);
-            if(arrMonsters[i].edict()==tr.pHit)
+            if(!arrMonsters[i].IsPlayer() and arrMonsters[i].IsMonster() and arrMonsters[i].IsAlive() and arrMonsters[i].IRelationshipByClass(CLASS_PLAYER)>0)
             {
+                all_enemies+=arrMonsters[i].GetClassname();
+                all_enemies+="\n";
+                Vector vecEnd=arrMonsters[i].pev.origin;
                 total_health+=arrMonsters[i].pev.health;
                 float dist=(vecSrc-vecEnd).Length();
                 total_distance+=dist;
+                valid_mCount+=1;
+
             }
         }
-        
-        int ping;
-        int loss;
-        const edict_t@ c_edict_pp = pPlayer.edict();
-        g_EngineFuncs.GetPlayerStats(c_edict_pp, ping, loss);
-
-        File@ fHandle;
-        @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+".txt" , OpenFile::APPEND);
-        if( fHandle !is null ) 
+        if(sample_count.exists(authid_pp))
         {
-            fHandle.Write("==================================================\n");
-            fHandle.Write("Player: "+authid_pp+" is scanning...\n");
-            fHandle.Write("PING: "+string(ping)+"\n");
-            fHandle.Write("Packet Loss: "+string(loss)+"\n");
-            fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
-            fHandle.Write("Nearby Monsters: "+string(mCount)+"\n");
-            fHandle.Write("Average health: "+string(total_health/mCount)+"\n");
-            fHandle.Write("Average Distance: "+string(total_distance/mCount)+"\n");
-            fHandle.Write("==================================================\n");
+            if(int(sample_count[authid_pp])>=200)
+            {
+                // if(valid_mCount!=0)
+                // {
+                //     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,"Detected:"+string(valid_mCount)+" AveHP:"+string(total_health/float(valid_mCount))+" AveDist:"+string(total_distance/float(valid_mCount)));
+                // }
+                // else{
+                //     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,"No enemies detected.\n");
+                // }
+                sample_count.set(authid_pp,0);
+                int ping;
+                int loss;
+                const edict_t@ c_edict_pp = pPlayer.edict();
+                g_EngineFuncs.GetPlayerStats(c_edict_pp, ping, loss);
+
+                File@ fHandle;
+                @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+"_radar.txt" , OpenFile::APPEND);
+                if( fHandle !is null ) 
+                {
+                    fHandle.Write("==================================================\n");
+                    fHandle.Write("Player: "+authid_pp+" is scanning...\n");
+                    fHandle.Write("PING: "+string(ping)+"\n");
+                    fHandle.Write("Packet Loss: "+string(loss)+"\n");
+                    fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
+                    fHandle.Write("Nearby Monsters: "+string(valid_mCount)+"\n");
+                    if(valid_mCount!=0)
+                    {
+                        fHandle.Write("Average health: "+string(total_health/float(valid_mCount))+"\n");
+                        fHandle.Write("Average Distance: "+string(total_health/float(valid_mCount))+"\n");                    
+                    }
+                    else{
+                        fHandle.Write("Average health: "+string(0)+"\n");
+                        fHandle.Write("Average Distance: "+string(-1)+"\n");                    
+                    }
+                    fHandle.Write("==================================================\n");
+                }
+                fHandle.Close();
+            }
+            else
+            {
+                sample_count.set(authid_pp,int(sample_count[authid_pp])+1);
+            }
         }
-        fHandle.Close();
-
-
+        else
+        {
+            sample_count.set(authid_pp,0);
+        }
+        
     }
     return HOOK_CONTINUE;
 }
