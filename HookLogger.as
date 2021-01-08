@@ -1,13 +1,9 @@
 array<string> players_in_server;
 dictionary fired_primary;
 dictionary fired_secondary;
-<<<<<<< Updated upstream
-dictionary RadarP;
-=======
 dictionary dps;
 dictionary RadarP;
 dictionary birthplaces;
->>>>>>> Stashed changes
 array<Vector> GraveYards;
 array<DateTime> PrevTolls;
 array<TimeDifference> TimeToNext;
@@ -215,10 +211,7 @@ HookReturnCode ClientPutInServerH(CBasePlayer@ pPlayer)
     // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "New player: "+authid_pp+"\n");
     authid_pp=authid_pp.Replace(":","");
     RadarP.set(authid_pp,666);
-<<<<<<< Updated upstream
-=======
     birthplaces.set(authid_pp,pPlayer.pev.origin);
->>>>>>> Stashed changes
     return HOOK_CONTINUE;
 }
 
@@ -234,10 +227,7 @@ HookReturnCode PlayerSpawnH(CBasePlayer@ pPlayer)
     authid_pp=authid_pp.Replace(":","");
 
     RadarP.set(authid_pp,666);
-<<<<<<< Updated upstream
-=======
     birthplaces.set(authid_pp,pPlayer.pev.origin);
->>>>>>> Stashed changes
 
     int ping;
     int loss;
@@ -378,10 +368,7 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
         int CurrentGYC=GraveYards.length();
         float to_nearest_GY=-1.0;
         float correspond_DPM=0.0;
-<<<<<<< Updated upstream
-=======
         float to_birthplace=-1.0;
->>>>>>> Stashed changes
         if(CurrentGYC>0){
             array<float> distances;
             for(int i=0;i<CurrentGYC;i++)
@@ -395,10 +382,7 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
             {
                 correspond_DPM=60.0/float(TimeToNext[indexGY].GetSeconds());
             }
-<<<<<<< Updated upstream
-=======
             to_birthplace=(Vector(birthplaces[authid_pp])-pPlayer.pev.origin).Length();
->>>>>>> Stashed changes
         }
         if(sample_count.exists(authid_pp))
         {
@@ -446,14 +430,11 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
                 {
                     fHandle.Write("==================================================\n");
                     fHandle.Write("Player: "+authid_pp+" is scanning...\n");
-<<<<<<< Updated upstream
-=======
                     fHandle.Write("Health: "+string(pPlayer.pev.health)+"\n");
                     fHandle.Write("Armor: "+string(pPlayer.pev.armorvalue)+"\n");
                     fHandle.Write("Point At (x): "+string(pPlayer.GetGunPosition().x)+"\n");
                     fHandle.Write("Point At (y): "+string(pPlayer.GetGunPosition().y)+"\n");
                     fHandle.Write("Point At (z): "+string(pPlayer.GetGunPosition().z)+"\n");
->>>>>>> Stashed changes
                     fHandle.Write("PING: "+string(ping)+"\n");
                     fHandle.Write("Packet Loss: "+string(loss)+"\n");
                     fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
@@ -470,19 +451,13 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
                     if(to_nearest_GY<512.0)
                     {
                         fHandle.Write("NearestGY:"+string(to_nearest_GY)+"\n");
-<<<<<<< Updated upstream
-=======
                         fHandle.Write("To BirthPlace:"+string(to_birthplace)+"\n");
->>>>>>> Stashed changes
                         fHandle.Write("DPM:"+string(correspond_DPM)+"\n");
                     }
                     else
                     {
                         fHandle.Write("NearestGY:"+string(-1.0)+"\n");
-<<<<<<< Updated upstream
-=======
                         fHandle.Write("To BirthPlace:"+string(-1.0)+"\n");
->>>>>>> Stashed changes
                         fHandle.Write("DPM:"+string(0.0)+"\n");
                     }
                     fHandle.Write("==================================================\n");
