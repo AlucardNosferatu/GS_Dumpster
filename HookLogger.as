@@ -439,13 +439,13 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
                     }
                     if(to_nearest_GY<512.0)
                     {
-                        fHandle.Write("NearestGY:"+string(to_nearest_GY));
-                        fHandle.Write("DPM:"+string(correspond_DPM));
+                        fHandle.Write("NearestGY:"+string(to_nearest_GY)+"\n");
+                        fHandle.Write("DPM:"+string(correspond_DPM)+"\n");
                     }
                     else
                     {
-                        fHandle.Write("NearestGY:"+string(-1.0));
-                        fHandle.Write("DPM:"+string(0.0));
+                        fHandle.Write("NearestGY:"+string(-1.0)+"\n");
+                        fHandle.Write("DPM:"+string(0.0)+"\n");
                     }
                     fHandle.Write("==================================================\n");
                 }
