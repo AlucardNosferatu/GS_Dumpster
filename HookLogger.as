@@ -343,8 +343,11 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
         
         float total_health=0.0;
         float total_distance=0.0;
+        float total_ally_health=0.0;
+        float total_ally_distance=0.0;
         int mCount=0;
         int valid_mCount=0;
+        int nearby_pCount=0;
         uint maxCount = 256;
         array<CBaseEntity@> arrMonsters(maxCount + 1);
         mCount=g_EntityFuncs.MonstersInSphere(arrMonsters, vecSrc, 512.0);
@@ -362,6 +365,12 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
                 total_distance+=dist;
                 valid_mCount+=1;
 
+            }
+            else if(arrMonsters[i].IsPlayer() and !(arrMonsters[i].edict() is pPlayer.edict()))
+            {
+                total_ally_distance+=(arrMonsters[i].pev.origin-vecSrc).Length();
+                total_ally_health+=arrMonsters[i].pev.health;
+                nearby_pCount+=1;
             }
         }
         int CurrentGYC=GraveYards.length();
@@ -426,9 +435,15 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
                 const edict_t@ c_edict_pp = pPlayer.edict();
                 g_EngineFuncs.GetPlayerStats(c_edict_pp, ping, loss);
 
-                CBasePlayerWeapon@  weaponHeld=CBasePlayerWeapon@(pPlayer.m_hActiveItem.GetEntity());
-                int AmmoCount=pPlayer.m_rgAmmo(size_t(weaponHeld.m_iPrimaryAmmoType)));
-                float FireRate=1/weaponHeld.m_flNextPrimaryAttack;
+                CBasePlayerWeapon@ weaponHeld= cast<CBasePlayerWeapon@>(pPlayer.m_hActiveItem.GetEntity());
+                int AmmoCount=0;
+                if(weaponHeld.m_iPrimaryAmmoType!=-1)
+                {
+                    AmmoCount=pPlayer.m_rgAmmo(size_t(weaponHeld.m_iPrimaryAmmoType));
+                }
+                float FireRate=weaponHeld.m_flNextPrimaryAttack;
+                int ClipSize=weaponHeld.iMaxClip();
+                int AcutalAmmoInClip=weaponHeld.m_iClip;
 
                 File@ fHandle;
                 @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+"_radar.txt" , OpenFile::APPEND);
@@ -442,13 +457,21 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
                     fHandle.Write("==================================================\n");
                     fHandle.Write("Health: "+string(pPlayer.pev.health)+"\n");
                     fHandle.Write("Armor: "+string(pPlayer.pev.armorvalue)+"\n");
-                    fHandle.Write("Point At (x): "+string(pPlayer.GetGunPosition().x)+"\n");
-                    fHandle.Write("Point At (y): "+string(pPlayer.GetGunPosition().y)+"\n");
-                    fHandle.Write("Point At (z): "+string(pPlayer.GetGunPosition().z)+"\n");
-                    fHandle.Write("Total Player In Server: "+string(g_PlayerFuncs.GetNumPlayers())+"\n");
+                    fHandle.Write("Other Player In Server: "+string(nearby_pCount)+"\n");
+                    if(nearby_pCount==0)
+                    {
+                        fHandle.Write("Other Player Ave Distance: "+string(-1.0)+"\n");
+                        fHandle.Write("Other Player Ave Health: "+string(0)+"\n");
+                    }
+                    else
+                    {
+                        fHandle.Write("Other Player Ave Distance: "+string(total_ally_health/float(nearby_pCount))+"\n");
+                        fHandle.Write("Other Player Ave Health: "+string(total_ally_distance/float(nearby_pCount))+"\n");
+                    }
                     fHandle.Write("Weapon: "+weaponHeld.GetClassname()+"\n");
                     fHandle.Write("Ammo: "+string(AmmoCount)+"\n");
-                    fHandle.Write("FireRate: "+string(FireRate)+"\n");
+                    fHandle.Write("ClipSize: "+string(ClipSize)+"\n");
+                    fHandle.Write("AmmoInClip: "+string(AcutalAmmoInClip)+"\n");
                     fHandle.Write("Nearby Monsters: "+string(valid_mCount)+"\n");
                     if(valid_mCount!=0)
                     {
