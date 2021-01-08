@@ -264,7 +264,7 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
     string dt_str;
     datetime.ToString(dt_str);
 
-    uint ms=datetime.GetMilliseconds();
+    int ms=int(datetime.GetMilliseconds());
 
     edict_t@ edict_pp = pPlayer.edict();
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
@@ -464,7 +464,7 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
                     DateTime datetime=DateTime();
                     string dstr;
                     datetime.ToString(dstr);
-                    uint ms=datetime.GetMilliseconds();
+                    int ms=int(datetime.GetMilliseconds());
                     fHandle.Write("==================================================\n");
                     fHandle.Write(dstr+"\n\n");
                     fHandle.Write(string(ms)+"ms \n");
