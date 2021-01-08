@@ -264,6 +264,8 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
     string dt_str;
     datetime.ToString(dt_str);
 
+    uint ms=datetime.GetMilliseconds();
+
     edict_t@ edict_pp = pPlayer.edict();
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
     // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Fucked player: "+authid_pp+"\n");
@@ -302,6 +304,7 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
     {
         fHandle.Write("==================================================\n");
         fHandle.Write(dt_str+"\n\n");
+        fHandle.Write(string(ms)+"ms \n");
         fHandle.Write("Player: "+authid_pp+" get fucked!!!\n");
         fHandle.Write("==================================================\n");
     }
@@ -458,7 +461,13 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
                 @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+"_radar.txt" , OpenFile::APPEND);
                 if( fHandle !is null ) 
                 {
+                    DateTime datetime=DateTime();
+                    string dstr;
+                    datetime.ToString(dstr);
+                    uint ms=datetime.GetMilliseconds();
                     fHandle.Write("==================================================\n");
+                    fHandle.Write(dstr+"\n\n");
+                    fHandle.Write(string(ms)+"ms \n");
                     fHandle.Write("Player: "+authid_pp+" is scanning...\n");
                     fHandle.Write("PING: "+string(ping)+"\n");
                     fHandle.Write("Packet Loss: "+string(loss)+"\n");
