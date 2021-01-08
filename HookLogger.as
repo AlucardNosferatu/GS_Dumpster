@@ -29,7 +29,7 @@ void PluginInit()
 
 void init_GraveYard()
 {
-    GYMax=8;
+    GYMax=16;
     int CurrentGYC=GraveYards.length();
     if(CurrentGYC!=0)
     {
@@ -436,6 +436,16 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
                     else{
                         fHandle.Write("Average health: "+string(0)+"\n");
                         fHandle.Write("Average Distance: "+string(-1)+"\n");                    
+                    }
+                    if(to_nearest_GY<512.0)
+                    {
+                        fHandle.Write("NearestGY:"+string(to_nearest_GY));
+                        fHandle.Write("DPM:"+string(correspond_DPM));
+                    }
+                    else
+                    {
+                        fHandle.Write("NearestGY:"+string(-1.0));
+                        fHandle.Write("DPM:"+string(0.0));
                     }
                     fHandle.Write("==================================================\n");
                 }
