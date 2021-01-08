@@ -296,6 +296,15 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
         g_PlayerFuncs.ShowMessage(pPlayer, "Current GYC:"+string(distances.length())+", Dig a new grave:"+string(vecDie.x)+"#"+string(vecDie.y)+"#"+string(vecDie.z)+"\n");
     }
 
+    File@ fHandle;
+    @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+"_radar.txt" , OpenFile::APPEND);
+    if( fHandle !is null ) 
+    {
+        fHandle.Write("==================================================\n");
+        fHandle.Write(dt_str+"\n\n");
+        fHandle.Write("Player: "+authid_pp+" get fucked!!!\n");
+        fHandle.Write("==================================================\n");
+    fHandle.Close();
 
     File@ fHandle;
     @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+".txt" , OpenFile::APPEND);
