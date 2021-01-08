@@ -3,6 +3,8 @@ dictionary fired_primary;
 dictionary fired_secondary;
 dictionary RadarP;
 array<Vector> GraveYards;
+array<DateTime> PrevTolls;
+array<TimeDifference> TimeToNext;
 int GYMax;
 int NewestGYIndex;
 dictionary sample_count;
@@ -32,6 +34,8 @@ void init_GraveYard()
     if(CurrentGYC!=0)
     {
         GraveYards.removeRange(0, CurrentGYC);
+        PrevTolls.removeRange(0, CurrentGYC);
+        TimeToNext.removeRange(0, CurrentGYC);
     }
     NewestGYIndex=0;
 }
@@ -58,15 +62,21 @@ float min_of_fArray(array<float> fArray)
 
 void merge_GraveYards(int indexGY,Vector vecDie)
 {
+    DateTime FToll=DateTime();
     Vector midPoint=(GraveYards[indexGY]+vecDie)/2;
     GraveYards[indexGY]=midPoint;
+    TimeToNext[indexGY]=FToll-PrevTolls[indexGY];
+    PrevTolls[indexGY]=FToll;
 }
 
 void dig_NewGrave(Vector vecDie)
 {
     if(NewestGYIndex<GYMax)
     {
+        DateTime FToll=DateTime();
         GraveYards.insertLast(vecDie);
+        TimeToNext.insertLast(FToll-FToll);
+        PrevTolls.insertLast(FToll);
         NewestGYIndex+=1;
     }
 }
@@ -118,7 +128,7 @@ HookReturnCode ClientSayH(SayParameters@ pParams)
     CBasePlayer@ pPlayer=pParams.GetPlayer();
     edict_t@ edict_pp = pPlayer.edict();
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
-    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Player: "+authid_pp+" says:\n"+pParams.GetCommand()+"\n");
+    // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Player: "+authid_pp+" says:\n"+pParams.GetCommand()+"\n");
     authid_pp=authid_pp.Replace(":","");
 
     int ping;
@@ -196,7 +206,7 @@ HookReturnCode ClientPutInServerH(CBasePlayer@ pPlayer)
 {
     edict_t@ edict_pp = pPlayer.edict();
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
-    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "New player: "+authid_pp+"\n");
+    // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "New player: "+authid_pp+"\n");
     authid_pp=authid_pp.Replace(":","");
     RadarP.set(authid_pp,666);
     return HOOK_CONTINUE;
@@ -210,7 +220,7 @@ HookReturnCode PlayerSpawnH(CBasePlayer@ pPlayer)
 		
     edict_t@ edict_pp = pPlayer.edict();
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
-    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "New player: "+authid_pp+"\n");
+    // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "New player: "+authid_pp+"\n");
     authid_pp=authid_pp.Replace(":","");
 
     RadarP.set(authid_pp,666);
@@ -253,7 +263,7 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
 
     edict_t@ edict_pp = pPlayer.edict();
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
-    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Fucked player: "+authid_pp+"\n");
+    // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Fucked player: "+authid_pp+"\n");
     authid_pp=authid_pp.Replace(":","");
 
     RadarP.set(authid_pp,0);
@@ -271,14 +281,16 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
     {
         distances[i]=(vecDie-GraveYards[i]).Length();
     }
-    if(distances.length()>0 and min_of_fArray(distances)<32.0)
+    if(distances.length()>0 and min_of_fArray(distances)<256.0)
     {
         int indexGY=distances.find(min_of_fArray(distances));
         merge_GraveYards(indexGY,vecDie);
+        g_PlayerFuncs.ShowMessage(pPlayer,"Merge with a old grave:"+string(indexGY)+"\nlocates:"+string(vecDie.x)+"#"+string(vecDie.y)+"#"+string(vecDie.z)+"\nDPM:"+string(60.0/float(TimeToNext[indexGY].GetSeconds())));
     }
     else
     {
         dig_NewGrave(vecDie);
+        g_PlayerFuncs.ShowMessage(pPlayer, "Current GYC:"+string(distances.length())+", Dig a new grave:"+string(vecDie.x)+"#"+string(vecDie.y)+"#"+string(vecDie.z)+"\n");
     }
 
 
@@ -349,17 +361,57 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
 
             }
         }
+        int CurrentGYC=GraveYards.length();
+        float to_nearest_GY=-1.0;
+        float correspond_DPM=0.0;
+        if(CurrentGYC>0){
+            array<float> distances;
+            for(int i=0;i<CurrentGYC;i++)
+            {
+                distances.insertLast((GraveYards[i]-vecSrc).Length());
+            }
+            to_nearest_GY=min_of_fArray(distances);
+            int indexGY=distances.find(to_nearest_GY);
+            int TTN=TimeToNext[indexGY].GetSeconds();
+            if(TTN!=0)
+            {
+                correspond_DPM=60.0/float(TimeToNext[indexGY].GetSeconds());
+            }
+        }
         if(sample_count.exists(authid_pp))
         {
             if(int(sample_count[authid_pp])>=200)
             {
-                // if(valid_mCount!=0)
-                // {
-                //     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,"Detected:"+string(valid_mCount)+" AveHP:"+string(total_health/float(valid_mCount))+" AveDist:"+string(total_distance/float(valid_mCount)));
-                // }
-                // else{
-                //     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,"No enemies detected.\n");
-                // }
+                string info="";
+                if(valid_mCount!=0)
+                {
+                    info="Detected:"+string(valid_mCount);
+                    info+=" AveHP:"+string(total_health/float(valid_mCount));
+                    info+=" AveDist:"+string(total_distance/float(valid_mCount));
+                    if(to_nearest_GY>0 and to_nearest_GY<512.0)
+                    {
+                        info+=" NearestGY:"+string(to_nearest_GY);
+                        info+=" DPM:"+string(correspond_DPM);
+                    }
+                    else
+                    {
+                        info+=" No GY detected.";
+                    }
+                }
+                else{
+                    info="No enemies detected. ";
+                    if(to_nearest_GY>0 and to_nearest_GY<512.0)
+                    {
+                        info+="To nearest Graveyard:"+string(to_nearest_GY);
+                        info+=" DPM:"+string(correspond_DPM);
+                    }
+                    else
+                    {
+                        info+="No Graveyards on this map now.";
+                    }
+                }
+                info+="\n";
+                g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,info);
                 sample_count.set(authid_pp,0);
                 int ping;
                 int loss;
@@ -414,7 +466,7 @@ HookReturnCode PlayerTakeDamageH(DamageInfo@ pDamageInfo)
         CBasePlayer@ pPlayer=cast<CBasePlayer@>(pDamageInfo.pVictim);
         edict_t@ edict_pp = pPlayer.edict();
         string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
-        g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Damaged player: "+authid_pp+"\n");
+        // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Damaged player: "+authid_pp+"\n");
         authid_pp=authid_pp.Replace(":","");
 
         int ping;
@@ -545,7 +597,7 @@ HookReturnCode WeaponPrimaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWe
 
     edict_t@ edict_pp = pPlayer.edict();
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
-    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Player: "+authid_pp+" is attacking!\n");
+    // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Player: "+authid_pp+" is attacking!\n");
     authid_pp=authid_pp.Replace(":","");
 
     int ping;
@@ -560,7 +612,7 @@ HookReturnCode WeaponPrimaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWe
         if(string(fired_primary[authid_pp])==pWeapon.GetClassname())
         {
             // Same weapon
-            g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Time Elapsed: "+string(g_Engine.time-float(fired_primary[authid_pp+"_time"]))+"\n");
+            // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Time Elapsed: "+string(g_Engine.time-float(fired_primary[authid_pp+"_time"]))+"\n");
             
             if(g_Engine.time-float(fired_primary[authid_pp+"_time"])>20)
             {
@@ -616,7 +668,7 @@ HookReturnCode WeaponSecondaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ p
 
     edict_t@ edict_pp = pPlayer.edict();
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
-    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Player: "+authid_pp+" is attacking!\n");
+    // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Player: "+authid_pp+" is attacking!\n");
     authid_pp=authid_pp.Replace(":","");
 
     int ping;
@@ -631,7 +683,7 @@ HookReturnCode WeaponSecondaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ p
         if(string(fired_secondary[authid_pp])==pWeapon.GetClassname())
         {
             // Same weapon
-            g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Time Elapsed: "+string(g_Engine.time-float(fired_secondary[authid_pp+"_time"]))+"\n");
+            // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Time Elapsed: "+string(g_Engine.time-float(fired_secondary[authid_pp+"_time"]))+"\n");
 
             if(g_Engine.time-float(fired_secondary[authid_pp+"_time"])>20)
             {
