@@ -435,6 +435,7 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
                     fHandle.Write("Point At (x): "+string(pPlayer.GetGunPosition().x)+"\n");
                     fHandle.Write("Point At (y): "+string(pPlayer.GetGunPosition().y)+"\n");
                     fHandle.Write("Point At (z): "+string(pPlayer.GetGunPosition().z)+"\n");
+                    fHandle.Write("Total Player In Server: "+string(g_PlayerFuncs.GetNumPlayers())+"\n");
                     fHandle.Write("PING: "+string(ping)+"\n");
                     fHandle.Write("Packet Loss: "+string(loss)+"\n");
                     fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
