@@ -729,7 +729,7 @@ HookReturnCode WeaponPrimaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWe
             fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
             fHandle.Write("Primary ammo: "+pWeapon.pszAmmo1()+"\n");
             fHandle.Write(string(pWeapon.m_iClip)+" rounds left in the current clip.\n");
-            fHandle.Write(string(pPlayer.m_rgAmmo(size_t(pWeapon.m_iPrimaryAmmoType)))+" rounds left in total.\n");
+            // fHandle.Write(string(pPlayer.m_rgAmmo(size_t(pWeapon.m_iPrimaryAmmoType)))+" rounds left in total.\n");
             fHandle.Write("==================================================\n");
         }
         fHandle.Close();
@@ -800,7 +800,7 @@ HookReturnCode WeaponSecondaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ p
             fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
             fHandle.Write("Secondary ammo: "+pWeapon.pszAmmo2()+"\n");
             fHandle.Write(string(pWeapon.m_iClip2)+" rounds left in the current clip.\n");
-            fHandle.Write(string(pPlayer.m_rgAmmo(size_t(pWeapon.m_iSecondaryAmmoType)))+" rounds left in total.\n");
+            // fHandle.Write(string(pPlayer.m_rgAmmo(size_t(pWeapon.m_iSecondaryAmmoType)))+" rounds left in total.\n");
             fHandle.Write("==================================================\n");
         }
         fHandle.Close();
