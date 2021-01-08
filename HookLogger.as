@@ -304,6 +304,7 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
         fHandle.Write(dt_str+"\n\n");
         fHandle.Write("Player: "+authid_pp+" get fucked!!!\n");
         fHandle.Write("==================================================\n");
+    }
     fHandle.Close();
 
     File@ fHandle;
