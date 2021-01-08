@@ -428,6 +428,7 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
 
                 CBasePlayerWeapon@  weaponHeld=CBasePlayerWeapon@(pPlayer.m_hActiveItem.GetEntity());
                 int AmmoCount=pPlayer.m_rgAmmo(size_t(weaponHeld.m_iPrimaryAmmoType)));
+                float FireRate=1/weaponHeld.m_flNextPrimaryAttack;
 
                 File@ fHandle;
                 @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+"_radar.txt" , OpenFile::APPEND);
@@ -447,7 +448,7 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
                     fHandle.Write("Total Player In Server: "+string(g_PlayerFuncs.GetNumPlayers())+"\n");
                     fHandle.Write("Weapon: "+weaponHeld.GetClassname()+"\n");
                     fHandle.Write("Ammo: "+string(AmmoCount)+"\n");
-                    fHandle.Write("Ammo: "+string(AmmoCount)+"\n");
+                    fHandle.Write("FireRate: "+string(FireRate)+"\n");
                     fHandle.Write("Nearby Monsters: "+string(valid_mCount)+"\n");
                     if(valid_mCount!=0)
                     {
