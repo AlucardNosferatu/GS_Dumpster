@@ -264,8 +264,6 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
     string dt_str;
     datetime.ToString(dt_str);
 
-    int ms=int(datetime.GetMilliseconds());
-
     edict_t@ edict_pp = pPlayer.edict();
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
     // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Fucked player: "+authid_pp+"\n");
@@ -464,10 +462,8 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
                     DateTime datetime=DateTime();
                     string dstr;
                     datetime.ToString(dstr);
-                    int ms=int(datetime.GetMilliseconds());
                     fHandle.Write("==================================================\n");
                     fHandle.Write(dstr+"\n\n");
-                    fHandle.Write(string(ms)+"ms \n");
                     fHandle.Write("Player: "+authid_pp+" is scanning...\n");
                     fHandle.Write("PING: "+string(ping)+"\n");
                     fHandle.Write("Packet Loss: "+string(loss)+"\n");
