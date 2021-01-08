@@ -1,7 +1,6 @@
 array<string> players_in_server;
 dictionary fired_primary;
 dictionary fired_secondary;
-dictionary dps;
 dictionary RadarP;
 dictionary birthplaces;
 array<Vector> GraveYards;
@@ -404,7 +403,8 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
                         info+=" No GY detected.";
                     }
                 }
-                else{
+                else
+                {
                     info="No enemies detected. ";
                     if(to_nearest_GY>0 and to_nearest_GY<512.0)
                     {
@@ -418,11 +418,16 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
                 }
                 info+="\n";
                 g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,info);
+
                 sample_count.set(authid_pp,0);
+
                 int ping;
                 int loss;
                 const edict_t@ c_edict_pp = pPlayer.edict();
                 g_EngineFuncs.GetPlayerStats(c_edict_pp, ping, loss);
+
+                CBasePlayerWeapon@  weaponHeld=CBasePlayerWeapon@(pPlayer.m_hActiveItem.GetEntity());
+                int AmmoCount=pPlayer.m_rgAmmo(size_t(weaponHeld.m_iPrimaryAmmoType)));
 
                 File@ fHandle;
                 @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+"_radar.txt" , OpenFile::APPEND);
@@ -430,15 +435,19 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
                 {
                     fHandle.Write("==================================================\n");
                     fHandle.Write("Player: "+authid_pp+" is scanning...\n");
+                    fHandle.Write("PING: "+string(ping)+"\n");
+                    fHandle.Write("Packet Loss: "+string(loss)+"\n");
+                    fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
+                    fHandle.Write("==================================================\n");
                     fHandle.Write("Health: "+string(pPlayer.pev.health)+"\n");
                     fHandle.Write("Armor: "+string(pPlayer.pev.armorvalue)+"\n");
                     fHandle.Write("Point At (x): "+string(pPlayer.GetGunPosition().x)+"\n");
                     fHandle.Write("Point At (y): "+string(pPlayer.GetGunPosition().y)+"\n");
                     fHandle.Write("Point At (z): "+string(pPlayer.GetGunPosition().z)+"\n");
                     fHandle.Write("Total Player In Server: "+string(g_PlayerFuncs.GetNumPlayers())+"\n");
-                    fHandle.Write("PING: "+string(ping)+"\n");
-                    fHandle.Write("Packet Loss: "+string(loss)+"\n");
-                    fHandle.Write("Position Vector: "+pPlayer.Center().ToString()+"\n");
+                    fHandle.Write("Weapon: "+weaponHeld.GetClassname()+"\n");
+                    fHandle.Write("Ammo: "+string(AmmoCount)+"\n");
+                    fHandle.Write("Ammo: "+string(AmmoCount)+"\n");
                     fHandle.Write("Nearby Monsters: "+string(valid_mCount)+"\n");
                     if(valid_mCount!=0)
                     {
