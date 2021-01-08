@@ -457,6 +457,8 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
                     fHandle.Write("==================================================\n");
                     fHandle.Write("Health: "+string(pPlayer.pev.health)+"\n");
                     fHandle.Write("Armor: "+string(pPlayer.pev.armorvalue)+"\n");
+                    fHandle.Write("Frags: "+string(pPlayer.pev.frags)+"\n");
+                    fHandle.Write("Death: "+string(pPlayer.m_iDeaths)+"\n");
                     fHandle.Write("Other Player In Server: "+string(nearby_pCount)+"\n");
                     if(nearby_pCount==0)
                     {
