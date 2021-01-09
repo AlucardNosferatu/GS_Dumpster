@@ -67,14 +67,16 @@ HookReturnCode EnhancePrimary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
     }
     if(MindControllerP.exists(authid_pp) and int(MindControllerP[authid_pp])>100)
     {
-        Vector vecSrc=pPlayer.pev.origin;
-        Vector AimAt=pPlayer.GetGunPosition();
+        g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,"MC Activated...\n");
+        Vector vecSrc = pPlayer.GetGunPosition();
+        Vector vecEnd = pPlayer.GetAutoaimVector( 0.0f );
+        Math.MakeVectors( pPlayer.pev.v_angle );
         TraceResult tr;
-        g_Utility.TraceLine(vecSrc, AimAt, dont_ignore_monsters, ignore_glass, pPlayer.edict(), tr)	;
-        if( tr.pHit !is null)
+        g_Utility.TraceLine(vecSrc, vecEnd*65536.0f, dont_ignore_monsters, ignore_glass, pPlayer.edict(), tr)	;
+        if(tr.pHit !is null)
         {
             CBaseEntity@ HitM=g_EntityFuncs.Instance(tr.pHit);
-            g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,HitM.GetClassname());
+            g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,HitM.GetClassname()+"\n");
             if(HitM.IsMonster() and HitM.IRelationshipByClass(CLASS_PLAYER)>0)
             {
                 HitM.SetClassification(11);
