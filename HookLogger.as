@@ -302,7 +302,6 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
     {
         fHandle.Write("==================================================\n");
         fHandle.Write(dt_str+"\n\n");
-        fHandle.Write(string(ms)+"ms \n");
         fHandle.Write("Player: "+authid_pp+" get fucked!!!\n");
         fHandle.Write("==================================================\n");
     }
@@ -436,7 +435,7 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
                     }
                 }
                 info+="\n";
-                g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,info);
+                // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,info);
 
                 sample_count.set(authid_pp,0);
 

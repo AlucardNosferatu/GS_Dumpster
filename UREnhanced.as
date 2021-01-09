@@ -1,4 +1,5 @@
 dictionary EnhancedP;
+dictionary MindControllerP;
 
 void PluginInit()
 {
@@ -29,7 +30,6 @@ CClientCommand g_GetEnhancedMore("fuckfuck", "I Need More Power!!!!", @enhanceMo
 void enhanceMore(const CCommand@ pArgs) 
 {
     CBasePlayer@ pPlayer=g_ConCommandSystem.GetCurrentPlayer();
-    // pPlayer.m_flMaxSpeed=600;
     pPlayer.TakeHealth(666, DMG_GENERIC,666);
     pPlayer.TakeArmor(666, DMG_GENERIC,666);
     edict_t@ edict_pp = pPlayer.edict();
@@ -38,6 +38,17 @@ void enhanceMore(const CCommand@ pArgs)
     EnhancedP.set(authid_pp,666);
 }
 
+CClientCommand g_GetEnhancedMooore("fuckfuckfuck", "Moooorrrrre Power!!!!", @enhanceMooore);
+void enhanceMooore(const CCommand@ pArgs) 
+{
+    CBasePlayer@ pPlayer=g_ConCommandSystem.GetCurrentPlayer();
+    pPlayer.TakeHealth(666, DMG_GENERIC,666);
+    pPlayer.TakeArmor(666, DMG_GENERIC,666);
+    edict_t@ edict_pp = pPlayer.edict();
+    string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
+    authid_pp=authid_pp.Replace(":","");
+    MindControllerP.set(authid_pp,666);
+}
 
 HookReturnCode EnhancePrimary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
 {
@@ -54,10 +65,24 @@ HookReturnCode EnhancePrimary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
         pWeapon.m_flNextPrimaryAttack/=10;
         return HOOK_CONTINUE;
     }
-    else
+    if(MindControllerP.exists(authid_pp) and int(MindControllerP[authid_pp])>100)
     {
+        Vector vecSrc=pPlayer.pev.origin;
+        Vector AimAt=pPlayer.GetGunPosition();
+        TraceResult tr;
+        g_Utility.TraceLine(vecSrc, AimAt, dont_ignore_monsters, ignore_glass, pPlayer.edict(), tr)	;
+        if( tr.pHit !is null)
+        {
+            CBaseEntity@ HitM=g_EntityFuncs.Instance(tr.pHit);
+            g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,HitM.GetClassname());
+            if(HitM.IsMonster() and HitM.IRelationshipByClass(CLASS_PLAYER)>0)
+            {
+                HitM.SetClassification(11);
+            }
+        }
         return HOOK_CONTINUE;
     }
+    return HOOK_CONTINUE;
 
 }
 
@@ -69,6 +94,10 @@ HookReturnCode CancelByDeath(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
     if(EnhancedP.exists(authid_pp))
     {
         EnhancedP.set(authid_pp,0);
+    }
+    if(MindControllerP.exists(authid_pp))
+    {
+        MindControllerP.set(authid_pp,0);
     }
     return HOOK_CONTINUE;
 }
