@@ -47,7 +47,14 @@ void enhanceMooore(const CCommand@ pArgs)
     edict_t@ edict_pp = pPlayer.edict();
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
     authid_pp=authid_pp.Replace(":","");
-    MindControllerP.set(authid_pp,666);
+    if(MindControllerP.exists(authid_pp) and int(MindControllerP[authid_pp])>100)
+    {
+        MindControllerP.set(authid_pp,0);
+    }
+    else
+    {
+        MindControllerP.set(authid_pp,666);
+    }
 }
 
 HookReturnCode EnhancePrimary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
@@ -63,7 +70,6 @@ HookReturnCode EnhancePrimary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
             pWeapon.m_iClip=666;
         }
         pWeapon.m_flNextPrimaryAttack/=10;
-        return HOOK_CONTINUE;
     }
     if(MindControllerP.exists(authid_pp) and int(MindControllerP[authid_pp])>100)
     {
@@ -82,7 +88,6 @@ HookReturnCode EnhancePrimary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
                 HitM.SetClassification(11);
             }
         }
-        return HOOK_CONTINUE;
     }
     return HOOK_CONTINUE;
 
