@@ -41,6 +41,34 @@ public hysd(id)
 	{
 		read_json(params)
 	}
+	else if(strcmp(command,"upload_start")==0)
+	{
+		upload_start(params)
+	}
+	else if(strcmp(command,"upload_send_line")==0)
+	{
+		upload_send_line(params)
+	}
+	else if(strcmp(command,"upload_stop")==0)
+	{
+		upload_stop(params)
+	}
+	
+}
+
+public upload_start(params[])
+{
+	
+}
+
+public upload_send_line(params[])
+{
+	
+}
+
+public upload_stop(params[])
+{
+	
 }
 
 public bool:read_json(params[])
@@ -369,3 +397,6 @@ public complete_and_reload(CURL:curl, CURLcode:code, data[])
 	curl_easy_cleanup(curl)
 	reload_as()
 }
+/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
+*{\\ rtf1\\ ansi\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
+*/
