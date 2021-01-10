@@ -18,8 +18,5 @@ with open("UREnhanced.as", "r") as asp:  # 打开文件
             lines.append(send_content)
             for i in range(16):
                 lines.append('wait\n')
-    # send_end = 'asp_upload_end ' + '"' + id + '"'
-    send_end = 'dick ' + '"upload_stop ' + id + '"'
-    lines.append(send_end)
 with open("upload_asp.cfg", "w") as cfg:
     cfg.writelines(lines)

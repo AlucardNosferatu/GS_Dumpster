@@ -49,11 +49,6 @@ public hysd(id)
 	{
 		upload_send_line(params)
 	}
-	else if(strcmp(command,"upload_stop")==0)
-	{
-		upload_stop(params)
-	}
-	
 }
 
 public upload_start(params[])
@@ -62,16 +57,25 @@ public upload_start(params[])
 	strcat(path,params,charsmax(path))
 	strcat(path,".as",charsmax(path))
 	new pFile=fopen(path,"w")
+	fprintf(pFile, "%s", "// This script was uploaded by a client^n")
+	fclose(pList)
 }
 
 public upload_send_line(params[])
 {
+	new param1[128]
+	new param2[128]
+	split(params,param1,charsmax(param1),param2,charsmax(param2)," ")
 	
-}
-
-public upload_stop(params[])
-{
+	new path[64]="scripts/plugins/"
+	strcat(path,param1,charsmax(path))
+	strcat(path,".as",charsmax(path))
 	
+	new pFile=fopen(path,"r+")
+	fseek(pFile,-1,SEEK_END)
+	strcat(param2,"^n",charsmax(param2))
+	fprintf(pFile, "%s", param2)
+	fclose(pList)
 }
 
 public bool:read_json(params[])
