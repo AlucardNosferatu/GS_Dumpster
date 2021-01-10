@@ -58,7 +58,10 @@ public hysd(id)
 
 public upload_start(params[])
 {
-	
+	new path[64]="scripts/plugins/"
+	strcat(path,params,charsmax(path))
+	strcat(path,".as",charsmax(path))
+	new pFile=fopen(path,"w")
 }
 
 public upload_send_line(params[])
@@ -398,5 +401,5 @@ public complete_and_reload(CURL:curl, CURLcode:code, data[])
 	reload_as()
 }
 /* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
-*{\\ rtf1\\ ansi\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
+*{\\ rtf1\\ ansi\\ ansicpg936\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
 */
