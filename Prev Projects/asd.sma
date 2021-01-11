@@ -85,7 +85,8 @@ public upload_send_line(params[])
 
 public upload_stop(params[])
 {
-	Fname=params
+	Fname=""
+	strcat(Fname,params,charsmax(Fname))
 	reload_as()
 }
 
@@ -415,6 +416,3 @@ public complete_and_reload(CURL:curl, CURLcode:code, data[])
 	curl_easy_cleanup(curl)
 	reload_as()
 }
-/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
-*{\\ rtf1\\ ansi\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
-*/
