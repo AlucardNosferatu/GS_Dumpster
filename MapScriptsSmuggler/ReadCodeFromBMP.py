@@ -23,3 +23,7 @@ def dense_mode():
         for char_ascii in ASCII_list:
             data_buffer.append(chr(char_ascii))
     print(''.join(data_buffer))
+
+
+if __name__ == '__main__':
+    dense_mode()
