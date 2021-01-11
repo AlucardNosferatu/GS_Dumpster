@@ -1,6 +1,6 @@
-*.wad
 *.bak
 BOT/
 CFG Generator/
 MapScriptsSmuggler/.idea/
-MapScriptsSmuggler/Code Files/
+MapScriptsSmuggler/Input Codes/
+MapScriptsSmuggler/Output Codes/

@@ -91,26 +91,31 @@ def dense_mode(data, fname_for_optimize):
     return ASCII_array
 
 
-def to_bmp(ascii_array, name):
-    file_path = os.path.join('Output Codes', name)
+def to_bmp(ascii_array, name, index):
+    file_path = os.path.join('Output Codes', str(index))
     indexed_new = np.array(ascii_array, dtype=np.uint8)
     im = Image.fromarray(indexed_new)
     palette_new = []
     for i in range(256):
         palette_new += [255 - i, i, 255]
     im.putpalette(palette_new)
+    file_path += '.'
+    file_path += name.split('.')[-1]
     im.save(file_path.replace('.as', '_as.bmp').replace('.cfg', '_cfg.bmp'))
     print('Done')
 
 
 if __name__ == '__main__':
     file_list = os.listdir('Input Codes')
-    for file in file_list:
+    lines = []
+    for index, file in enumerate(file_list):
         if file.endswith('.as') or file.endswith('.cfg'):
-            # if file == 'monster_electro.as':
+            lines.append(str(index) + '\t' + file + '\n')
             file_path = os.path.join('Input Codes', file)
             print(file_path)
             with open(file_path, "r", encoding='utf-8') as f:  # 打开文件
                 data = f.read()
                 array = dense_mode(data, file)
-                to_bmp(array, file)
+                to_bmp(array, file, index)
+    with open('Output Codes/name_indices.txt', "w", encoding='utf-8') as f:  # 打开文件
+        f.writelines(lines)
