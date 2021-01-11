@@ -1,4 +1,4 @@
-def GetCFG(input_file="UREnhanced.as", output_file="upload_asp.cfg"):
+def get_cfg(input_file="UREnhanced.as", output_file="upload_asp.cfg"):
     lines = []
     with open(input_file, "r") as asp:  # 打开文件
         id = asp.name.replace('.as', '')
