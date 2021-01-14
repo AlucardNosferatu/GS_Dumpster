@@ -1,14 +1,6 @@
 # GS_Dumpster
 HL1 Mod Dumpster
 
-## HookLogger
+## Maps
 
-用钩子记录Player在服务器的所有事件（Spawn、TakeDamage、Killed、Disconnected等）
-
-## UREnhanced
-
-你被强化了，快送！
-
-`.fuck` 一级强化
-
-`.fuckfuck` 二级强化
+纯实体Map开发技术/其它Map相关（不含AS脚本）技术实验场
