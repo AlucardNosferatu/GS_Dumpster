@@ -13,10 +13,12 @@
  // AMX Headers
 #include "amxxmodule.h"
 
-// STD Lib Headers
+ // STD Lib Headers
 #include <vector>
 #include <string>
 
+// Ripent Headers
+#include "ripent.h"
 
 using namespace std;
 

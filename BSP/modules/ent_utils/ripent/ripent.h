@@ -1,4 +1,4 @@
-#include "cmdlib.h"
+﻿#include "cmdlib.h"
 #include "messages.h"
 #include "win32fix.h"
 #include "log.h"
@@ -29,3 +29,16 @@
 #endif
 #endif
 
+#ifdef RIPENT_PAUSE
+#ifdef SYSTEM_WIN32
+#undef cscanf
+#undef cprintf
+#include <conio.h>
+#endif
+#endif
+#ifdef ZHLT_LANGFILE
+#ifdef SYSTEM_WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
+#endif

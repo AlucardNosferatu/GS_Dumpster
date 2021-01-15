@@ -11,17 +11,7 @@
 // csg4.c
 
 #include "ripent.h"
-#ifdef RIPENT_PAUSE
-#ifdef SYSTEM_WIN32
-#include <conio.h>
-#endif
-#endif
-#ifdef ZHLT_LANGFILE
-#ifdef SYSTEM_WIN32
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#endif
-#endif
+
 
 typedef enum
 {
@@ -266,7 +256,7 @@ void ParseEntityData(const char* cTab, int iTabLength, const char* cNewLine, int
 
 			// New line.
 			iNewLength += iNewLineLength;
-		}
+	}
 
 		// Terminator.
 		iNewLength += iTerminatorLength;
@@ -365,7 +355,7 @@ void ParseEntityData(const char* cTab, int iTabLength, const char* cNewLine, int
 		}
 
 		//return true;
-	}
+}
 	catch (...)
 	{
 		//
@@ -960,9 +950,7 @@ static void     Settings()
 		break;
 	}
 #endif
-
 	Log("\n");
-
 	// RipEnt Specific Settings
 	Log("mode                [ %7s ] [ %7s ]\n", tmp, "N/A");
 	Log("parse               [ %7s ] [ %7s ]\n", g_parse ? "on" : "off", DEFAULT_PARSE ? "on" : "off");
@@ -1049,7 +1037,7 @@ int main_ripent(int argc, char** argv)
 				else if (!strcasecmp(argv[i], "-export"))
 				{
 					g_mode = hl_export;
-				}
+			}
 				// g_parse: command line switch (-parse).
 				// Added by: Ryan Gregg aka Nem
 				else if (!strcasecmp(argv[i], "-parse"))
@@ -1165,7 +1153,7 @@ int main_ripent(int argc, char** argv)
 					DefaultExtension(g_Mapname, ".bsp");
 #endif
 				}
-			}
+		}
 
 #ifndef RIPENT_TEXTURE
 			if (g_mode == hl_undefined)
@@ -1206,9 +1194,9 @@ int main_ripent(int argc, char** argv)
 					{
 						Log("%s ", argv[i]);
 					}
-				}
-				Log("\n");
 			}
+				Log("\n");
+	}
 #else
 			LogStart(argc, argv);
 #endif
@@ -1326,7 +1314,7 @@ int main_ripent(int argc, char** argv)
 #endif
 
 	return 0;
-}
+				}
 
 // do nothing - we don't have params to fetch
 void GetParamsFromEnt(entity_t* mapent) {}
