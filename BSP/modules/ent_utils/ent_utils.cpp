@@ -8,12 +8,6 @@
  * Modification by David Anderson, dvander@tcwonline.org (AMXx 0.20)
  * Modification by Scrooge2029, 1641367382@qq.com (AMXx 1.82)
  *
- * Bugs/Fixes
- *
- * v0.1
- * - code structure renewed
- * v0.2
- * - added socket_send2 to send data containing null bytes (FALUCO)(AMXX v1.65)
  */
 
  // AMX Headers
