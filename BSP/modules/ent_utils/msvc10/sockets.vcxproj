@@ -14,7 +14,7 @@
     <ProjectGuid>{F15BBA96-2F66-44BB-9DDF-D91AE6D33AE7}</ProjectGuid>
     <RootNamespace>sockets</RootNamespace>
     <Keyword>Win32Proj</Keyword>
-    <ProjectName>forward</ProjectName>
+    <ProjectName>ent_utils</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -56,7 +56,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\;..\sdk;..\ann;..\tinyxml;..\etc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;FORWARD_EXPORTS;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;ENT_UTILS_EXPORTS;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -97,18 +97,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\ann\cnnmain.cpp" />
-    <ClCompile Include="..\ann\Filter.cpp" />
-    <ClCompile Include="..\ann\mainwindow.cpp" />
-    <ClCompile Include="..\ann\Matrix.cpp" />
-    <ClCompile Include="..\ann\Tensor.cpp" />
-    <ClCompile Include="..\ann\utils.cpp" />
-    <ClCompile Include="..\forward.cpp" />
+    <ClCompile Include="..\ent_utils.cpp" />
     <ClCompile Include="..\sdk\amxxmodule.cpp" />
-    <ClCompile Include="..\tinyxml\tinystr.cpp" />
-    <ClCompile Include="..\tinyxml\tinyxml.cpp" />
-    <ClCompile Include="..\tinyxml\tinyxmlerror.cpp" />
-    <ClCompile Include="..\tinyxml\tinyxmlparser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\svn_version.h" />
@@ -116,7 +106,7 @@
     <ClInclude Include="..\sdk\amxxmodule.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\plugins\include\forward.inc" />
+    <None Include="..\..\..\plugins\include\ent_utils.inc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
