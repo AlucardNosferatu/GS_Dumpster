@@ -55,8 +55,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\;..\sdk;..\ann;..\tinyxml;..\etc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;ENT_UTILS_EXPORTS;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\;..\sdk;..\template;..\ripent;..\common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;ENT_UTILS_EXPORTS;HAVE_STDINT_H;RIPENT;VERSION_32BIT;NDEBUG;_CONSOLE;SYSTEM_WIN32;STDC_HEADERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -97,13 +97,46 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\common\blockmem.cpp" />
+    <ClCompile Include="..\common\bspfile.cpp" />
+    <ClCompile Include="..\common\cmdlib.cpp" />
+    <ClCompile Include="..\common\cmdlinecfg.cpp" />
+    <ClCompile Include="..\common\filelib.cpp" />
+    <ClCompile Include="..\common\files.cpp" />
+    <ClCompile Include="..\common\log.cpp" />
+    <ClCompile Include="..\common\mathlib.cpp" />
+    <ClCompile Include="..\common\messages.cpp" />
+    <ClCompile Include="..\common\resourcelock.cpp" />
+    <ClCompile Include="..\common\scriplib.cpp" />
+    <ClCompile Include="..\common\threads.cpp" />
+    <ClCompile Include="..\common\winding.cpp" />
     <ClCompile Include="..\ent_utils.cpp" />
+    <ClCompile Include="..\ripent\ripent.cpp" />
     <ClCompile Include="..\sdk\amxxmodule.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\svn_version.h" />
+    <ClInclude Include="..\common\anorms.h" />
+    <ClInclude Include="..\common\blockmem.h" />
+    <ClInclude Include="..\common\boundingbox.h" />
+    <ClInclude Include="..\common\bspfile.h" />
+    <ClInclude Include="..\common\cmdlib.h" />
+    <ClInclude Include="..\common\cmdlinecfg.h" />
+    <ClInclude Include="..\common\filelib.h" />
+    <ClInclude Include="..\common\hlassert.h" />
+    <ClInclude Include="..\common\log.h" />
+    <ClInclude Include="..\common\mathlib.h" />
+    <ClInclude Include="..\common\mathtypes.h" />
+    <ClInclude Include="..\common\messages.h" />
+    <ClInclude Include="..\common\resourcelock.h" />
+    <ClInclude Include="..\common\scriplib.h" />
+    <ClInclude Include="..\common\threads.h" />
+    <ClInclude Include="..\common\TimeCounter.h" />
+    <ClInclude Include="..\common\win32fix.h" />
+    <ClInclude Include="..\common\winding.h" />
+    <ClInclude Include="..\ripent\ripent.h" />
     <ClInclude Include="..\sdk\moduleconfig.h" />
     <ClInclude Include="..\sdk\amxxmodule.h" />
+    <ClInclude Include="..\svn_version.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\plugins\include\ent_utils.inc" />

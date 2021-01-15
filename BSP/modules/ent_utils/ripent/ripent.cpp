@@ -1000,7 +1000,7 @@ static void     Settings()
  * main
  * ============
  */
-int             main(int argc, char** argv)
+int main_ripent(int argc, char** argv)
 {
 	int             i;
 	double          start, end;

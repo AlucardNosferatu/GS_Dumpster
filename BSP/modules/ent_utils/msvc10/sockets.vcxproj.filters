@@ -18,24 +18,138 @@
     <Filter Include="Pawn Includes">
       <UniqueIdentifier>{ffbc64d0-627e-4b7b-851d-f0c0cb9030ed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\AMXX_MODULE_DLL">
+      <UniqueIdentifier>{ceed2cc5-4d05-4549-abf4-fe5ce766e955}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ZHLT_COMMON">
+      <UniqueIdentifier>{9a81a0b0-8252-49ab-a16e-6f324b7c6b7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ZHLT_COMMON">
+      <UniqueIdentifier>{42ad5a86-e3d4-4e96-90d8-8fc77f892eaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ZHLT_RIPENT">
+      <UniqueIdentifier>{92e128df-21b4-4d88-a116-09fb6a6ecfb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ZHLT_RIPENT">
+      <UniqueIdentifier>{bd470046-7b1f-43a1-b5f3-d4af03607d4e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\sdk\amxxmodule.cpp">
       <Filter>Module SDK\SDK Base</Filter>
     </ClCompile>
     <ClCompile Include="..\ent_utils.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\AMXX_MODULE_DLL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ripent\ripent.cpp">
+      <Filter>Source Files\ZHLT_RIPENT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\blockmem.cpp">
+      <Filter>Source Files\ZHLT_COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\bspfile.cpp">
+      <Filter>Source Files\ZHLT_COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\cmdlib.cpp">
+      <Filter>Source Files\ZHLT_COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\cmdlinecfg.cpp">
+      <Filter>Source Files\ZHLT_COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\filelib.cpp">
+      <Filter>Source Files\ZHLT_COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\files.cpp">
+      <Filter>Source Files\ZHLT_COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\log.cpp">
+      <Filter>Source Files\ZHLT_COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\mathlib.cpp">
+      <Filter>Source Files\ZHLT_COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\messages.cpp">
+      <Filter>Source Files\ZHLT_COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\resourcelock.cpp">
+      <Filter>Source Files\ZHLT_COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\scriplib.cpp">
+      <Filter>Source Files\ZHLT_COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\threads.cpp">
+      <Filter>Source Files\ZHLT_COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\winding.cpp">
+      <Filter>Source Files\ZHLT_COMMON</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\svn_version.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\sdk\moduleconfig.h">
       <Filter>Module SDK</Filter>
     </ClInclude>
     <ClInclude Include="..\sdk\amxxmodule.h">
       <Filter>Module SDK\SDK Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\svn_version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ripent\ripent.h">
+      <Filter>Header Files\ZHLT_RIPENT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\anorms.h">
+      <Filter>Header Files\ZHLT_COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\blockmem.h">
+      <Filter>Header Files\ZHLT_COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\boundingbox.h">
+      <Filter>Header Files\ZHLT_COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\bspfile.h">
+      <Filter>Header Files\ZHLT_COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\cmdlib.h">
+      <Filter>Header Files\ZHLT_COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\cmdlinecfg.h">
+      <Filter>Header Files\ZHLT_COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\filelib.h">
+      <Filter>Header Files\ZHLT_COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\hlassert.h">
+      <Filter>Header Files\ZHLT_COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\log.h">
+      <Filter>Header Files\ZHLT_COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\mathlib.h">
+      <Filter>Header Files\ZHLT_COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\mathtypes.h">
+      <Filter>Header Files\ZHLT_COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\messages.h">
+      <Filter>Header Files\ZHLT_COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\resourcelock.h">
+      <Filter>Header Files\ZHLT_COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\scriplib.h">
+      <Filter>Header Files\ZHLT_COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\threads.h">
+      <Filter>Header Files\ZHLT_COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\TimeCounter.h">
+      <Filter>Header Files\ZHLT_COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\win32fix.h">
+      <Filter>Header Files\ZHLT_COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\winding.h">
+      <Filter>Header Files\ZHLT_COMMON</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
