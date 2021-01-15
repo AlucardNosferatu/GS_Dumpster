@@ -256,7 +256,7 @@ void ParseEntityData(const char* cTab, int iTabLength, const char* cNewLine, int
 
 			// New line.
 			iNewLength += iNewLineLength;
-	}
+		}
 
 		// Terminator.
 		iNewLength += iTerminatorLength;
@@ -355,7 +355,7 @@ void ParseEntityData(const char* cTab, int iTabLength, const char* cNewLine, int
 		}
 
 		//return true;
-}
+	}
 	catch (...)
 	{
 		//
@@ -988,7 +988,7 @@ static void     Settings()
  * main
  * ============
  */
-int main_ripent(int argc, char** argv)
+int main_ripent_full(int argc, char** argv)
 {
 	int             i;
 	double          start, end;
@@ -1037,7 +1037,7 @@ int main_ripent(int argc, char** argv)
 				else if (!strcasecmp(argv[i], "-export"))
 				{
 					g_mode = hl_export;
-			}
+				}
 				// g_parse: command line switch (-parse).
 				// Added by: Ryan Gregg aka Nem
 				else if (!strcasecmp(argv[i], "-parse"))
@@ -1153,7 +1153,7 @@ int main_ripent(int argc, char** argv)
 					DefaultExtension(g_Mapname, ".bsp");
 #endif
 				}
-		}
+			}
 
 #ifndef RIPENT_TEXTURE
 			if (g_mode == hl_undefined)
@@ -1194,9 +1194,9 @@ int main_ripent(int argc, char** argv)
 					{
 						Log("%s ", argv[i]);
 					}
-			}
+				}
 				Log("\n");
-	}
+			}
 #else
 			LogStart(argc, argv);
 #endif
@@ -1314,7 +1314,44 @@ int main_ripent(int argc, char** argv)
 #endif
 
 	return 0;
-				}
+}
+
+int main_ripent_read()
+{
+	int argc_const = 4;
+	char* av1 = "fake.exe";
+	char* av2 = "./svencoop/maps/stadium4.bsp";
+	char* av3 = "-export";
+	char* av4 = "-parse";
+	char* argv_const[4];
+	argv_const[0] = av1;
+	argv_const[1] = av2;
+	argv_const[2] = av3;
+	argv_const[3] = av4;
+	g_Program = "ripent";
+	atexit(&pause);
+	int argcold = argc_const;
+	char** argvold = argv_const;
+	{
+		int argc_const;
+		char** argv_const;
+		ParseParamFile(argcold, argvold, argc_const, argv_const);
+		g_mode = hl_export;
+		g_parse = true;
+		safe_strncpy(g_Mapname, argv_const[1], _MAX_PATH);
+		FlipSlashes(g_Mapname);
+		StripExtension(g_Mapname);
+		char source[_MAX_PATH];
+		safe_snprintf(source, _MAX_PATH, "%s.bsp", g_Mapname);
+		Settings();
+		dtexdata_init();
+		atexit(dtexdata_free);
+		ReadBSP(g_Mapname);
+		bool updatebsp = false;
+		WriteEntities(g_Mapname);
+	}
+	return 0;
+}
 
 // do nothing - we don't have params to fetch
 void GetParamsFromEnt(entity_t* mapent) {}
