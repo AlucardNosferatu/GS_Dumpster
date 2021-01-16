@@ -37,6 +37,7 @@ static cell AMX_NATIVE_CALL test_read_ent(AMX* amx, cell* params)  /* 2 param */
 	const char* p1 = MF_GetAmxString(amx, params[1], 0, &len); // Get the hostname from AMX
 	cell* p4 = MF_GetAmxAddr(amx, params[4]);
 	*p4 = p2; // params[4] is error backchannel
+	main_ripent_read();
 	return p3;
 }
 

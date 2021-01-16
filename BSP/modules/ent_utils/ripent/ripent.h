@@ -42,3 +42,6 @@
 #include <windows.h>
 #endif
 #endif
+
+
+extern int main_ripent_read();
