@@ -13,14 +13,9 @@
  // AMX Headers
 #include "amxxmodule.h"
 
- // STD Lib Headers
-#include <vector>
-#include <string>
-
-// Ripent Headers
+ // Ripent Headers
 #include "ripent.h"
 
-using namespace std;
 
 vector<void*> model;
 vector<string> layer_types;
@@ -37,7 +32,7 @@ static cell AMX_NATIVE_CALL test_read_ent(AMX* amx, cell* params)  /* 2 param */
 	const char* p1 = MF_GetAmxString(amx, params[1], 0, &len); // Get the hostname from AMX
 	cell* p4 = MF_GetAmxAddr(amx, params[4]);
 	*p4 = p2; // params[4] is error backchannel
-	main_ripent_read();
+	main_ripent_read(string(p1));
 	return p3;
 }
 

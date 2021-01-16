@@ -11,12 +11,12 @@
 
 public plugin_init() {
 	register_plugin(PLUGIN, VERSION, AUTHOR)
-	register_concmd("test_rip","test_rip")
+	register_concmd("ent_export","ent_export")
 }
 
-public test_rip()
+public ent_export()
 {
 	new ret1
-	new ret2=test_read_ent("LostXmas", 2029, 1224, ret1)
+	new ret2=test_read_ent("toonrun1.bsp", 2029, 1224, ret1)
 	server_print("Test Module: %d, %d",ret1,ret2)
 }

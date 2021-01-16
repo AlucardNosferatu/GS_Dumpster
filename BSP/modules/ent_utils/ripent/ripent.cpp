@@ -1316,11 +1316,19 @@ int main_ripent_full(int argc, char** argv)
 	return 0;
 }
 
-int main_ripent_read()
+int main_ripent_read(string map_name)
 {
 	int argc_const = 4;
+
+	string map_dir = "./svencoop/maps/";
+	map_dir += map_name;
+	const char* full_path = map_dir.c_str();
 	char* av1 = "fake.exe";
-	char* av2 = "./svencoop/maps/stadium4.bsp";
+
+	int nLen = strlen(full_path) + 1;
+	char* av2 = (char*)malloc(sizeof(char) * nLen);
+	strcpy(av2, full_path);
+
 	char* av3 = "-export";
 	char* av4 = "-parse";
 	char* argv_const[4];
@@ -1328,8 +1336,8 @@ int main_ripent_read()
 	argv_const[1] = av2;
 	argv_const[2] = av3;
 	argv_const[3] = av4;
-	g_Program = "ripent";
-	atexit(&pause);
+	//g_Program = "ripent";
+	//atexit(&pause);
 	int argcold = argc_const;
 	char** argvold = argv_const;
 	{

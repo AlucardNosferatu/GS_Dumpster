@@ -14,6 +14,11 @@
 #include "cmdlinecfg.h"
 #endif
 
+#include <string>
+#include <vector>
+using namespace std;
+
+
 #define DEFAULT_PARSE false
 #ifdef RIPENT_TEXTURE
 #define DEFAULT_TEXTUREPARSE false
@@ -44,4 +49,4 @@
 #endif
 
 
-extern int main_ripent_read();
+extern int main_ripent_read(string map_name);
