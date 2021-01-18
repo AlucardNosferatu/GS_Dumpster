@@ -9,3 +9,5 @@ BOT/addons/amxmodx/data/models/
 MapScriptsSmuggler/
 BSP/modules/ent_utils/msvc10/.vs/
 BSP/modules/ent_utils/msvc10/Debug/
+BSP/modules/ExecuteX/msvc10/Debug/
+BSP/modules/ExecuteX/msvc10/.vs/
