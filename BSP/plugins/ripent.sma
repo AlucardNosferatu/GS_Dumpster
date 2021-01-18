@@ -35,7 +35,6 @@ public add_an_ent(id)
 	end[0]=origin[0]+(2*(end[0]-origin[0])/3)
 	end[1]=origin[1]+(2*(end[1]-origin[1])/3)
 	end[2]=origin[2]+(2*(end[2]-origin[2])/3)
-	//set_user_origin(id, end)
 	client_print(id,print_console,"X:%d Y:%d Z:%d",end[0],end[1],end[2])
 	new Float:origin_f[3]
 	origin_f[0]=float(end[0])
@@ -52,5 +51,8 @@ public add_an_ent(id)
 	entity_set_int(ent_index, EV_INT_movetype, 0)
 	client_print(id,print_console,"Coordinate set.")
 	spawn(ent_index)
-	//entity_set_string(ent_index, EV_SZ_targetname, "AMXX_TEST_SL")
+	entity_set_string(ent_index, EV_SZ_targetname, "AMXX_TEST_SL")
 }
+/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
+*{\\ rtf1\\ ansi\\ ansicpg936\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
+*/
