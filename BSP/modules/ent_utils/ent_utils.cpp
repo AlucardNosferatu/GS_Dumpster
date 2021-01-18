@@ -36,14 +36,14 @@ static cell AMX_NATIVE_CALL test_read_ent(AMX* amx, cell* params)  /* 2 param */
 	return p3;
 }
 
-AMX_NATIVE_INFO forward_natives[] = {
+AMX_NATIVE_INFO ent_utils_natives[] = {
 	{"test_read_ent", test_read_ent},
 	{NULL, NULL}
 };
 
 void OnAmxxAttach()
 {
-	MF_AddNatives(forward_natives);
+	MF_AddNatives(ent_utils_natives);
 	return;
 }
 
