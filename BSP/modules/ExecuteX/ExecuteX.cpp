@@ -48,6 +48,13 @@ static cell AMX_NATIVE_CALL native_Execute(AMX* amx, cell* amxparams) {
 	string f_str = string(file);
 	string relative(".\\");
 	bool startwith = f_str.compare(0, relative.size(), relative) == 0;
+	if (startwith) {
+		f_str = f_str.replace(f_str.find(".\\"), 1, wd_str.c_str());
+	}
+	const char* f_c_str = f_str.c_str();
+	int nLen = strlen(f_c_str) + 1;
+	char* file2 = (char*)malloc(sizeof(char) * nLen);
+	strcpy(file2, f_c_str);
 
 	SHELLEXECUTEINFO ShExecInfo;
 
@@ -55,7 +62,7 @@ static cell AMX_NATIVE_CALL native_Execute(AMX* amx, cell* amxparams) {
 	ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS | SEE_MASK_FLAG_NO_UI;
 	ShExecInfo.hwnd = NULL;
 	ShExecInfo.lpVerb = NULL;
-	ShExecInfo.lpFile = file;
+	ShExecInfo.lpFile = file2;
 	ShExecInfo.lpParameters = params;
 	ShExecInfo.lpDirectory = NULL;
 	ShExecInfo.nShow = SW_SHOWNORMAL;
