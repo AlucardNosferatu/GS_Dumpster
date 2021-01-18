@@ -43,16 +43,8 @@ public add_an_ent(id)
 	client_print(id,print_console,"X:%f Y:%f Z:%f",origin_f[0],origin_f[1],origin_f[2])
 	
 	new ent_index=create_entity("weapon_357")
-	entity_set_model(ent_index, "models/afrikakorps/weapons/w_357.mdl")
-	entity_set_string(ent_index, EV_SZ_viewmodel,"models/afrikakorps/weapons/v_357.mdl")
-	entity_set_string(ent_index, EV_SZ_weaponmodel,"models/afrikakorps/weapons/p_357.mdl")
-	client_print(id,print_console,"EntIndex:%d ",ent_index)
+	
 	entity_set_origin(ent_index, origin_f);
-	entity_set_int(ent_index, EV_INT_movetype, 0)
-	client_print(id,print_console,"Coordinate set.")
 	spawn(ent_index)
 	entity_set_string(ent_index, EV_SZ_targetname, "AMXX_TEST_SL")
 }
-/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
-*{\\ rtf1\\ ansi\\ ansicpg936\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
-*/
