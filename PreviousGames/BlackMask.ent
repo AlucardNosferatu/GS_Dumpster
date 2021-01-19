@@ -1,0 +1,642 @@
+{
+  "wad" "\program files (x86)\steam\steamapps\common\half-life sdk\texture wad files\decals.wad;\program files (x86)\steam\steamapps\common\half-life sdk\texture wad files\halflife.wad;\program files (x86)\steam\steamapps\common\half-life sdk\texture wad files\liquids.wad;\program files (x86)\steam\steamapps\common\half-life sdk\texture wad files\spraypaint.wad;\program files (x86)\steam\steamapps\common\half-life sdk\texture wad files\xeno.wad"
+  "mapversion" "220"
+  "classname" "worldspawn"
+  "MaxRange" "4096"
+  "sounds" "1"
+  "skyname" "cliff"
+  "classname" "worldspawn"
+}
+{
+  "origin" "384 544 352"
+  "angles" "0 0 0"
+  "classname" "weapon_crowbar"
+}
+{
+  "origin" "192 384 160"
+  "_fade" "1.0"
+  "_light" "255 255 128 200"
+  "classname" "light"
+}
+{
+  "origin" "384 192 320"
+  "_fade" "1.0"
+  "_light" "255 255 128 200"
+  "classname" "light"
+}
+{
+  "origin" "384 576 160"
+  "_fade" "1.0"
+  "_light" "255 255 128 200"
+  "classname" "light"
+}
+{
+  "origin" "384 576 320"
+  "_fade" "1.0"
+  "_light" "255 255 128 200"
+  "classname" "light"
+}
+{
+  "origin" "192 384 320"
+  "_fade" "1.0"
+  "_light" "255 255 128 200"
+  "classname" "light"
+}
+{
+  "origin" "576 384 320"
+  "_fade" "1.0"
+  "_light" "255 255 128 200"
+  "classname" "light"
+}
+{
+  "origin" "576 384 160"
+  "_fade" "1.0"
+  "_light" "255 255 128 200"
+  "classname" "light"
+}
+{
+  "origin" "384 160 160"
+  "_fade" "1.0"
+  "_light" "255 255 128 200"
+  "classname" "light"
+}
+{
+  "origin" "688 576 352"
+  "weapons" "1"
+  "rendercolor" "0 0 0"
+  "angles" "0 270 0"
+  "spawnflags" "1"
+  "classname" "monster_human_grunt"
+}
+{
+  "origin" "80 576 352"
+  "weapons" "1"
+  "rendercolor" "0 0 0"
+  "angles" "0 270 0"
+  "spawnflags" "1"
+  "classname" "monster_human_grunt"
+}
+{
+  "origin" "480 384 192"
+  "target" "Patrol4"
+  "weapons" "1"
+  "rendercolor" "0 0 0"
+  "angles" "0 270 0"
+  "spawnflags" "1"
+  "classname" "monster_human_grunt"
+}
+{
+  "origin" "288 384 192"
+  "target" "Patrol1"
+  "weapons" "1"
+  "rendercolor" "0 0 0"
+  "angles" "0 90 0"
+  "spawnflags" "1"
+  "classname" "monster_human_grunt"
+}
+{
+  "origin" "288 576 200"
+  "target" "Patrol2"
+  "targetname" "Patrol1"
+  "angles" "0 270 0"
+  "classname" "path_corner"
+}
+{
+  "origin" "288 192 200"
+  "target" "Patrol1"
+  "targetname" "Patrol2"
+  "angles" "0 90 0"
+  "classname" "path_corner"
+}
+{
+  "origin" "480 192 200"
+  "target" "Patrol3"
+  "targetname" "Patrol4"
+  "angles" "0 90 0"
+  "classname" "path_corner"
+}
+{
+  "origin" "480 576 200"
+  "target" "Patrol4"
+  "targetname" "Patrol3"
+  "angles" "0 270 0"
+  "classname" "path_corner"
+}
+{
+  "origin" "384 384 608"
+  "pitch" "-90"
+  "angles" "90 0 0"
+  "_fade" "1.0"
+  "_light" "255 255 128 500"
+  "classname" "light_environment"
+}
+{
+  "origin" "384 384 584"
+  "_fade" "1.0"
+  "_light" "255 255 128 200"
+  "classname" "light"
+}
+{
+  "origin" "384 -160 480"
+  "_fade" "1.0"
+  "_light" "255 255 128 200"
+  "classname" "light"
+}
+{
+  "origin" "256 -160 480"
+  "_fade" "1.0"
+  "_light" "255 255 128 200"
+  "classname" "light"
+}
+{
+  "origin" "128 -160 480"
+  "_fade" "1.0"
+  "_light" "255 255 128 200"
+  "classname" "light"
+}
+{
+  "origin" "0 -160 480"
+  "_fade" "1.0"
+  "_light" "255 255 128 200"
+  "classname" "light"
+}
+{
+  "origin" "384 -448 704"
+  "pitch" "-90"
+  "angles" "-90 0 0"
+  "_fade" "1.0"
+  "_light" "255 255 128 200"
+  "classname" "light_environment"
+}
+{
+  "origin" "208 -432 224"
+  "weapons" "1"
+  "rendercolor" "0 0 0"
+  "angles" "0 90 0"
+  "spawnflags" "1"
+  "classname" "monster_human_grunt"
+}
+{
+  "origin" "464 -304 288"
+  "weapons" "1"
+  "rendercolor" "0 0 0"
+  "angles" "0 90 0"
+  "spawnflags" "1"
+  "classname" "monster_human_grunt"
+}
+{
+  "origin" "16 -208 160"
+  "weapons" "1"
+  "rendercolor" "0 0 0"
+  "angles" "0 90 0"
+  "spawnflags" "1"
+  "classname" "monster_human_grunt"
+}
+{
+  "origin" "192 384 224"
+  "pitchstart" "100"
+  "pitch" "100"
+  "health" "10"
+  "message" "NWH_L.wav"
+  "spawnflags" "1"
+  "classname" "ambient_generic"
+}
+{
+  "origin" "576 384 224"
+  "pitchstart" "100"
+  "pitch" "100"
+  "health" "10"
+  "message" "NWH_R.wav"
+  "spawnflags" "1"
+  "classname" "ambient_generic"
+}
+{
+  "origin" "720 632 240"
+  "angles" "0 90 0"
+  "classname" "weapon_crossbow"
+}
+{
+  "model" "*1"
+  "spawnobject" "11"
+  "rendercolor" "0 0 0"
+  "explosion" "1"
+  "material" "1"
+  "health" "15"
+  "spawnflags" "128"
+  "classname" "func_breakable"
+}
+{
+  "model" "*2"
+  "spawnobject" "11"
+  "rendercolor" "0 0 0"
+  "explosion" "1"
+  "material" "1"
+  "health" "15"
+  "spawnflags" "128"
+  "classname" "func_breakable"
+}
+{
+  "origin" "496 -320 256"
+  "angles" "0 0 0"
+  "classname" "item_healthkit"
+}
+{
+  "origin" "240 -432 192"
+  "angles" "0 0 0"
+  "classname" "item_healthkit"
+}
+{
+  "origin" "-16 -208 144"
+  "rockets" "5"
+  "classname" "weaponbox"
+}
+{
+  "origin" "720 712 296"
+  "angles" "0 0 0"
+  "classname" "weapon_handgrenade"
+}
+{
+  "origin" "-16 -240 144"
+  "angles" "0 0 0"
+  "classname" "weapon_rpg"
+}
+{
+  "model" "*3"
+  "classname" "func_wall"
+}
+{
+  "model" "*4"
+  "rendercolor" "0 0 0"
+  "health" "1"
+  "buoyancy" "20"
+  "friction" "50"
+  "size" "1"
+  "classname" "func_pushable"
+}
+{
+  "origin" "384 472 416"
+  "angles" "0 0 0"
+  "classname" "weapon_9mmhandgun"
+}
+{
+  "origin" "384 -448 1120"
+  "angles" "0 0 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_apache"
+}
+{
+  "model" "*5"
+  "rendercolor" "0 0 0"
+  "classname" "func_wall"
+}
+{
+  "origin" "384 384 480"
+  "angles" "0 0 0"
+  "classname" "weapon_rpg"
+}
+{
+  "model" "*6"
+  "wait" "4"
+  "speed" "100"
+  "angles" "0 0 0"
+  "rendercolor" "0 0 0"
+  "classname" "func_door"
+}
+{
+  "origin" "384 224 160"
+  "_fade" "1.0"
+  "_light" "255 255 128 200"
+  "classname" "light"
+}
+{
+  "origin" "576 96 132"
+  "angles" "0 0 0"
+  "classname" "item_suit"
+}
+{
+  "origin" "576 96 84"
+  "angles" "0 270 0"
+  "classname" "info_player_start"
+}
+{
+  "model" "*7"
+  "material" "2"
+  "health" "100"
+  "buoyancy" "20"
+  "friction" "250"
+  "size" "1"
+  "classname" "func_pushable"
+}
+{
+  "model" "*8"
+  "material" "2"
+  "health" "100"
+  "buoyancy" "20"
+  "friction" "250"
+  "size" "1"
+  "classname" "func_pushable"
+}
+{
+  "model" "*9"
+  "material" "2"
+  "health" "100"
+  "buoyancy" "20"
+  "friction" "250"
+  "size" "1"
+  "classname" "func_pushable"
+}
+{
+  "model" "*10"
+  "material" "2"
+  "health" "100"
+  "buoyancy" "20"
+  "friction" "250"
+  "size" "1"
+  "classname" "func_pushable"
+}
+{
+  "model" "*11"
+  "rendercolor" "0 0 0"
+  "buoyancy" "40"
+  "friction" "100"
+  "size" "3"
+  "material" "2"
+  "classname" "func_pushable"
+}
+{
+  "model" "*12"
+  "buoyancy" "30"
+  "friction" "220"
+  "size" "3"
+  "rendercolor" "0 0 0"
+  "explosion" "1"
+  "material" "1"
+  "health" "60"
+  "spawnflags" "128"
+  "classname" "func_pushable"
+}
+{
+  "origin" "336 664 88"
+  "angles" "0 0 0"
+  "classname" "weapon_shotgun"
+}
+{
+  "origin" "32 316 77"
+  "angles" "0 0 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "32 357 66"
+  "angles" "0 0 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "32 400 80"
+  "angles" "0 0 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "32 417 64"
+  "angles" "0 0 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "324 296 40"
+  "angles" "90 0 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "274 315 40"
+  "angles" "90 0 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "336 346 40"
+  "angles" "90 0 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "402 384 40"
+  "angles" "90 0 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "368 405 40"
+  "angles" "90 0 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "32 256 63"
+  "angles" "0 0 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "32 279 74"
+  "angles" "0 0 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "32 468 94"
+  "angles" "0 0 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "32 333 118"
+  "angles" "0 0 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "32 390 100"
+  "angles" "0 0 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "312 408 40"
+  "angles" "90 0 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "411 355 40"
+  "angles" "90 0 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "269 373 40"
+  "angles" "90 0 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "393 331 40"
+  "angles" "90 0 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "736 363 94"
+  "angles" "0 180 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "736 277 120"
+  "angles" "0 180 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "736 271 48"
+  "angles" "0 180 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "736 331 99"
+  "angles" "0 180 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "736 447 120"
+  "angles" "0 180 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "736 433 48"
+  "angles" "0 180 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "736 329 60"
+  "angles" "0 180 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "736 415 95"
+  "angles" "0 180 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "736 386 132"
+  "angles" "0 180 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "736 287 96"
+  "angles" "0 180 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_tripmine"
+}
+{
+  "origin" "168 696 32"
+  "netname" "LastStand"
+  "weapons" "3"
+  "angles" "0 0 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_human_grunt"
+}
+{
+  "origin" "224 687 32"
+  "netname" "LastStand"
+  "weapons" "1"
+  "angles" "0 0 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_human_grunt"
+}
+{
+  "origin" "177 616 32"
+  "netname" "LastStand"
+  "weapons" "5"
+  "angles" "0 0 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_human_grunt"
+}
+{
+  "origin" "240 632 32"
+  "netname" "LastStand"
+  "weapons" "10"
+  "angles" "0 0 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_human_grunt"
+}
+{
+  "origin" "235 584 32"
+  "netname" "LastStand"
+  "weapons" "8"
+  "angles" "0 0 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_human_grunt"
+}
+{
+  "origin" "594 710 32"
+  "angles" "0 0 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_gman"
+}
+{
+  "origin" "508 681 32"
+  "angles" "0 270 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_sentry"
+}
+{
+  "origin" "547 627 32"
+  "angles" "0 270 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_sentry"
+}
+{
+  "origin" "584 600 32"
+  "angles" "0 270 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_sentry"
+}
+{
+  "origin" "628 608 32"
+  "angles" "0 270 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_sentry"
+}
+{
+  "origin" "665 634 32"
+  "angles" "0 270 0"
+  "rendercolor" "0 0 0"
+  "classname" "monster_sentry"
+}
+{
+  "origin" "576 576 176"
+  "orientation" "1"
+  "angles" "0 270 0"
+  "rendercolor" "0 0 0"
+  "spawnflags" "32"
+  "classname" "monster_turret"
+}
+{
+  "origin" "192 576 176"
+  "orientation" "1"
+  "angles" "0 270 0"
+  "rendercolor" "0 0 0"
+  "spawnflags" "32"
+  "classname" "monster_turret"
+}
