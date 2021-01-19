@@ -8,13 +8,13 @@ void PluginInit()
     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "I love Carol forever and ever!\n");
     g_Hooks.RegisterHook(Hooks::Weapon::WeaponPrimaryAttack, @EnhancePrimary);
     g_Hooks.RegisterHook(Hooks::Player::PlayerKilled, @CancelByDeath);
+    
 }
 
 CClientCommand g_GetEnhanced("fuck", "I Need Power!!!!", @enhance);
 void enhance(const CCommand@ pArgs) 
 {
     CBasePlayer@ pPlayer=g_ConCommandSystem.GetCurrentPlayer();
-    g_EntityLoader.LoadFromFile("test.ent");
     pPlayer.GiveNamedItem("weapon_egon",0,450);
     pPlayer.GiveNamedItem("weapon_rpg",0,15);
     pPlayer.GiveNamedItem("weapon_m249",0,150);
