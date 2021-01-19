@@ -14,7 +14,7 @@ CClientCommand g_GetEnhanced("fuck", "I Need Power!!!!", @enhance);
 void enhance(const CCommand@ pArgs) 
 {
     CBasePlayer@ pPlayer=g_ConCommandSystem.GetCurrentPlayer();
-    // pPlayer.m_flMaxSpeed=600;
+    g_EntityLoader.LoadFromFile("test.ent");
     pPlayer.GiveNamedItem("weapon_egon",0,450);
     pPlayer.GiveNamedItem("weapon_rpg",0,15);
     pPlayer.GiveNamedItem("weapon_m249",0,150);
@@ -69,6 +69,7 @@ HookReturnCode EnhancePrimary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
         {
             pWeapon.m_iClip=666;
         }
+        pPlayer.m_rgAmmo(pWeapon.PrimaryAmmoIndex(),pWeapon.iMaxAmmo1());
         pWeapon.m_flNextPrimaryAttack/=10;
     }
     if(MindControllerP.exists(authid_pp) and int(MindControllerP[authid_pp])>100)
