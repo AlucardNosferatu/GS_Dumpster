@@ -19,13 +19,13 @@ string GetBuffType(CBasePlayer@ pPlayer)
 	int32 choice=Math.RandomLong(0,3);
 	if(choice==1)
 	{
-		return "DMG#75.0";
+		return "DMG#125.0";
 	}
 	else if(choice==2)
 	{
 		return "HEALTH#2.0";
 	}
-	return "DMG#75.0";
+	return "DMG#125.0";
 }
 
 HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int iGib)
@@ -49,7 +49,7 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
 	{
 		prev.removeAt(0);
 	}
-	if(prev.length()>81)
+	if(prev.length()>162)
 	{
 		prev.removeAt(0);
 		prev.removeAt(0);
