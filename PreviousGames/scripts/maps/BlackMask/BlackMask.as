@@ -10,4 +10,23 @@ void MapActivate()
 void MapInit()
 {
 	g_EngineFuncs.ServerPrint("I love Carol forever and ever!\n");
+	g_Hooks.RegisterHook(Hooks::Player::PlayerKilled, @PlayerKilledH);
+}
+
+HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int iGib)
+{
+	g_EngineFuncs.ServerPrint("Someone died\n");
+	CBasePlayerWeapon@ weaponHeld= cast<CBasePlayerWeapon@>(pPlayer.m_hActiveItem.GetEntity());
+	File@ fHandle;
+	@fHandle  = g_FileSystem.OpenFile( szEntFile, OpenFile::APPEND );
+	if( fHandle !is null )
+	{
+		fHandle.Write("{\n");
+		fHandle.Write("  \"origin\" \""+pPlayer.pev.origin.ToString()+"\"\n");
+		fHandle.Write("  \"angles\" \"0 0 0\"\n");
+		fHandle.Write("  \"classname\" \""+weaponHeld.GetClassname()+"\"\n");
+		fHandle.Write("}\n");
+		fHandle.Close();
+	}
+    return HOOK_CONTINUE;
 }
