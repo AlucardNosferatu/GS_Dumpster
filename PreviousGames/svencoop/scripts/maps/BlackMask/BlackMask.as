@@ -18,24 +18,56 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
 	g_EngineFuncs.ServerPrint("Someone died\n");
 	CBasePlayerWeapon@ weaponHeld= cast<CBasePlayerWeapon@>(pPlayer.m_hActiveItem.GetEntity());
 	File@ fHandle;
-	@fHandle  = g_FileSystem.OpenFile( "scripts/maps/"+szEntFile, OpenFile::APPEND );
+	array<string> prev;
+	@fHandle  = g_FileSystem.OpenFile( "scripts/maps/"+szEntFile, OpenFile::READ );
 	if( fHandle !is null )
 	{
-		fHandle.Write("{\n");
-		string OriginStr=string(int(pPlayer.pev.origin.x));
-		OriginStr+=" ";
-		OriginStr+=string(int(pPlayer.pev.origin.y));
-		OriginStr+=" ";
-		OriginStr+=string(int(pPlayer.pev.origin.z));
-		fHandle.Write("  \"origin\" \""+OriginStr+"\"\n");
-		fHandle.Write("  \"angles\" \"0 0 0\"\n");
-		fHandle.Write("  \"classname\" \""+weaponHeld.GetClassname()+"\"\n");
-		fHandle.Write("}\n");
+		while(!fHandle.EOFReached())
+		{
+    		string sLine;
+        	fHandle.ReadLine(sLine);
+			prev.insertLast(sLine);
+        }
+        fHandle.Close();
+	}
+	if(prev.length()>128)
+	{
+		prev.removeAt(0);
+		prev.removeAt(0);
+		prev.removeAt(0);
+		prev.removeAt(0);
+		prev.removeAt(0);
+	}
+
+	string OriginStr=string(int(pPlayer.pev.origin.x));
+	OriginStr+=" ";
+	OriginStr+=string(int(pPlayer.pev.origin.y));
+	OriginStr+=" ";
+	OriginStr+=string(int(pPlayer.pev.origin.z));
+	prev.insertLast("{");
+	prev.insertLast("  \"origin\" \""+OriginStr+"\"");
+	prev.insertLast("  \"angles\" \"0 0 0\"");
+	prev.insertLast("  \"classname\" \""+weaponHeld.GetClassname()+"\"");
+	prev.insertLast("}");
+
+	@fHandle  = g_FileSystem.OpenFile( "scripts/maps/"+szEntFile, OpenFile::WRITE );
+	if( fHandle !is null )
+	{
+		for(uint i=0;i<prev.length();i++)
+		{
+			if(i==prev.length()-1)
+			{
+				fHandle.Write(prev[i]);
+			}
+			else
+			{
+				fHandle.Write(prev[i]+"\n");
+			}
+		}
 		fHandle.Close();
 	}
 	else
 	{
 		g_EngineFuncs.ServerPrint("Cant open file, NullPointer returned.\n");
 	}
-    return HOOK_CONTINUE;
-}
+    return HOOK_CONTINUE;}
