@@ -14,6 +14,20 @@ void MapInit()
 	g_Hooks.RegisterHook(Hooks::PickupObject::Collected, @CollectedH);
 }
 
+string GetBuffType(CBasePlayer@ pPlayer)
+{
+	int32 choice=Math.RandomLong(0,3);
+	if(choice==1)
+	{
+		return "DMG#75.0";
+	}
+	else if(choice==2)
+	{
+		return "HEALTH#2.0";
+	}
+	return "DMG#75.0";
+}
+
 HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int iGib)
 {
 	g_EngineFuncs.ServerPrint("Someone died\n");
@@ -31,13 +45,31 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
         }
         fHandle.Close();
 	}
-	if(prev.length()>98)
+	if(prev.length()==1)
+	{
+		prev.removeAt(0);
+	}
+	if(prev.length()>81)
 	{
 		prev.removeAt(0);
 		prev.removeAt(0);
 		prev.removeAt(0);
 		prev.removeAt(0);
 		prev.removeAt(0);
+		prev.removeAt(0);
+		prev.removeAt(0);
+		prev.removeAt(0);
+		prev.removeAt(0);
+	}
+
+	string BTypeStr=GetBuffType(pPlayer);
+	float BValueFloat=atof(BTypeStr.Split("#")[1]);
+	BTypeStr=BTypeStr.Split("#")[0];
+
+	int DMG_BUFF=0;
+	if(BTypeStr=="DMG")
+	{
+		DMG_BUFF=int(BValueFloat);
 	}
 
 	string OriginStr=string(int(pPlayer.pev.origin.x));
@@ -47,8 +79,12 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
 	OriginStr+=string(int(pPlayer.pev.origin.z));
 	prev.insertLast("{");
 	prev.insertLast("  \"origin\" \""+OriginStr+"\"");
-	prev.insertLast("  \"angles\" \"0 0 0\"");
+	prev.insertLast("  \"targetname\" \"LEGACY_BUFF\"");
 	prev.insertLast("  \"classname\" \""+weaponHeld.GetClassname()+"\"");
+	prev.insertLast("  \"$s_BUFF_TYPE\" \""+BTypeStr+"\"");
+	prev.insertLast("  \"$f_BUFF_VALUE\" \""+formatFloat(BValueFloat,"0",0,2)+"\"");
+	prev.insertLast("  \"dmg\" \""+string(DMG_BUFF)+"\"");
+	prev.insertLast("  \"spawnflags\" \"1024\"");
 	prev.insertLast("}");
 
 	@fHandle  = g_FileSystem.OpenFile( "scripts/maps/"+szEntFile, OpenFile::WRITE );
@@ -98,9 +134,6 @@ HookReturnCode CollectedH( CBaseEntity@ pPickup, CBaseEntity@ pOther )
 				}
 			}
 		}
-
-
-
 	}
 	return HOOK_CONTINUE;
 }

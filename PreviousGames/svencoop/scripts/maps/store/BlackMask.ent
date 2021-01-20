@@ -1,7 +1,9 @@
 {
   "origin" "520 72 128"
   "targetname" "LEGACY_BUFF"
-  "classname" "weapon_crowbar"
-  "$s_BUFF_TYPE" "HEALTH"
-  "$f_BUFF_VALUE" "2.00"
+  "classname" "weapon_9mmAR"
+  "$s_BUFF_TYPE" "DMG"
+  "$f_BUFF_VALUE" "75.00"
+  "dmg" "75"
+  "spawnflags" "1024"
 }
