@@ -22,7 +22,12 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
 	if( fHandle !is null )
 	{
 		fHandle.Write("{\n");
-		fHandle.Write("  \"origin\" \""+pPlayer.pev.origin.ToString()+"\"\n");
+		string OriginStr=string(int(pPlayer.pev.origin.x));
+		OriginStr+=" ";
+		OriginStr+=string(int(pPlayer.pev.origin.y));
+		OriginStr+=" ";
+		OriginStr+=string(int(pPlayer.pev.origin.z));
+		fHandle.Write("  \"origin\" \""+OriginStr+"\"\n");
 		fHandle.Write("  \"angles\" \"0 0 0\"\n");
 		fHandle.Write("  \"classname\" \""+weaponHeld.GetClassname()+"\"\n");
 		fHandle.Write("}\n");
