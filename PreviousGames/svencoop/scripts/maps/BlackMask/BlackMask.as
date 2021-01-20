@@ -31,7 +31,7 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
         }
         fHandle.Close();
 	}
-	if(prev.length()>128)
+	if(prev.length()>98)
 	{
 		prev.removeAt(0);
 		prev.removeAt(0);
