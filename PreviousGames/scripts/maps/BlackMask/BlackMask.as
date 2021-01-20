@@ -28,5 +28,9 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
 		fHandle.Write("}\n");
 		fHandle.Close();
 	}
+	else
+	{
+		g_EngineFuncs.ServerPrint("Cant open file, NullPointer returned.\n");
+	}
     return HOOK_CONTINUE;
 }
