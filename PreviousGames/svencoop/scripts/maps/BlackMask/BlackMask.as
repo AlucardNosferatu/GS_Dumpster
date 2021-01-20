@@ -11,6 +11,7 @@ void MapInit()
 {
 	g_EngineFuncs.ServerPrint("I love Carol forever and ever!\n");
 	g_Hooks.RegisterHook(Hooks::Player::PlayerKilled, @PlayerKilledH);
+	g_Hooks.RegisterHook(Hooks::PickupObject::Collected, @CollectedH);
 }
 
 HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int iGib)
@@ -70,4 +71,36 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
 	{
 		g_EngineFuncs.ServerPrint("Cant open file, NullPointer returned.\n");
 	}
-    return HOOK_CONTINUE;}
+    return HOOK_CONTINUE;
+}
+
+HookReturnCode CollectedH( CBaseEntity@ pPickup, CBaseEntity@ pOther )
+{
+	if(pPickup.GetTargetname()=="LEGACY_BUFF")
+	{
+		CustomKeyvalues@ CKV=pPickup.GetCustomKeyvalues();
+		CustomKeyvalue BUFF_TYPE=CKV.GetKeyvalue("$s_BUFF_TYPE");
+		string BTypeStr=BUFF_TYPE.GetString();
+		CustomKeyvalue BUFF_VALUE=CKV.GetKeyvalue("$f_BUFF_VALUE");
+		float BValueFloat=BUFF_VALUE.GetFloat();
+		g_EngineFuncs.ServerPrint("Get BUFF: TYPE-"+BTypeStr+" VALUE-"+string(BValueFloat)+"\n");
+		if(BTypeStr=="HEALTH")
+		{
+			CBasePlayerItem@ BuffItem=cast<CBasePlayerItem@>(pPickup);
+			EHandle Owner=BuffItem.m_hPlayer;
+			if(Owner.IsValid())
+			{
+				CBaseEntity@ ePlayer=Owner.GetEntity();
+				if(ePlayer !is null)
+				{
+					CBasePlayer@ pPlayer=cast<CBasePlayer@>(ePlayer);
+					pPlayer.pev.health*=BValueFloat;
+				}
+			}
+		}
+
+
+
+	}
+	return HOOK_CONTINUE;
+}

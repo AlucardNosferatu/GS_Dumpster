@@ -1,5 +1,7 @@
 {
   "origin" "520 72 128"
-  "angles" "0 0 0"
+  "targetname" "LEGACY_BUFF"
   "classname" "weapon_crowbar"
+  "$s_BUFF_TYPE" "HEALTH"
+  "$f_BUFF_VALUE" "2.00"
 }
