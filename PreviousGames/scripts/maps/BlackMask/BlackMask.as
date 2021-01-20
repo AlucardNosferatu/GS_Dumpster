@@ -1,12 +1,13 @@
-string szEntFile="BlackMask/BlackMask.ent"
+string szEntFile="BlackMask/BlackMask.ent";
 
 void MapActivate()
 {
+	g_EngineFuncs.ServerPrint("Try to load ent file\n");
 	if ( !g_EntityLoader.LoadFromFile( szEntFile ) )
 		g_EngineFuncs.ServerPrint( "Can't open " + szEntFile + "\n" );
 }
 
 void MapInit()
 {
-	g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "I love Carol forever and ever!\n");
+	g_EngineFuncs.ServerPrint("I love Carol forever and ever!\n");
 }
