@@ -1,4 +1,4 @@
-string szEntFile="BlackMask/BlackMask.ent";
+string szEntFile="store/BlackMask.ent";
 
 void MapActivate()
 {
@@ -18,7 +18,7 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
 	g_EngineFuncs.ServerPrint("Someone died\n");
 	CBasePlayerWeapon@ weaponHeld= cast<CBasePlayerWeapon@>(pPlayer.m_hActiveItem.GetEntity());
 	File@ fHandle;
-	@fHandle  = g_FileSystem.OpenFile( szEntFile, OpenFile::APPEND );
+	@fHandle  = g_FileSystem.OpenFile( "scripts/maps/"+szEntFile, OpenFile::APPEND );
 	if( fHandle !is null )
 	{
 		fHandle.Write("{\n");
