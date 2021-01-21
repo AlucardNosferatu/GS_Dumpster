@@ -9,7 +9,6 @@ void PluginInit()
     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Carol is my angel!\n");
     InitEcco();
     InitBank();
-    g_Scheduler.SetInterval( "UpdateProfit", 6, g_Scheduler.REPEAT_INFINITE_TIMES);
 }
 
 void InitBank()
@@ -35,7 +34,9 @@ void InitBank()
         bank_cap=atof(Accounts[0].Split("\t")[1]);
         Accounts.removeAt(0);
     }
+    g_Scheduler.SetInterval( "UpdateProfit", 6, g_Scheduler.REPEAT_INFINITE_TIMES);
     g_Hooks.RegisterHook(Hooks::Player::ClientSay, @deposit);
+    g_Hooks.RegisterHook(Hooks::Game::MapChange, @statement);
 }
 
 void UpdateProfit()
@@ -82,7 +83,8 @@ void UpdateProfit()
                     fHandle.Close();
                 }
             }
-            profit+=(balance*profRate/6);
+            profit+=(balance*profRate/60);
+            g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Profiting:"+string(profit)+"\n");
             @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+PlayerUniqueId+".txt" , OpenFile::WRITE);
             if( fHandle !is null ) 
             {
@@ -105,6 +107,84 @@ HookReturnCode deposit(SayParameters@ pParams)
     {
         int fund = atoi(cArgs.Arg(1));
         g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Depositing:"+string(fund)+"\n");
+        string PlayerUniqueId = e_PlayerInventory.GetUniquePlayerId(pPlayer);
+        File@ fHandle;
+        float balance=0;
+        float profit=0;
+        float profRate=0.1;
+        if(Accounts.find(PlayerUniqueId)>=0)
+        {
+            @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+PlayerUniqueId+".txt" , OpenFile::READ);
+            if( fHandle !is null ) 
+            {
+                string sLine;
+                fHandle.ReadLine(sLine);
+                balance=atof(sLine.Split("\t")[1]);
+                fHandle.ReadLine(sLine);
+                profit=atof(sLine.Split("\t")[1]);
+                fHandle.ReadLine(sLine);
+                profRate=atof(sLine.Split("\t")[1]);
+                fHandle.Close();
+            }
+            balance+=float(fund);
+            e_PlayerInventory.ChangeBalance(pPlayer, -fund);
+            @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+PlayerUniqueId+".txt" , OpenFile::WRITE);
+            if( fHandle !is null ) 
+            {
+                fHandle.Write("BALANCE\t"+formatFloat(balance,"0",0,4)+"\n");
+                fHandle.Write("PROFIT\t"+formatFloat(profit,"0",0,4)+"\n");
+                fHandle.Write("PROFIT RATE\t"+formatFloat(profRate,"0",0,4));
+                fHandle.Close();
+            }
+        }
+        else
+        {
+            g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Plz wait until your account having been created.\n");
+        }
     }
     return HOOK_CONTINUE;
+}
+
+HookReturnCode statement()
+{
+    int pCount=g_PlayerFuncs.GetNumPlayers();
+    for(int i=1;i<=pCount;i++)
+    {
+        CBasePlayer@ pPlayer=g_PlayerFuncs.FindPlayerByIndex(i);
+        if ( pPlayer !is null && pPlayer.IsConnected() )
+        {
+            string PlayerUniqueId = e_PlayerInventory.GetUniquePlayerId(pPlayer);
+            File@ fHandle;
+            float balance=0;
+            float profit=0;
+            float profRate=0.1;
+            if(Accounts.find(PlayerUniqueId)>=0)
+            {
+                g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Doing statement when players leave.\n");
+                @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+PlayerUniqueId+".txt" , OpenFile::READ);
+                if( fHandle !is null ) 
+                {
+                    string sLine;
+                    fHandle.ReadLine(sLine);
+                    balance=atof(sLine.Split("\t")[1]);
+                    fHandle.ReadLine(sLine);
+                    profit=atof(sLine.Split("\t")[1]);
+                    fHandle.ReadLine(sLine);
+                    profRate=atof(sLine.Split("\t")[1]);
+                    fHandle.Close();
+                }
+                balance+=profit;
+                profit=0;
+                @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+PlayerUniqueId+".txt" , OpenFile::WRITE);
+                if( fHandle !is null ) 
+                {
+                    fHandle.Write("BALANCE\t"+formatFloat(balance,"0",0,4)+"\n");
+                    fHandle.Write("PROFIT\t"+formatFloat(profit,"0",0,4)+"\n");
+                    fHandle.Write("PROFIT RATE\t"+formatFloat(profRate,"0",0,4));
+                    fHandle.Close();
+                }
+            }
+        }
+    }
+	return HOOK_CONTINUE;
 }
