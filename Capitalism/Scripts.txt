@@ -31,7 +31,7 @@ ammo_762
 ammo_ARgrenades
 ammo_buckshot
 ammo_crossbow
-ammp_gaussclip
+ammo_gaussclip
 ammo_rpgclip
 ammo_sporeclip
 item_battery
