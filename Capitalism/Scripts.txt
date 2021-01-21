@@ -24,3 +24,16 @@ weapon_sniperrifle
 weapon_sporelauncher
 weapon_tripmine
 weapon_uzi
+ammo_9mmcip
+ammo_357
+ammo_556
+ammo_762
+ammo_ARgrenades
+ammo_buckshot
+ammo_crossbow
+ammp_gaussclip
+ammo_rpgclip
+ammo_sporeclip
+item_battery
+item_healthkit
+item_longjump
