@@ -13,7 +13,6 @@ weapon_hornetgun
 weapon_m16
 weapon_m249
 weapon_medkit
-weapon_minigun
 weapon_pipewrench
 weapon_rpg
 weapon_satchel
