@@ -35,6 +35,7 @@ void InitBank()
         bank_cap=atof(Accounts[0].Split("\t")[1]);
         Accounts.removeAt(0);
     }
+    g_Hooks.RegisterHook(Hooks::Player::ClientSay, @deposit);
 }
 
 void UpdateProfit()
@@ -92,4 +93,18 @@ void UpdateProfit()
             }
         }
     }
+}
+
+HookReturnCode deposit(SayParameters@ pParams)
+{
+    CBasePlayer@ pPlayer = pParams.GetPlayer();
+    const CCommand@ cArgs = pParams.GetArguments();
+    if( cArgs.ArgC() < 2 )
+        return HOOK_CONTINUE;
+    if(pPlayer !is null && (cArgs[0].ToLowercase() == "!deposit" || cArgs[0].ToLowercase() == "/deposit"))
+    {
+        int fund = atoi(cArgs.Arg(1));
+        g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Depositing:"+string(fund)+"\n");
+    }
+    return HOOK_CONTINUE;
 }
