@@ -23,7 +23,7 @@ weapon_sniperrifle
 weapon_sporelauncher
 weapon_tripmine
 weapon_uzi
-ammo_9mmcip
+ammo_9mmclip
 ammo_357
 ammo_556
 ammo_762
