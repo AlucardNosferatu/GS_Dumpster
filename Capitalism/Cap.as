@@ -9,6 +9,7 @@ void PluginInit()
     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Carol is my angel!\n");
     InitEcco();
     InitBank();
+    
 }
 
 void InitBank()
@@ -20,7 +21,7 @@ void InitBank()
         string sLine;
         fHandle.ReadLine(sLine);
         bank_cap=atoi(sLine.Split("\t")[1]);
-        while(sLine.length>0)
+        while(sLine.Length()>0)
         {
             fHandle.ReadLine(sLine);
             Accounts.insertLast(sLine);
@@ -33,11 +34,11 @@ void UpdateAccount(CBasePlayer@ pPlayer)
 {
     string PlayerUniqueId = e_PlayerInventory.GetUniquePlayerId(pPlayer);
     File@ fHandle;
+    int balance=0;
+    int profit=0;
+    float profRate=0.1;
     if(Accounts.find(PlayerUniqueId)>=0)
     {
-        int balance=0;
-        int profit=0;
-        int 
         @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+PlayerUniqueId+".txt" , OpenFile::READ);
         if( fHandle !is null ) 
         {
@@ -53,8 +54,9 @@ void UpdateAccount(CBasePlayer@ pPlayer)
     @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+PlayerUniqueId+".txt" , OpenFile::WRITE);
     if( fHandle !is null ) 
     {   
-        string sLine;
-        fHandle.ReadLine(sLine);
+        fHandle.Write("BALANCE\t"+string(balance)+"\n");
+        fHandle.Write("PROFIT\t"+string(profit)+"\n");
+        fHandle.Write("PROFIT RATE\t"+string(profRate));
     }
     fHandle.Close();
 }
