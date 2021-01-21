@@ -59,14 +59,24 @@ void UpdateProfit()
         else
         {
             Accounts.insertLast(PlayerUniqueId);
+            @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/bank.txt" , OpenFile::WRITE);
+            if( fHandle !is null ) 
+            {
+                fHandle.Write("CAPITAL\t"+formatFloat(bank_cap,"0",0,4)+"\n");
+                for(uint i=0;i<Accounts.length();i++)
+                {
+                    fHandle.Write(Accounts[i]+"\n");
+                }
+                fHandle.Close();
+            }
         }
         profit+=(balance*profRate/6);
         @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+PlayerUniqueId+".txt" , OpenFile::WRITE);
         if( fHandle !is null ) 
         {
-            fHandle.Write("BALANCE\t"+string(balance)+"\n");
-            fHandle.Write("PROFIT\t"+string(profit)+"\n");
-            fHandle.Write("PROFIT RATE\t"+string(profRate));
+            fHandle.Write("BALANCE\t"+formatFloat(balance,"0",0,4)+"\n");
+            fHandle.Write("PROFIT\t"+formatFloat(profit,"0",0,4)+"\n");
+            fHandle.Write("PROFIT RATE\t"+formatFloat(profRate,"0",0,4));
             fHandle.Close();
         }
     }
