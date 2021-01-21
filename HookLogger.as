@@ -100,6 +100,11 @@ HookReturnCode MapChangeH()
     for(int n=0;n<pCount2;n++)
     {
         string authid_pp=players_in_server[n];
+        
+        if(authid_pp=="BOT")
+        {
+            authid_pp="RCBOT_BOT";
+        }
 
         File@ fHandle;
         @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+authid_pp+".txt" , OpenFile::APPEND);
@@ -129,8 +134,12 @@ HookReturnCode ClientSayH(SayParameters@ pParams)
     CBasePlayer@ pPlayer=pParams.GetPlayer();
     edict_t@ edict_pp = pPlayer.edict();
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
-    // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Player: "+authid_pp+" says:\n"+pParams.GetCommand()+"\n");
     authid_pp=authid_pp.Replace(":","");
+
+    if(authid_pp=="BOT")
+    {
+        authid_pp="RCBOT_BOT";
+    }
 
     int ping;
     int loss;
@@ -173,6 +182,11 @@ HookReturnCode ClientDisconnectH(CBasePlayer@ pPlayer)
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
     authid_pp=authid_pp.Replace(":","");
 
+    if(authid_pp=="BOT")
+    {
+        authid_pp="RCBOT_BOT";
+    }
+
     int ping;
     int loss;
     const edict_t@ c_edict_pp = pPlayer.edict();
@@ -207,8 +221,13 @@ HookReturnCode ClientPutInServerH(CBasePlayer@ pPlayer)
 {
     edict_t@ edict_pp = pPlayer.edict();
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
-    // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "New player: "+authid_pp+"\n");
     authid_pp=authid_pp.Replace(":","");
+
+    if(authid_pp=="BOT")
+    {
+        authid_pp="RCBOT_BOT";
+    }
+
     RadarP.set(authid_pp,666);
     birthplaces.set(authid_pp,pPlayer.pev.origin);
     return HOOK_CONTINUE;
@@ -222,8 +241,12 @@ HookReturnCode PlayerSpawnH(CBasePlayer@ pPlayer)
 		
     edict_t@ edict_pp = pPlayer.edict();
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
-    // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "New player: "+authid_pp+"\n");
     authid_pp=authid_pp.Replace(":","");
+
+    if(authid_pp=="BOT")
+    {
+        authid_pp="RCBOT_BOT";
+    }
 
     RadarP.set(authid_pp,666);
     birthplaces.set(authid_pp,pPlayer.pev.origin);
@@ -266,8 +289,12 @@ HookReturnCode PlayerKilledH(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
 
     edict_t@ edict_pp = pPlayer.edict();
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
-    // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Fucked player: "+authid_pp+"\n");
     authid_pp=authid_pp.Replace(":","");
+
+    if(authid_pp=="BOT")
+    {
+        authid_pp="RCBOT_BOT";
+    }
 
     RadarP.set(authid_pp,0);
 
@@ -344,6 +371,12 @@ HookReturnCode PlayerPostThinkH(CBasePlayer@ pPlayer)
     edict_t@ edict_pp = pPlayer.edict();
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
     authid_pp=authid_pp.Replace(":","");
+
+    if(authid_pp=="BOT")
+    {
+        authid_pp="RCBOT_BOT";
+    }
+
     if(RadarP.exists(authid_pp) and int(RadarP[authid_pp])>100)
     {
         Vector vecSrc = pPlayer.pev.origin;
@@ -538,8 +571,12 @@ HookReturnCode PlayerTakeDamageH(DamageInfo@ pDamageInfo)
         CBasePlayer@ pPlayer=cast<CBasePlayer@>(pDamageInfo.pVictim);
         edict_t@ edict_pp = pPlayer.edict();
         string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
-        // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Damaged player: "+authid_pp+"\n");
         authid_pp=authid_pp.Replace(":","");
+
+        if(authid_pp=="BOT")
+        {
+            authid_pp="RCBOT_BOT";
+        }
 
         int ping;
         int loss;
@@ -669,8 +706,12 @@ HookReturnCode WeaponPrimaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWe
 
     edict_t@ edict_pp = pPlayer.edict();
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
-    // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Player: "+authid_pp+" is attacking!\n");
     authid_pp=authid_pp.Replace(":","");
+
+    if(authid_pp=="BOT")
+    {
+        authid_pp="RCBOT_BOT";
+    }
 
     int ping;
     int loss;
@@ -740,8 +781,12 @@ HookReturnCode WeaponSecondaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ p
 
     edict_t@ edict_pp = pPlayer.edict();
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
-    // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Player: "+authid_pp+" is attacking!\n");
     authid_pp=authid_pp.Replace(":","");
+
+    if(authid_pp=="BOT")
+    {
+        authid_pp="RCBOT_BOT";
+    }
 
     int ping;
     int loss;
