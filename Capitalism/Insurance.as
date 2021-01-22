@@ -164,7 +164,7 @@ HookReturnCode medical_servive(SayParameters@ pParams)
                 }
                 else
                 {
-                    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Price for Blast INS is 10000, You need more funds.\n");
+                    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Price for Bullet INS is 10000, You need more funds.\n");
                     return HOOK_CONTINUE;
                 }
                 return HOOK_CONTINUE;
