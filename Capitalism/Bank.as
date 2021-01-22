@@ -34,7 +34,7 @@ void InitBank()
         bank_cap=atof(Accounts[0].Split("\t")[1]);
         Accounts.removeAt(0);
     }
-    g_Scheduler.SetInterval( "UpdateProfit", 6, g_Scheduler.REPEAT_INFINITE_TIMES);
+    g_Scheduler.SetInterval( "UpdateProfit", 36, g_Scheduler.REPEAT_INFINITE_TIMES);
     g_Hooks.RegisterHook(Hooks::Player::ClientSay, @depo_or_withd);
     g_Hooks.RegisterHook(Hooks::Game::MapChange, @statement);
 }
@@ -83,7 +83,7 @@ void UpdateProfit()
                     fHandle.Close();
                 }
             }
-            profit+=(balance*profRate/60);
+            profit+=(balance*profRate/10);
             g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Profiting:"+string(profit)+"\n");
             @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+PlayerUniqueId+".txt" , OpenFile::WRITE);
             if( fHandle !is null ) 
