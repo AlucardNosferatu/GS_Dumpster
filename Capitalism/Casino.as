@@ -52,7 +52,7 @@ void statement_survive(string Banker, string die)
     CBasePlayer@ pBanker=e_PlayerInventory.FindPlayerById(Banker);
     if(pBanker is null)
     {
-        //Cancel bet
+        //TODO: Cancel bet
     }
     else
     {
@@ -66,7 +66,7 @@ void statement_survive(string Banker, string die)
             CBasePlayer@ pGamble=e_PlayerInventory.FindPlayerById(gamblers[i]);
             if(pGamble is null)
             {
-                //Mark as debt
+                //TODO: Mark as debt
             }
             else
             {
@@ -104,7 +104,7 @@ void statement_score(string Banker)
     CBasePlayer@ pBanker=e_PlayerInventory.FindPlayerById(Banker);
     if(pBanker is null)
     {
-        //Cancel bet
+        //TODO: Cancel bet
     }
     else
     {
@@ -120,7 +120,7 @@ void statement_score(string Banker)
             CBasePlayer@ pGamble=e_PlayerInventory.FindPlayerById(gamblers[i]);
             if(pGamble is null)
             {
-                //Mark as debt
+                //TODO: Mark as debt
             }
             else
             {
