@@ -53,7 +53,7 @@ void UpdateUserInfo()
     if( fHandle !is null )
     {
         array<string> users=INS_DMG_BULLET.getKeys();
-        int users_count=int(keys.length());
+        int users_count=int(users.length());
         for(int i=0;i<users_count;i++)
         {
             fHandle.Write(users[i]+"\t"+string(INS_DMG_BULLET[users[i]])+"\n");
@@ -65,7 +65,7 @@ void UpdateUserInfo()
     if( fHandle !is null )
     {
         array<string> users=INS_DMG_BLAST.getKeys();
-        int users_count=int(keys.length());
+        int users_count=int(users.length());
         for(int i=0;i<users_count;i++)
         {
             fHandle.Write(users[i]+"\t"+string(INS_DMG_BLAST[users[i]])+"\n");
