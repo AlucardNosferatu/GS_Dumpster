@@ -14,6 +14,7 @@ void PluginInit()
 void InitCasino()
 {
     g_Hooks.RegisterHook(Hooks::Player::ClientSay, @bet);
+    g_Hooks.RegisterHook(Hooks::Player::PlayerKilled, @check_corpse);
 }
 
 void CheckBet()
@@ -28,7 +29,7 @@ HookReturnCode bet(SayParameters@ pParams)
     const CCommand@ cArgs = pParams.GetArguments();
     if(pPlayer !is null && (cArgs[0].ToLowercase() == "!bet" || cArgs[0].ToLowercase() == "/bet"))
     {
-        if(Bet.exists("Status") and Bet["Status"]=="OnGoing")
+        if(Bet.exists("Status") and string(Bet["Status"])=="OnGoing")
         {
             g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Plz wait until current game finishes.\n");
             return HOOK_CONTINUE;
@@ -87,6 +88,16 @@ HookReturnCode bet(SayParameters@ pParams)
         string target=cArgs[2];
         array<string> stake_and_target={cArgs[1],cArgs[2]};
         Players.set[PlayerUniqueId,stake_and_target];
+    }
+    return HOOK_CONTINUE;
+}
+
+HookReturnCode check_corpse(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int iGib)
+{
+    if(Bet.exists("Status") and string(Bet["Status"])=="OnGoing" and Bet.exists("Game") and string(Bet["Game"]).StartsWith("survive_"))
+    {
+        CBasePlayer@ target=g_PlayerFuncs.FindPlayerByName(string(Bet["Target"]));
+        
     }
     return HOOK_CONTINUE;
 }
