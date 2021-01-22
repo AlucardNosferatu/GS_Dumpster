@@ -53,7 +53,7 @@ void statement_survive(string Banker, bool die)
     int lose=0;
     int win=0;
     array<string> users=Players.getKeys();
-        int users_count=int(keys.length());
+    int users_count=int(users.length());
         for(int i=0;i<users_count;i++)
 }
 
