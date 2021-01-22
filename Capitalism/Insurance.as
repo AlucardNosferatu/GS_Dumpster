@@ -144,11 +144,57 @@ HookReturnCode medical_servive(SayParameters@ pParams)
         {
             if(cArgs[1]=="DMG_BULLET")
             {
-                
+                if(e_PlayerInventory.GetBalance(pPlayer)>10000)
+                {
+                    string PlayerUniqueId = e_PlayerInventory.GetUniquePlayerId(pPlayer);
+                    e_PlayerInventory.ChangeBalance(pPlayer, -10000);
+                    INS_DMG_BULLET.set(PlayerUniqueId,1000);
+                    File@ fHandle;
+                    @fHandle = g_FileSystem.OpenFile( "scripts/plugins/store/ins_dmg_bullet.txt" , OpenFile::WRITE);
+                    if( fHandle !is null )
+                    {
+                        array<string> users=INS_DMG_BULLET.getKeys()
+                        int users_count=int(keys.length());
+                        for(int i=0;i<users_count;i++)
+                        {
+                            fHandle.Write(users[i]+"\t"+string(INS_DMG_BULLET[users[i]])+"\n")
+                        }
+                        fHandle.Close();
+                    }
+                }
+                else
+                {
+                    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Price for Blast INS is 10000, You need more funds.\n");
+                    return HOOK_CONTINUE;
+                }
+                return HOOK_CONTINUE;
             }
             else if(cArgs[1]=="DMG_BLAST")
             {
-
+                if(e_PlayerInventory.GetBalance(pPlayer)>20000)
+                {
+                    string PlayerUniqueId = e_PlayerInventory.GetUniquePlayerId(pPlayer);
+                    e_PlayerInventory.ChangeBalance(pPlayer, -20000);
+                    INS_DMG_BLAST.set(PlayerUniqueId,1000);
+                    File@ fHandle;
+                    @fHandle = g_FileSystem.OpenFile( "scripts/plugins/store/ins_dmg_blast.txt" , OpenFile::WRITE);
+                    if( fHandle !is null )
+                    {
+                        array<string> users=INS_DMG_BLAST.getKeys()
+                        int users_count=int(keys.length());
+                        for(int i=0;i<users_count;i++)
+                        {
+                            fHandle.Write(users[i]+"\t"+string(INS_DMG_BLAST[users[i]])+"\n")
+                        }
+                        fHandle.Close();
+                    }
+                }
+                else
+                {
+                    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Price for Blast INS is 20000, You need more funds.\n");
+                    return HOOK_CONTINUE;
+                }
+                return HOOK_CONTINUE;
             }
             else
             {
