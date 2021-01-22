@@ -1,4 +1,7 @@
 #include "Ecco/Include"
+dictionary INS_DMG_BULLET;
+dictionary INS_DMG_BLAST;
+
 
 void PluginInit()
 {
@@ -9,9 +12,46 @@ void PluginInit()
     InitInsurrance();
 }
 
+void GetUserList()
+{
+    File@ fHandle;
+    string sLine;
+    
+    @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/ins_dmg_bullet.txt" , OpenFile::READ);
+    if( fHandle !is null )
+    {
+        while(!fHandle.EOFReached())
+        {
+            fHandle.ReadLine(sLine);
+            string user_name=sLine.Split("\t")[0];
+            int rest_time=atoi(sLine.Split("\t")[1]);
+            INS_DMG_BULLET.set(user_name,rest_time);
+
+        }
+        fHandle.Close();
+    }
+
+    @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/ins_dmg_blast.txt" , OpenFile::READ);
+    if( fHandle !is null )
+    {
+        while(!fHandle.EOFReached())
+        {
+            fHandle.ReadLine(sLine);
+            string user_name=sLine.Split("\t")[0];
+            int rest_time=atoi(sLine.Split("\t")[1]);
+            INS_DMG_BLAST.set(user_name,rest_time);
+        }
+        fHandle.Close();
+    }
+}
+
+
 void InitInsurrance()
 {
+    GetUserList();
     g_Hooks.RegisterHook(Hooks::Player::ClientSay, @medical_servive);
+    // g_Hooks.RegisterHook(Hooks::Player::PlayerTakeDamage, @insurrance_service);
+
 }
 
 HookReturnCode medical_servive(SayParameters@ pParams)
@@ -90,6 +130,30 @@ HookReturnCode medical_servive(SayParameters@ pParams)
             else
             {
                 g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "You are too poor to call for an emergency rescue!\n");
+            }
+        }
+    }
+    else if(pPlayer !is null && (cArgs[0].ToLowercase() == "!insure" || cArgs[0].ToLowercase() == "/insure"))
+    {
+        if( cArgs.ArgC() < 2 )
+        {
+            g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Plz specify the type of insurrance you want to buy.\n");
+            return HOOK_CONTINUE;
+        }
+        else
+        {
+            if(cArgs[1]=="DMG_BULLET")
+            {
+                
+            }
+            else if(cArgs[1]=="DMG_BLAST")
+            {
+
+            }
+            else
+            {
+                g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "We don't have the type of insurrance you specified, sorry.\n");
+                return HOOK_CONTINUE;
             }
         }
     }
