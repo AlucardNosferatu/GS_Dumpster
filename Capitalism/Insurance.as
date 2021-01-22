@@ -9,7 +9,7 @@ void PluginInit()
     g_Module.ScriptInfo.SetContactInfo("1641367382@qq.com");
     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "My-Dearest-Girl...Ms.Carol!\n");
     InitEcco();
-    InitInsurrance();
+    InitInsurance();
 }
 
 void GetUserList()
@@ -74,11 +74,11 @@ void UpdateUserInfo()
     }
 }
 
-void InitInsurrance()
+void InitInsurance()
 {
     GetUserList();
     g_Hooks.RegisterHook(Hooks::Player::ClientSay, @medical_servive);
-    g_Hooks.RegisterHook(Hooks::Player::PlayerTakeDamage, @insurrance_service);
+    g_Hooks.RegisterHook(Hooks::Player::PlayerTakeDamage, @insurance_service);
 }
 
 HookReturnCode medical_servive(SayParameters@ pParams)
@@ -164,7 +164,7 @@ HookReturnCode medical_servive(SayParameters@ pParams)
     {
         if( cArgs.ArgC() < 2 )
         {
-            g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Plz specify the type of insurrance you want to buy.\n");
+            g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Plz specify the type of insurance you want to buy.\n");
             return HOOK_CONTINUE;
         }
         else
@@ -203,7 +203,7 @@ HookReturnCode medical_servive(SayParameters@ pParams)
             }
             else
             {
-                g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "We don't have the type of insurrance you specified, sorry.\n");
+                g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "We don't have the type of insurance you specified, sorry.\n");
                 return HOOK_CONTINUE;
             }
         }
@@ -211,7 +211,7 @@ HookReturnCode medical_servive(SayParameters@ pParams)
     return HOOK_CONTINUE;
 }
 
-HookReturnCode insurrance_service(DamageInfo@ pDamageInfo)
+HookReturnCode insurance_service(DamageInfo@ pDamageInfo)
 {
     if(pDamageInfo.flDamage<1.0)
     {
