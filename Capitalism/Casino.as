@@ -19,9 +19,44 @@ void InitCasino()
 
 void CheckBet()
 {
+    string Game=string(Bet["Game"]);
+    string Mode=Game.Split("_")[0];//survive or score
+    int Time=atoi(Game.Split("_")[1]);//seconds to check
+    if(Mode=="survive")
+    {
+        bool die=(string(Bet["Result"])=="die");
+        statement_survive(string(Bet["Banker"]),die);
+    }
+    else if(Mode=="score")
+    {
+        int N=atoi(string(Bet["Target"]));
+        Bet.set("Result",GetTopN(N));
+        statement_score(string(Bet["Banker"]));
+    }
+    ResetBet();
+}
+
+void ResetBet()
+{
+    Bet.deleteAll();
+    Players.deleteAll();
+}
+
+string GetTopN(int N)
+{
+    return "Scrooge_Carol_Drood";
+}
+
+
+void statement_survive(string Banker, bool die)
+{
 
 }
 
+void statement_score(string Banker)
+{
+
+}
 
 HookReturnCode bet(SayParameters@ pParams)
 {
@@ -63,6 +98,14 @@ HookReturnCode bet(SayParameters@ pParams)
             }
             else if(Game.StartsWith("score_"))
             {
+                if( cArgs.ArgC() < 3 or )
+                {
+                    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Plz specify the TopN you want to bet, cannot be larger than half of the current amount of players.\n");
+                    return HOOK_CONTINUE;
+                }
+                string Target=cArgs[2];
+                Bet.set('Target', Target);
+                Bet.set("Result","wait");
                 Bet.set("Status","OnGoing")
                 int seconds_to_check=atoi(Game.Split("_")[1]);
                 g_Scheduler.SetInterval( "CheckBet", seconds_to_check, 1);
