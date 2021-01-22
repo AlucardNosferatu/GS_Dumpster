@@ -111,6 +111,7 @@ void statement_score(string Banker)
         array<string> TopN=string(Bet["Result"]).Split("_");
         int N=int(TopN.length());
         float odds_miss=atof(string(Bet["Game"]).Split("_")[2]);
+        float odds_match_modifier=atof(string(Bet["Game"]).Split("_")[3]);
 
         array<string> gamblers=Players.getKeys();
         int gamblers_count=int(gamblers.length());
@@ -131,14 +132,16 @@ void statement_score(string Banker)
                 int order=TopN.find(Target);
                 if(order>0)
                 {
+                    odds=odds_match_modifier*(N-order);
                     e_PlayerInventory.ChangeBalance(pGamble, Stake);
-                    e_PlayerInventory.ChangeBalance(pGamble, stake*(N-order));
-                    e_PlayerInventory.ChangeBalance(pBanker, -stake*(N-order));
+                    e_PlayerInventory.ChangeBalance(pGamble, stake*odds);
+                    e_PlayerInventory.ChangeBalance(pBanker, -stake*odds);
                 }
                 else
                 {
-                    e_PlayerInventory.ChangeBalance(pGamble, -Stake*odds_miss);
-                    e_PlayerInventory.ChangeBalance(pBanker, Stake*odds_miss);
+                    odds=odds_miss;
+                    e_PlayerInventory.ChangeBalance(pGamble, -Stake*odds);
+                    e_PlayerInventory.ChangeBalance(pBanker, Stake*odds);
                 }
 
             }
