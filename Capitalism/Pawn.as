@@ -4,7 +4,7 @@ void PluginInit()
 {
     g_Module.ScriptInfo.SetAuthor("Scrooge2029");
     g_Module.ScriptInfo.SetContactInfo("1641367382@qq.com");
-    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Carol is my angel!\n");
+    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "My-Dearest-Girl...Ms.Carol!\n");
     InitEcco();
     InitPawn();
 }
