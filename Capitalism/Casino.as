@@ -50,7 +50,11 @@ string GetTopN(int N)
 
 void statement_survive(string Banker, bool die)
 {
-
+    int lose=0;
+    int win=0;
+    array<string> users=Players.getKeys();
+        int users_count=int(keys.length());
+        for(int i=0;i<users_count;i++)
 }
 
 void statement_score(string Banker)
@@ -106,7 +110,7 @@ HookReturnCode bet(SayParameters@ pParams)
                 string Target=cArgs[2];
                 Bet.set('Target', Target);
                 Bet.set("Result","wait");
-                Bet.set("Status","OnGoing")
+                Bet.set("Status","OnGoing");
                 int seconds_to_check=atoi(Game.Split("_")[1]);
                 g_Scheduler.SetInterval( "CheckBet", seconds_to_check, 1);
             }
