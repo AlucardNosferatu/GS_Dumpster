@@ -45,13 +45,40 @@ void GetUserList()
     }
 }
 
+void UpdateUserInfo()
+{
+    File@ fHandle;
+
+    @fHandle = g_FileSystem.OpenFile( "scripts/plugins/store/ins_dmg_bullet.txt" , OpenFile::WRITE);
+    if( fHandle !is null )
+    {
+        array<string> users=INS_DMG_BULLET.getKeys()
+        int users_count=int(keys.length());
+        for(int i=0;i<users_count;i++)
+        {
+            fHandle.Write(users[i]+"\t"+string(INS_DMG_BULLET[users[i]])+"\n")
+        }
+        fHandle.Close();
+    }
+
+    @fHandle = g_FileSystem.OpenFile( "scripts/plugins/store/ins_dmg_blast.txt" , OpenFile::WRITE);
+    if( fHandle !is null )
+    {
+        array<string> users=INS_DMG_BLAST.getKeys()
+        int users_count=int(keys.length());
+        for(int i=0;i<users_count;i++)
+        {
+            fHandle.Write(users[i]+"\t"+string(INS_DMG_BLAST[users[i]])+"\n")
+        }
+        fHandle.Close();
+    }
+}
 
 void InitInsurrance()
 {
     GetUserList();
     g_Hooks.RegisterHook(Hooks::Player::ClientSay, @medical_servive);
-    // g_Hooks.RegisterHook(Hooks::Player::PlayerTakeDamage, @insurrance_service);
-
+    g_Hooks.RegisterHook(Hooks::Player::PlayerTakeDamage, @insurrance_service);
 }
 
 HookReturnCode medical_servive(SayParameters@ pParams)
@@ -238,33 +265,4 @@ HookReturnCode insurrance_service(DamageInfo@ pDamageInfo)
         return HOOK_CONTINUE;
     }
     return HOOK_CONTINUE;
-}
-
-void UpdateUserInfo()
-{
-    File@ fHandle;
-
-    @fHandle = g_FileSystem.OpenFile( "scripts/plugins/store/ins_dmg_bullet.txt" , OpenFile::WRITE);
-    if( fHandle !is null )
-    {
-        array<string> users=INS_DMG_BULLET.getKeys()
-        int users_count=int(keys.length());
-        for(int i=0;i<users_count;i++)
-        {
-            fHandle.Write(users[i]+"\t"+string(INS_DMG_BULLET[users[i]])+"\n")
-        }
-        fHandle.Close();
-    }
-
-    @fHandle = g_FileSystem.OpenFile( "scripts/plugins/store/ins_dmg_blast.txt" , OpenFile::WRITE);
-    if( fHandle !is null )
-    {
-        array<string> users=INS_DMG_BLAST.getKeys()
-        int users_count=int(keys.length());
-        for(int i=0;i<users_count;i++)
-        {
-            fHandle.Write(users[i]+"\t"+string(INS_DMG_BLAST[users[i]])+"\n")
-        }
-        fHandle.Close();
-    }
 }
