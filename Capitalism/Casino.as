@@ -56,6 +56,7 @@ HookReturnCode bet(SayParameters@ pParams)
                 }
                 string Target=cArgs[2];
                 Bet.set('Target', Target);
+                Bet.set("Result","live");
                 Bet.set("Status","OnGoing")
                 int seconds_to_check=atoi(Game.Split("_")[1]);
                 g_Scheduler.SetInterval( "CheckBet", seconds_to_check, 1);
@@ -96,8 +97,14 @@ HookReturnCode check_corpse(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int iG
 {
     if(Bet.exists("Status") and string(Bet["Status"])=="OnGoing" and Bet.exists("Game") and string(Bet["Game"]).StartsWith("survive_"))
     {
+        string PlayerUniqueId = e_PlayerInventory.GetUniquePlayerId(pPlayer);
         CBasePlayer@ target=g_PlayerFuncs.FindPlayerByName(string(Bet["Target"]));
-        
+        string TargetUniqueId = e_PlayerInventory.GetUniquePlayerId(target);
+        if(PlayerUniqueId==TargetUniqueId)
+        {
+            Bet.set("Result","die");
+        }
+        return HOOK_CONTINUE;
     }
     return HOOK_CONTINUE;
 }
