@@ -149,18 +149,7 @@ HookReturnCode medical_servive(SayParameters@ pParams)
                     string PlayerUniqueId = e_PlayerInventory.GetUniquePlayerId(pPlayer);
                     e_PlayerInventory.ChangeBalance(pPlayer, -10000);
                     INS_DMG_BULLET.set(PlayerUniqueId,1000);
-                    File@ fHandle;
-                    @fHandle = g_FileSystem.OpenFile( "scripts/plugins/store/ins_dmg_bullet.txt" , OpenFile::WRITE);
-                    if( fHandle !is null )
-                    {
-                        array<string> users=INS_DMG_BULLET.getKeys()
-                        int users_count=int(keys.length());
-                        for(int i=0;i<users_count;i++)
-                        {
-                            fHandle.Write(users[i]+"\t"+string(INS_DMG_BULLET[users[i]])+"\n")
-                        }
-                        fHandle.Close();
-                    }
+                    UpdateUserInfo();
                 }
                 else
                 {
@@ -176,18 +165,7 @@ HookReturnCode medical_servive(SayParameters@ pParams)
                     string PlayerUniqueId = e_PlayerInventory.GetUniquePlayerId(pPlayer);
                     e_PlayerInventory.ChangeBalance(pPlayer, -20000);
                     INS_DMG_BLAST.set(PlayerUniqueId,1000);
-                    File@ fHandle;
-                    @fHandle = g_FileSystem.OpenFile( "scripts/plugins/store/ins_dmg_blast.txt" , OpenFile::WRITE);
-                    if( fHandle !is null )
-                    {
-                        array<string> users=INS_DMG_BLAST.getKeys()
-                        int users_count=int(keys.length());
-                        for(int i=0;i<users_count;i++)
-                        {
-                            fHandle.Write(users[i]+"\t"+string(INS_DMG_BLAST[users[i]])+"\n")
-                        }
-                        fHandle.Close();
-                    }
+                    UpdateUserInfo();
                 }
                 else
                 {
@@ -204,4 +182,89 @@ HookReturnCode medical_servive(SayParameters@ pParams)
         }
     }
     return HOOK_CONTINUE;
+}
+
+HookReturnCode insurrance_service(DamageInfo@ pDamageInfo)
+{
+    if(pDamageInfo.flDamage<1.0)
+    {
+        return HOOK_CONTINUE;
+    }
+    if(pDamageInfo.pVictim.IsPlayer())
+    {
+        CBasePlayer@ pPlayer=cast<CBasePlayer@>(pDamageInfo.pVictim);
+        CBaseEntity@ pAtk=pDamageInfo.pAttacker;
+        //TODO 根据pAtk筛选，防止骗保
+        string PlayerUniqueId = e_PlayerInventory.GetUniquePlayerId(pPlayer);
+        switch(pDamageInfo.bitsDamageType)
+        {
+            case DMG_BULLET:
+                if(INS_DMG_BULLET.exists(PlayerUniqueId) and int(INS_DMG_BULLET[PlayerUniqueId])>0)
+                {
+                    INS_DMG_BULLET[PlayerUniqueId]-=1;
+                    e_PlayerInventory.ChangeBalance(pPlayer, int(pDamageInfo.flDamage));
+                    if(INS_DMG_BULLET[PlayerUniqueId]%10==0)
+                    {
+                        UpdateUserInfo();
+                    }
+                }
+                else
+                {
+                    return HOOK_CONTINUE;
+                }
+                break;
+            case DMG_BLAST:
+                if(INS_DMG_BLAST.exists(PlayerUniqueId) and int(INS_DMG_BLAST[PlayerUniqueId])>0)
+                {
+                    INS_DMG_BLAST[PlayerUniqueId]-=1;
+                    e_PlayerInventory.ChangeBalance(pPlayer, int(pDamageInfo.flDamage));
+                    if(INS_DMG_BLAST[PlayerUniqueId]%10==0)
+                    {
+                        UpdateUserInfo();
+                    }
+                }
+                else
+                {
+                    return HOOK_CONTINUE;
+                }
+                break;
+            default:
+                return HOOK_CONTINUE;
+        }
+        return HOOK_CONTINUE;
+    }
+    else
+    {
+        return HOOK_CONTINUE;
+    }
+    return HOOK_CONTINUE;
+}
+
+void UpdateUserInfo()
+{
+    File@ fHandle;
+
+    @fHandle = g_FileSystem.OpenFile( "scripts/plugins/store/ins_dmg_bullet.txt" , OpenFile::WRITE);
+    if( fHandle !is null )
+    {
+        array<string> users=INS_DMG_BULLET.getKeys()
+        int users_count=int(keys.length());
+        for(int i=0;i<users_count;i++)
+        {
+            fHandle.Write(users[i]+"\t"+string(INS_DMG_BULLET[users[i]])+"\n")
+        }
+        fHandle.Close();
+    }
+
+    @fHandle = g_FileSystem.OpenFile( "scripts/plugins/store/ins_dmg_blast.txt" , OpenFile::WRITE);
+    if( fHandle !is null )
+    {
+        array<string> users=INS_DMG_BLAST.getKeys()
+        int users_count=int(keys.length());
+        for(int i=0;i<users_count;i++)
+        {
+            fHandle.Write(users[i]+"\t"+string(INS_DMG_BLAST[users[i]])+"\n")
+        }
+        fHandle.Close();
+    }
 }
