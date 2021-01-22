@@ -48,7 +48,9 @@ namespace Capitalism
             fHandle.ReadLine(sLine);
             countThis=atoi(sLine.Split("\t")[1]);
             fHandle.ReadLine(sLine);
-            currentRatio=atof(sLine.Split("\t")[1]);
+            float LastRecordedRatio=atof(sLine.Split("\t")[1]);
+            float PreviousRatio=(float(countThis)/float(countTotal-1));
+            currentRatio=(LastRecordedRatio+PreviousRatio)/2;
             fHandle.ReadLine(sLine);
             fluctuation=atof(sLine.Split("\t")[1]);
             fHandle.Close();
@@ -100,7 +102,7 @@ namespace Capitalism
             fluctuation=atof(sLine.Split("\t")[1]);
             fluctuation*=10;
             fHandle.Close();
-
+            g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Fluc:"+formatFloat(fluctuation,"0",0,4)+"\n");
 
             string weaponFile="scripts/plugins/Ecco/scripts/"+weaponClassname+".echo";
             File@ file = g_FileSystem.OpenFile(weaponFile, OpenFile::READ);
@@ -128,6 +130,7 @@ namespace Capitalism
                     //基础物资（撬棍、藤壶、扳手）为计划经济，不参与市场调控
                     discount=0.0;
                 }
+                g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Disc:"+formatFloat(discount,"0",0,4)+"\n");
                 e_PlayerInventory.ChangeBalance(pPlayer, int(discount));
             }
             else
