@@ -130,7 +130,7 @@ void statement_score(string Banker)
                 float odds;
 
                 int order=TopN.find(Target);
-                if(order>0)
+                if(order>=0)
                 {
                     odds=odds_match_modifier*(N-order);
                     e_PlayerInventory.ChangeBalance(pGamble, Stake);
