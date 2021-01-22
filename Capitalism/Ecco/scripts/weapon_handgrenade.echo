@@ -2,3 +2,5 @@ name:HE Grenade
 cost:15
 category:Military Weapon
 give weapon_handgrenade
+buycount weapon_handgrenade
+discount weapon_handgrenade

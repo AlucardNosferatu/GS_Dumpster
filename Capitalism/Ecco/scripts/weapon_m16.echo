@@ -2,3 +2,5 @@ name:M16+M203
 cost:25
 category:Military Weapon
 give weapon_m16
+buycount weapon_m16
+discount weapon_m16

@@ -2,3 +2,5 @@ name:Medic Kit
 cost:1
 category:Security
 give weapon_medkit
+buycount weapon_medkit
+discount weapon_medkit

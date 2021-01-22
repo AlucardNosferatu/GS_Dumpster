@@ -2,3 +2,5 @@ name:IMI Desert Eagle
 cost:4
 category:Mercenary Weapon
 give weapon_eagle
+buycount weapon_eagle
+discount weapon_eagle

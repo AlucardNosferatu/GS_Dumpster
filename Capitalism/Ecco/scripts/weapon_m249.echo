@@ -2,3 +2,5 @@ name:M249 S.A.W.
 cost:25
 category:Military Weapon
 give weapon_m249
+buycount weapon_m249
+discount weapon_m249

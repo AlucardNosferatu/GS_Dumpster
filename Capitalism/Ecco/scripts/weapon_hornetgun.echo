@@ -2,3 +2,5 @@ name:Hivehand
 cost:25
 category:Bio Weapon
 give weapon_hornetgun
+buycount weapon_hornetgun
+discount weapon_hornetgun

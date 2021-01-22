@@ -2,3 +2,5 @@ name:Snarks
 cost:20
 category:Bio Weapon
 give weapon_snark
+buycount weapon_snark
+discount weapon_snark

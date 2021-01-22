@@ -2,3 +2,5 @@ name:C4 Charges
 cost:15
 category:Military Weapon
 give weapon_satchel
+buycount weapon_satchel
+discount weapon_satchel

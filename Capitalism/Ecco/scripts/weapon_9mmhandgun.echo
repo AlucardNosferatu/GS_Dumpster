@@ -2,3 +2,5 @@ name:Beretta M9
 cost:2
 category:Security
 give weapon_9mmhandgun
+buycount weapon_9mmhandgun
+discount weapon_9mmhandgun

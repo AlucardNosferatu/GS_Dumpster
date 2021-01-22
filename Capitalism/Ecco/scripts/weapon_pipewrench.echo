@@ -2,3 +2,5 @@ name:Pipe Wrench
 cost:1
 category:Melee
 give weapon_pipewrench
+buycount weapon_pipewrench
+discount weapon_pipewrench
