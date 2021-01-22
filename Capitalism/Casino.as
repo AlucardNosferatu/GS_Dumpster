@@ -1,5 +1,6 @@
 #include "Ecco/Include"
 dictionary Bet;
+dictionary Players;
 
 void PluginInit()
 {
@@ -74,7 +75,18 @@ HookReturnCode bet(SayParameters@ pParams)
     }
     else if(pPlayer !is null && (cArgs[0].ToLowercase() == "!gamble" || cArgs[0].ToLowercase() == "/gamble"))
     {
+        if( cArgs.ArgC() < 3 )
+        {
+            g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Plz specify your stake and target(live/die for survive prediction game).\n");
+            return HOOK_CONTINUE;
+        }
+        string PlayerUniqueId = e_PlayerInventory.GetUniquePlayerId(pPlayer);
+        int stake=atoi(cArgs[1]);
+        e_PlayerInventory.ChangeBalance(pPlayer, -stake);
 
+        string target=cArgs[2];
+        array<string> stake_and_target={cArgs[1],cArgs[2]};
+        Players.set[PlayerUniqueId,stake_and_target];
     }
     return HOOK_CONTINUE;
 }
