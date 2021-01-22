@@ -22,12 +22,12 @@ HookReturnCode sell(SayParameters@ pParams)
     {
         int fund = atoi(cArgs.Arg(1));
         CBaseEntity@ weaponHeld= pPlayer.m_hActiveItem.GetEntity();
-        string weaponFile="scripts/plugins/Ecco/scripts/"+weaponHeld.GetClassname();
-        File@ file = g_FileSystem.OpenFile(MacroPath, OpenFile::READ);
+        string weaponFile="scripts/plugins/Ecco/scripts/"+weaponHeld.GetClassname()+".echo";
+        File@ file = g_FileSystem.OpenFile(weaponFile, OpenFile::READ);
         if(file !is null)
         {
             file.Close();
-            dictionary WeaponInfo=e_ScriptParser.RetrieveInfo("scripts/plugins/Ecco/scripts/"+weaponHeld.GetClassname());
+            dictionary WeaponInfo=e_ScriptParser.RetrieveInfo(weaponFile);
             float PriceInfo=atof(WeaponInfo['cost']);
             if(PriceInfo>50.0)
             {
