@@ -24,8 +24,7 @@ void CheckBet()
     int Time=atoi(Game.Split("_")[1]);//seconds to check
     if(Mode=="survive")
     {
-        bool die=(string(Bet["Result"])=="die");
-        statement_survive(string(Bet["Banker"]),die);
+        statement_survive(string(Bet["Banker"]),string(Bet["Result"]));
     }
     else if(Mode=="score")
     {
@@ -48,13 +47,50 @@ string GetTopN(int N)
 }
 
 
-void statement_survive(string Banker, bool die)
+void statement_survive(string Banker, string die)
 {
-    int lose=0;
-    int win=0;
-    array<string> users=Players.getKeys();
-    int users_count=int(users.length());
-        for(int i=0;i<users_count;i++)
+    CBasePlayer@ pBanker=e_PlayerInventory.FindPlayerById(Banker);
+    if(pBanker is null)
+    {
+        //Cancel bet
+    }
+    else
+    {
+        float odds_live=atof(string(Bet["Game"]).Split("_")[2]);
+        float odds_die=1/odds_live;
+
+        array<string> gamblers=Players.getKeys();
+        int gamblers_count=int(gamblers.length());
+        for(int i=0;i<gamblers_count;i++)
+        {
+            array<string> gamble=cast<array<string>>(Players[gamblers[i]]);
+            int Stake=atoi(gamble[0]);
+            string Target=gamble[1];
+            float odds;
+            if(Target=="live")
+            {
+                odds=odds_live;
+            }
+            else
+            {
+                odds=odds_die;
+            }
+            if(die==Target)
+            {
+                CBasePlayer@ pGamble=e_PlayerInventory.FindPlayerById(gamblers[i]);
+                if(pGamble is null)
+                {
+                    //Mark as debt
+                }
+                else
+                {
+
+                }
+            }
+
+        }
+    }
+
 }
 
 void statement_score(string Banker)
