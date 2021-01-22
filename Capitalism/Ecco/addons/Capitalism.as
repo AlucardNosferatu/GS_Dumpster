@@ -99,17 +99,19 @@ namespace Capitalism
             fHandle.ReadLine(sLine);
             fluctuation=atof(sLine.Split("\t")[1]);
             fHandle.Close();
-            string weaponFile="scripts/plugins/Ecco/scripts/"+weaponHeld.GetClassname()+".echo";
+
+
+            string weaponFile="scripts/plugins/Ecco/scripts/"+weaponClassname+".echo";
             File@ file = g_FileSystem.OpenFile(weaponFile, OpenFile::READ);
             if(file !is null)
             {
                 file.Close();
                 dictionary WeaponInfo=e_ScriptParser.RetrieveInfo(weaponFile);
-                float PriceInfo=atof(WeaponInfo['cost']);
+                float PriceInfo=atof(string(WeaponInfo['cost']));
                 float discount;
                 if(PriceInfo>1)
                 {
-                    if(fluctuation<-0.9)
+                    if(fluctuation>-0.9)
                     {
                         //跌幅不超过90%，购买减免跌幅*底价
                         discount=-(fluctuation*PriceInfo);
@@ -137,7 +139,5 @@ namespace Capitalism
         {
             return false;
         }
-        return true;
     }
-
 }
