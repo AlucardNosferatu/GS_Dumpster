@@ -98,6 +98,7 @@ namespace Capitalism
             currentRatio=atof(sLine.Split("\t")[1]);
             fHandle.ReadLine(sLine);
             fluctuation=atof(sLine.Split("\t")[1]);
+            fluctuation*=10;
             fHandle.Close();
 
 
