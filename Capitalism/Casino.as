@@ -63,28 +63,35 @@ void statement_survive(string Banker, string die)
         int gamblers_count=int(gamblers.length());
         for(int i=0;i<gamblers_count;i++)
         {
-            array<string> gamble=cast<array<string>>(Players[gamblers[i]]);
-            int Stake=atoi(gamble[0]);
-            string Target=gamble[1];
-            float odds;
-            if(Target=="live")
+            CBasePlayer@ pGamble=e_PlayerInventory.FindPlayerById(gamblers[i]);
+            if(pGamble is null)
             {
-                odds=odds_live;
+                //Mark as debt
             }
             else
             {
-                odds=odds_die;
-            }
-            if(die==Target)
-            {
-                CBasePlayer@ pGamble=e_PlayerInventory.FindPlayerById(gamblers[i]);
-                if(pGamble is null)
+                array<string> gamble=cast<array<string>>(Players[gamblers[i]]);
+                int Stake=atoi(gamble[0]);
+                string Target=gamble[1];
+                float odds;
+                if(Target=="live")
                 {
-                    //Mark as debt
+                    odds=odds_live;
                 }
                 else
                 {
-
+                    odds=odds_die;
+                }
+                if(die==Target)
+                {   
+                    e_PlayerInventory.ChangeBalance(pGamble, stake);
+                    e_PlayerInventory.ChangeBalance(pGamble, stake*odds);
+                    e_PlayerInventory.ChangeBalance(pBanker, -stake*odds);
+                }
+                else
+                {   
+                    e_PlayerInventory.ChangeBalance(pGamble, -stake*odds);
+                    e_PlayerInventory.ChangeBalance(pBanker, stake*odds);
                 }
             }
 
