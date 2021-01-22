@@ -9,8 +9,8 @@ namespace Capitalism
     bool buycount(CBasePlayer@ pPlayer, array<string>@ args)
     {
         string weaponClassname=args[0];
-        int countThis=0;
         int countTotal=0;
+        int countThis=0;
         float currentRatio=0.0;
         float fluctuation=0.0;
 
@@ -80,6 +80,62 @@ namespace Capitalism
 
     bool discount(CBasePlayer@ pPlayer, array<string>@ args)
     {
+        string weaponClassname=args[0];
+
+        int countThis=0;
+        float currentRatio=0.0;
+        float fluctuation=0.0;
+
+        File@ fHandle;
+
+        @fHandle = g_FileSystem.OpenFile( "scripts/plugins/store/"+weaponClassname+".price" , OpenFile::READ);
+        if( fHandle !is null ) 
+        {
+            string sLine;
+            fHandle.ReadLine(sLine);
+            countThis=atoi(sLine.Split("\t")[1]);
+            fHandle.ReadLine(sLine);
+            currentRatio=atof(sLine.Split("\t")[1]);
+            fHandle.ReadLine(sLine);
+            fluctuation=atof(sLine.Split("\t")[1]);
+            fHandle.Close();
+            string weaponFile="scripts/plugins/Ecco/scripts/"+weaponHeld.GetClassname()+".echo";
+            File@ file = g_FileSystem.OpenFile(weaponFile, OpenFile::READ);
+            if(file !is null)
+            {
+                file.Close();
+                dictionary WeaponInfo=e_ScriptParser.RetrieveInfo(weaponFile);
+                float PriceInfo=atof(WeaponInfo['cost']);
+                float discount;
+                if(PriceInfo>1)
+                {
+                    if(fluctuation<-0.9)
+                    {
+                        //跌幅不超过90%，购买减免跌幅*底价
+                        discount=-(fluctuation*PriceInfo);
+                    }
+                    else
+                    {
+                        //跌幅超过90%，折扣模式为1元购（返利模式，先款不足无法购买）防止倒贴现金
+                        discount=1-PriceInfo;
+                    }
+                }
+                else
+                {
+                    //基础物资（撬棍、藤壶、扳手）为计划经济，不参与市场调控
+                    discount=0.0;
+                }
+                e_PlayerInventory.ChangeBalance(pPlayer, int(discount));
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
         return true;
     }
 
