@@ -89,6 +89,7 @@ HookReturnCode bet(SayParameters@ pParams)
         string target=cArgs[2];
         array<string> stake_and_target={cArgs[1],cArgs[2]};
         Players.set[PlayerUniqueId,stake_and_target];
+        return HOOK_CONTINUE;
     }
     return HOOK_CONTINUE;
 }
