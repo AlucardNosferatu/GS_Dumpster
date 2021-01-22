@@ -84,17 +84,16 @@ void statement_survive(string Banker, string die)
                 }
                 if(die==Target)
                 {   
-                    e_PlayerInventory.ChangeBalance(pGamble, stake);
-                    e_PlayerInventory.ChangeBalance(pGamble, stake*odds);
-                    e_PlayerInventory.ChangeBalance(pBanker, -stake*odds);
+                    e_PlayerInventory.ChangeBalance(pGamble, Stake);
+                    e_PlayerInventory.ChangeBalance(pGamble, Stake*odds);
+                    e_PlayerInventory.ChangeBalance(pBanker, -Stake*odds);
                 }
                 else
                 {   
-                    e_PlayerInventory.ChangeBalance(pGamble, -stake*odds);
-                    e_PlayerInventory.ChangeBalance(pBanker, stake*odds);
+                    e_PlayerInventory.ChangeBalance(pGamble, -Stake*odds);
+                    e_PlayerInventory.ChangeBalance(pBanker, Stake*odds);
                 }
             }
-
         }
     }
 
@@ -102,7 +101,50 @@ void statement_survive(string Banker, string die)
 
 void statement_score(string Banker)
 {
+    CBasePlayer@ pBanker=e_PlayerInventory.FindPlayerById(Banker);
+    if(pBanker is null)
+    {
+        //Cancel bet
+    }
+    else
+    {
+        array<string> TopN=string(Bet["Result"]).Split("_");
+        int N=int(TopN.length());
+        float odds_miss=atof(string(Bet["Game"]).Split("_")[2]);
 
+        array<string> gamblers=Players.getKeys();
+        int gamblers_count=int(gamblers.length());
+        for(int i=0;i<gamblers_count;i++)
+        {
+            CBasePlayer@ pGamble=e_PlayerInventory.FindPlayerById(gamblers[i]);
+            if(pGamble is null)
+            {
+                //Mark as debt
+            }
+            else
+            {
+                array<string> gamble=cast<array<string>>(Players[gamblers[i]]);
+                int Stake=atoi(gamble[0]);
+                string Target=gamble[1];
+                float odds;
+
+                int order=TopN.find(Target);
+                if(order>0)
+                {
+                    e_PlayerInventory.ChangeBalance(pGamble, Stake);
+                    e_PlayerInventory.ChangeBalance(pGamble, stake*(N-order));
+                    e_PlayerInventory.ChangeBalance(pBanker, -stake*(N-order));
+                }
+                else
+                {
+                    e_PlayerInventory.ChangeBalance(pGamble, -Stake*odds_miss);
+                    e_PlayerInventory.ChangeBalance(pBanker, Stake*odds_miss);
+                }
+
+            }
+        }
+
+    }
 }
 
 HookReturnCode bet(SayParameters@ pParams)
@@ -173,6 +215,7 @@ HookReturnCode bet(SayParameters@ pParams)
             return HOOK_CONTINUE;
         }
         string PlayerUniqueId = e_PlayerInventory.GetUniquePlayerId(pPlayer);
+
         int stake=atoi(cArgs[1]);
         e_PlayerInventory.ChangeBalance(pPlayer, -stake);
 
