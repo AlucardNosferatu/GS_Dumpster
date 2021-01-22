@@ -35,7 +35,7 @@ void InitBank()
         Accounts.removeAt(0);
     }
     g_Scheduler.SetInterval( "UpdateProfit", 6, g_Scheduler.REPEAT_INFINITE_TIMES);
-    g_Hooks.RegisterHook(Hooks::Player::ClientSay, @deposit);
+    g_Hooks.RegisterHook(Hooks::Player::ClientSay, @depo_or_withd);
     g_Hooks.RegisterHook(Hooks::Game::MapChange, @statement);
 }
 
@@ -97,7 +97,7 @@ void UpdateProfit()
     }
 }
 
-HookReturnCode deposit(SayParameters@ pParams)
+HookReturnCode depo_or_withd(SayParameters@ pParams)
 {
     CBasePlayer@ pPlayer = pParams.GetPlayer();
     const CCommand@ cArgs = pParams.GetArguments();
@@ -106,7 +106,6 @@ HookReturnCode deposit(SayParameters@ pParams)
     if(pPlayer !is null && (cArgs[0].ToLowercase() == "!deposit" || cArgs[0].ToLowercase() == "/deposit"))
     {
         int fund = atoi(cArgs.Arg(1));
-        g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Depositing:"+string(fund)+"\n");
         string PlayerUniqueId = e_PlayerInventory.GetUniquePlayerId(pPlayer);
         File@ fHandle;
         float balance=0;
@@ -128,6 +127,44 @@ HookReturnCode deposit(SayParameters@ pParams)
             }
             balance+=float(fund);
             e_PlayerInventory.ChangeBalance(pPlayer, -fund);
+            @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+PlayerUniqueId+".txt" , OpenFile::WRITE);
+            if( fHandle !is null ) 
+            {
+                fHandle.Write("BALANCE\t"+formatFloat(balance,"0",0,4)+"\n");
+                fHandle.Write("PROFIT\t"+formatFloat(profit,"0",0,4)+"\n");
+                fHandle.Write("PROFIT RATE\t"+formatFloat(profRate,"0",0,4));
+                fHandle.Close();
+            }
+        }
+        else
+        {
+            g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Plz wait until your account having been created.\n");
+        }
+    }
+    else if(pPlayer !is null && (cArgs[0].ToLowercase() == "!withdraw" || cArgs[0].ToLowercase() == "/withdraw"))
+    {
+        int fund = atoi(cArgs.Arg(1));
+        string PlayerUniqueId = e_PlayerInventory.GetUniquePlayerId(pPlayer);
+        File@ fHandle;
+        float balance=0;
+        float profit=0;
+        float profRate=0.1;
+        if(Accounts.find(PlayerUniqueId)>=0)
+        {
+            @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+PlayerUniqueId+".txt" , OpenFile::READ);
+            if( fHandle !is null ) 
+            {
+                string sLine;
+                fHandle.ReadLine(sLine);
+                balance=atof(sLine.Split("\t")[1]);
+                fHandle.ReadLine(sLine);
+                profit=atof(sLine.Split("\t")[1]);
+                fHandle.ReadLine(sLine);
+                profRate=atof(sLine.Split("\t")[1]);
+                fHandle.Close();
+            }
+            balance-=float(fund);
+            e_PlayerInventory.ChangeBalance(pPlayer, fund);
             @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+PlayerUniqueId+".txt" , OpenFile::WRITE);
             if( fHandle !is null ) 
             {
