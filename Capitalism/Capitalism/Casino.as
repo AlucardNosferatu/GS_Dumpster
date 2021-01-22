@@ -1,4 +1,4 @@
-#include "Ecco/Include"
+#include "../Ecco/Include"
 dictionary Bet;
 dictionary Players;
 

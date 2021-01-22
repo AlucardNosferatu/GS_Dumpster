@@ -1,4 +1,4 @@
-#include "Ecco/Include"
+#include "../Ecco/Include"
 
 void PluginInit()
 {
@@ -28,7 +28,7 @@ HookReturnCode sell(SayParameters@ pParams)
         {
             file.Close();
             dictionary WeaponInfo=e_ScriptParser.RetrieveInfo(weaponFile);
-            float PriceInfo=atof(WeaponInfo['cost']);
+            float PriceInfo=atof(string(WeaponInfo['cost']));
             if(PriceInfo>50.0)
             {
                 PriceInfo*=0.4;
@@ -49,7 +49,7 @@ HookReturnCode sell(SayParameters@ pParams)
             {
                 PriceInfo*=0.9;
             }
-            pPlayer.RemovePlayerItem(weaponHeld);
+            pPlayer.RemovePlayerItem(cast<CBasePlayerItem@>(weaponHeld));
             e_PlayerInventory.ChangeBalance(pPlayer, int(PriceInfo));
         }
         else
