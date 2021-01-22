@@ -131,6 +131,7 @@ namespace Capitalism
             {
                 return false;
             }
+            return true;
         }
         else
         {
