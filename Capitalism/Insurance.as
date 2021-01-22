@@ -52,11 +52,11 @@ void UpdateUserInfo()
     @fHandle = g_FileSystem.OpenFile( "scripts/plugins/store/ins_dmg_bullet.txt" , OpenFile::WRITE);
     if( fHandle !is null )
     {
-        array<string> users=INS_DMG_BULLET.getKeys()
+        array<string> users=INS_DMG_BULLET.getKeys();
         int users_count=int(keys.length());
         for(int i=0;i<users_count;i++)
         {
-            fHandle.Write(users[i]+"\t"+string(INS_DMG_BULLET[users[i]])+"\n")
+            fHandle.Write(users[i]+"\t"+string(INS_DMG_BULLET[users[i]])+"\n");
         }
         fHandle.Close();
     }
@@ -64,11 +64,11 @@ void UpdateUserInfo()
     @fHandle = g_FileSystem.OpenFile( "scripts/plugins/store/ins_dmg_blast.txt" , OpenFile::WRITE);
     if( fHandle !is null )
     {
-        array<string> users=INS_DMG_BLAST.getKeys()
+        array<string> users=INS_DMG_BLAST.getKeys();
         int users_count=int(keys.length());
         for(int i=0;i<users_count;i++)
         {
-            fHandle.Write(users[i]+"\t"+string(INS_DMG_BLAST[users[i]])+"\n")
+            fHandle.Write(users[i]+"\t"+string(INS_DMG_BLAST[users[i]])+"\n");
         }
         fHandle.Close();
     }
