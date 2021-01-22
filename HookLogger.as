@@ -694,8 +694,7 @@ HookReturnCode PlayerTakeDamageH(DamageInfo@ pDamageInfo)
     {
         return HOOK_CONTINUE;
     }
-
-    
+    return HOOK_CONTINUE;
 }
 
 HookReturnCode WeaponPrimaryAttackH(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
