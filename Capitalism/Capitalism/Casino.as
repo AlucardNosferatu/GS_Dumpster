@@ -140,8 +140,10 @@ void statement_survive(string Banker, string die)
             {
                 if(pGamble !is null)
                 {
+                    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, gamblers[i]+" won the bet.\n");
                     e_PlayerInventory.ChangeBalance(pGamble, Stake);
                     e_PlayerInventory.ChangeBalance(pGamble, int(Stake*odds));
+                    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, Banker+" paid the bet.\n");
                     e_PlayerInventory.ChangeBalance(pBanker, int(-Stake*odds));
                 }
             }
@@ -149,7 +151,9 @@ void statement_survive(string Banker, string die)
             {
                 if(pGamble !is null)
                 {
+                    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, gamblers[i]+" lost the bet.\n");
                     e_PlayerInventory.ChangeBalance(pGamble, int(-Stake*odds));
+                    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, Banker+" got the bet.\n");
                     e_PlayerInventory.ChangeBalance(pBanker, int(Stake*odds));
                 }
                 else
