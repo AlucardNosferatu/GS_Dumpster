@@ -88,9 +88,13 @@ HookReturnCode EnhancePrimary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
             {
                 HitM.SetClassification(11);
             }
-            else
+            else if(HitM.IsMonster() and HitM.IRelationshipByClass(CLASS_PLAYER)<=0)
             {
                 HitM.SetClassification(16);
+            }
+            else if(HitM.GetClassname()=="func_door")
+            {
+                HitM.Use(cast<CBaseEntity@>(pPlayer), cast<CBaseEntity@>(pPlayer), USE_TOGGLE);
             }
         }
     }
