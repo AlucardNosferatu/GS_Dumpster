@@ -66,6 +66,7 @@ void UpdateDebtList()
 
 void CheckBet()
 {
+    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Time to check bet.\n");
     string Game=string(Bet["Game"]);
     string Mode=Game.Split("_")[0];//survive or score
     int Time=atoi(Game.Split("_")[1]);//seconds to check
@@ -263,7 +264,7 @@ HookReturnCode bet(SayParameters@ pParams)
                     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Invalid Target Player.\n");
                     return HOOK_CONTINUE;
                 }
-                if(Game.Split("_").length!=3)
+                if(Game.Split("_").length()!=3)
                 {
                     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "survive_#seconds#_#odds#.\n");
                     return HOOK_CONTINUE;
@@ -275,6 +276,7 @@ HookReturnCode bet(SayParameters@ pParams)
                 Bet.set("Status","OnGoing");
                 int seconds_to_check=atoi(Game.Split("_")[1]);
                 g_Scheduler.SetInterval( "CheckBet", seconds_to_check, 1);
+                g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Game set.\n");
             }
             else if(Game.StartsWith("score_"))
             {
@@ -284,7 +286,7 @@ HookReturnCode bet(SayParameters@ pParams)
                     return HOOK_CONTINUE;
                 }
                 string Target=cArgs[2];
-                if(Game.Split("_").length!=4)
+                if(Game.Split("_").length()!=4)
                 {
                     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "score_#seconds#_#odds@miss#_#odds@match#.\n");
                     return HOOK_CONTINUE;
@@ -296,6 +298,7 @@ HookReturnCode bet(SayParameters@ pParams)
                 Bet.set("Status","OnGoing");
                 int seconds_to_check=atoi(Game.Split("_")[1]);
                 g_Scheduler.SetInterval( "CheckBet", seconds_to_check, 1);
+                g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Game set.\n");
             }
             else
             {
@@ -307,20 +310,28 @@ HookReturnCode bet(SayParameters@ pParams)
     }
     else if(pPlayer !is null && (cArgs[0].ToLowercase() == "!gamble" || cArgs[0].ToLowercase() == "/gamble"))
     {
-        if( cArgs.ArgC() < 3 )
+        if(Bet.exists("Status") and string(Bet["Status"])=="OnGoing")
         {
-            g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Plz specify your stake and target(live/die for survive prediction game).\n");
+            if( cArgs.ArgC() < 3 )
+            {
+                g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Plz specify your stake and target(live/die for survive prediction game).\n");
+                return HOOK_CONTINUE;
+            }
+            string PlayerUniqueId = e_PlayerInventory.GetUniquePlayerId(pPlayer);
+
+            int stake=atoi(cArgs[1]);
+            e_PlayerInventory.ChangeBalance(pPlayer, -stake);
+
+            string target=cArgs[2];
+            array<string> stake_and_target={cArgs[1],cArgs[2]};
+            Players.set(PlayerUniqueId,stake_and_target);
             return HOOK_CONTINUE;
         }
-        string PlayerUniqueId = e_PlayerInventory.GetUniquePlayerId(pPlayer);
-
-        int stake=atoi(cArgs[1]);
-        e_PlayerInventory.ChangeBalance(pPlayer, -stake);
-
-        string target=cArgs[2];
-        array<string> stake_and_target={cArgs[1],cArgs[2]};
-        Players.set(PlayerUniqueId,stake_and_target);
-        return HOOK_CONTINUE;
+        else
+        {
+            g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "No bet is on currently.\n");
+            return HOOK_CONTINUE;
+        }
     }
     return HOOK_CONTINUE;
 }
