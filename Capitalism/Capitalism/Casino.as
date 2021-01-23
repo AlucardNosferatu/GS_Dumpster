@@ -1,6 +1,7 @@
 #include "../Ecco/Include"
 dictionary Bet;
 dictionary Players;
+dictionary Debts;
 
 void PluginInit()
 {
@@ -13,8 +14,53 @@ void PluginInit()
 
 void InitCasino()
 {
+    InitDebtList();
     g_Hooks.RegisterHook(Hooks::Player::ClientSay, @bet);
     g_Hooks.RegisterHook(Hooks::Player::PlayerKilled, @check_corpse);
+    g_Hooks.RegisterHook(Hooks::Player::ClientPutInServer, @check_debt);
+}
+
+void InitDebtList()
+{
+    File@ fHandle;
+    @fHandle = g_FileSystem.OpenFile( "scripts/plugins/store/Debts.txt" , OpenFile::READ);
+    if( fHandle !is null )
+    {
+        while(!fHandle.EOFReached())
+        {
+            fHandle.ReadLine(sLine);
+            if(sLine.Length()>0)
+            {
+                string gambler=sLine.Split("\t")[0];
+                int debt=atoi(sLine.Split("\t")[1]);
+                Debts.set(gambler,debt);
+            }
+        }
+        fHandle.Close();
+    }
+}
+
+void UpdateDebtList()
+{
+    File@ fHandle;
+    @fHandle = g_FileSystem.OpenFile( "scripts/plugins/store/Debts.txt" , OpenFile::WRITE);
+    if( fHandle !is null )
+    {
+        array<string> gamblers=Debts.getKeys();
+        int gamblers_count=int(gamblers.length());
+        for(int i=0;i<gamblers_count;i++)
+        {
+            if(i==gamblers_count-1)
+            {
+                fHandle.Write(gamblers[i]+"\t"+string(int(Debts[users[i]])));
+            }
+            else
+            {
+                fHandle.Write(gamblers[i]+"\t"+string(int(Debts[users[i]]))+"\n");
+            }
+        }
+        fHandle.Close();
+    }
 }
 
 void CheckBet()
@@ -52,7 +98,20 @@ void statement_survive(string Banker, string die)
     CBasePlayer@ pBanker=e_PlayerInventory.FindPlayerById(Banker);
     if(pBanker is null)
     {
-        //TODO: Cancel bet
+        array<string> gamblers=Players.getKeys();
+        int gamblers_count=int(gamblers.length());
+        for(int i=0;i<gamblers_count;i++)
+        {
+            CBasePlayer@ pGamble=e_PlayerInventory.FindPlayerById(gamblers[i]);
+            array<string> gamble=cast<array<string>>(Players[gamblers[i]]);
+            int Stake=atoi(gamble[0]);
+            string Target=gamble[1];
+            float odds;
+            if(pGamble !is null)
+            {
+                e_PlayerInventory.ChangeBalance(pGamble, Stake);
+            }
+        }
     }
     else
     {
@@ -64,34 +123,39 @@ void statement_survive(string Banker, string die)
         for(int i=0;i<gamblers_count;i++)
         {
             CBasePlayer@ pGamble=e_PlayerInventory.FindPlayerById(gamblers[i]);
-            if(pGamble is null)
+            array<string> gamble=cast<array<string>>(Players[gamblers[i]]);
+            int Stake=atoi(gamble[0]);
+            string Target=gamble[1];
+            float odds;
+            if(Target=="live")
             {
-                //TODO: Mark as debt
+                odds=odds_live;
             }
             else
             {
-                array<string> gamble=cast<array<string>>(Players[gamblers[i]]);
-                int Stake=atoi(gamble[0]);
-                string Target=gamble[1];
-                float odds;
-                if(Target=="live")
+                odds=odds_die;
+            }   
+            if(die==Target)
+            {
+                if(pGamble !is null)
                 {
-                    odds=odds_live;
-                }
-                else
-                {
-                    odds=odds_die;
-                }
-                if(die==Target)
-                {   
                     e_PlayerInventory.ChangeBalance(pGamble, Stake);
-                    e_PlayerInventory.ChangeBalance(pGamble, Stake*odds);
-                    e_PlayerInventory.ChangeBalance(pBanker, -Stake*odds);
+                    e_PlayerInventory.ChangeBalance(pGamble, int(Stake*odds));
+                    e_PlayerInventory.ChangeBalance(pBanker, int(-Stake*odds));
+                }
+            }
+            else
+            {
+                if(pGamble !is null)
+                {
+                    e_PlayerInventory.ChangeBalance(pGamble, int(-Stake*odds));
+                    e_PlayerInventory.ChangeBalance(pBanker, int(Stake*odds));
                 }
                 else
-                {   
-                    e_PlayerInventory.ChangeBalance(pGamble, -Stake*odds);
-                    e_PlayerInventory.ChangeBalance(pBanker, Stake*odds);
+                {
+                    e_PlayerInventory.ChangeBalance(pBanker, int(Stake*odds));
+                    Debts.set(gamblers[i],int(Stake*odds))
+                    UpdateDebtList();
                 }
             }
         }
@@ -104,7 +168,20 @@ void statement_score(string Banker)
     CBasePlayer@ pBanker=e_PlayerInventory.FindPlayerById(Banker);
     if(pBanker is null)
     {
-        //TODO: Cancel bet
+        array<string> gamblers=Players.getKeys();
+        int gamblers_count=int(gamblers.length());
+        for(int i=0;i<gamblers_count;i++)
+        {
+            CBasePlayer@ pGamble=e_PlayerInventory.FindPlayerById(gamblers[i]);
+            array<string> gamble=cast<array<string>>(Players[gamblers[i]]);
+            int Stake=atoi(gamble[0]);
+            string Target=gamble[1];
+            float odds;
+            if(pGamble !is null)
+            {
+                e_PlayerInventory.ChangeBalance(pGamble, Stake);
+            }
+        }
     }
     else
     {
@@ -118,35 +195,37 @@ void statement_score(string Banker)
         for(int i=0;i<gamblers_count;i++)
         {
             CBasePlayer@ pGamble=e_PlayerInventory.FindPlayerById(gamblers[i]);
-            if(pGamble is null)
+            array<string> gamble=cast<array<string>>(Players[gamblers[i]]);
+            int Stake=atoi(gamble[0]);
+            string Target=gamble[1];
+            float odds;
+            int order=TopN.find(Target);
+            if(order>=0)
             {
-                //TODO: Mark as debt
+                odds=odds_match_modifier*(N-order);
+                if(pGamble !is null)
+                {
+                    e_PlayerInventory.ChangeBalance(pGamble, Stake);
+                    e_PlayerInventory.ChangeBalance(pGamble, int(Stake*odds));
+                    e_PlayerInventory.ChangeBalance(pBanker, int(-Stake*odds));
+                }
             }
             else
             {
-                array<string> gamble=cast<array<string>>(Players[gamblers[i]]);
-                int Stake=atoi(gamble[0]);
-                string Target=gamble[1];
-                float odds;
-
-                int order=TopN.find(Target);
-                if(order>=0)
+                odds=odds_miss;
+                if(pGamble !is null)
                 {
-                    odds=odds_match_modifier*(N-order);
-                    e_PlayerInventory.ChangeBalance(pGamble, Stake);
-                    e_PlayerInventory.ChangeBalance(pGamble, stake*odds);
-                    e_PlayerInventory.ChangeBalance(pBanker, -stake*odds);
+                    e_PlayerInventory.ChangeBalance(pGamble, int(-Stake*odds));
+                    e_PlayerInventory.ChangeBalance(pBanker, int(Stake*odds));
                 }
                 else
                 {
-                    odds=odds_miss;
-                    e_PlayerInventory.ChangeBalance(pGamble, -Stake*odds);
-                    e_PlayerInventory.ChangeBalance(pBanker, Stake*odds);
+                    e_PlayerInventory.ChangeBalance(pBanker, int(Stake*odds));
+                    Debts.set(gamblers[i],int(Stake*odds))
+                    UpdateDebtList();
                 }
-
             }
         }
-
     }
 }
 
@@ -242,6 +321,18 @@ HookReturnCode check_corpse(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int iG
             Bet.set("Result","die");
         }
         return HOOK_CONTINUE;
+    }
+    return HOOK_CONTINUE;
+}
+
+HookReturnCode check_debt(CBasePlayer@ pPlayer)
+{
+    string id=e_PlayerInventory.GetUniquePlayerId(pPlayer);
+    if(Debts.exists(id))
+    {
+        e_PlayerInventory.ChangeBalance(pPlayer, -int(Debts[id]));
+        Debts.delete(id);
+        UpdateDebtList();
     }
     return HOOK_CONTINUE;
 }
