@@ -249,10 +249,6 @@ HookReturnCode bet(SayParameters@ pParams)
             }
             string PlayerUniqueId = e_PlayerInventory.GetUniquePlayerId(pPlayer);
             string Game=cArgs[1];
-            
-            Bet.set("Banker", PlayerUniqueId);
-            Bet.set("Game", Game);
-            
             if(Game.StartsWith("survive_"))
             {
                 if( cArgs.ArgC() < 3 )
@@ -261,6 +257,19 @@ HookReturnCode bet(SayParameters@ pParams)
                     return HOOK_CONTINUE;
                 }
                 string Target=cArgs[2];
+                CBasePlayer@ pTarget = g_PlayerFuncs.FindPlayerByName(Target);
+                if(pTarget is null)
+                {
+                    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Invalid Target Player.\n");
+                    return HOOK_CONTINUE;
+                }
+                if(Game.Split("_").length!=3)
+                {
+                    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "survive_#seconds#_#odds#.\n");
+                    return HOOK_CONTINUE;
+                }
+                Bet.set("Banker", PlayerUniqueId);
+                Bet.set("Game", Game);
                 Bet.set('Target', Target);
                 Bet.set("Result","live");
                 Bet.set("Status","OnGoing");
@@ -275,6 +284,13 @@ HookReturnCode bet(SayParameters@ pParams)
                     return HOOK_CONTINUE;
                 }
                 string Target=cArgs[2];
+                if(Game.Split("_").length!=4)
+                {
+                    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "score_#seconds#_#odds@miss#_#odds@match#.\n");
+                    return HOOK_CONTINUE;
+                }
+                Bet.set("Banker", PlayerUniqueId);
+                Bet.set("Game", Game);
                 Bet.set('Target', Target);
                 Bet.set("Result","wait");
                 Bet.set("Status","OnGoing");
