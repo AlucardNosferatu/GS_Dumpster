@@ -26,6 +26,7 @@ void InitDebtList()
     @fHandle = g_FileSystem.OpenFile( "scripts/plugins/store/Debts.txt" , OpenFile::READ);
     if( fHandle !is null )
     {
+        string sLine;
         while(!fHandle.EOFReached())
         {
             fHandle.ReadLine(sLine);
@@ -52,11 +53,11 @@ void UpdateDebtList()
         {
             if(i==gamblers_count-1)
             {
-                fHandle.Write(gamblers[i]+"\t"+string(int(Debts[users[i]])));
+                fHandle.Write(gamblers[i]+"\t"+string(int(Debts[gamblers[i]])));
             }
             else
             {
-                fHandle.Write(gamblers[i]+"\t"+string(int(Debts[users[i]]))+"\n");
+                fHandle.Write(gamblers[i]+"\t"+string(int(Debts[gamblers[i]]))+"\n");
             }
         }
         fHandle.Close();
@@ -91,7 +92,6 @@ string GetTopN(int N)
 {
     return "Scrooge_Carol_Drood";
 }
-
 
 void statement_survive(string Banker, string die)
 {
@@ -154,7 +154,7 @@ void statement_survive(string Banker, string die)
                 else
                 {
                     e_PlayerInventory.ChangeBalance(pBanker, int(Stake*odds));
-                    Debts.set(gamblers[i],int(Stake*odds))
+                    Debts.set(gamblers[i],int(Stake*odds));
                     UpdateDebtList();
                 }
             }
@@ -221,7 +221,7 @@ void statement_score(string Banker)
                 else
                 {
                     e_PlayerInventory.ChangeBalance(pBanker, int(Stake*odds));
-                    Debts.set(gamblers[i],int(Stake*odds))
+                    Debts.set(gamblers[i],int(Stake*odds));
                     UpdateDebtList();
                 }
             }
@@ -263,13 +263,13 @@ HookReturnCode bet(SayParameters@ pParams)
                 string Target=cArgs[2];
                 Bet.set('Target', Target);
                 Bet.set("Result","live");
-                Bet.set("Status","OnGoing")
+                Bet.set("Status","OnGoing");
                 int seconds_to_check=atoi(Game.Split("_")[1]);
                 g_Scheduler.SetInterval( "CheckBet", seconds_to_check, 1);
             }
             else if(Game.StartsWith("score_"))
             {
-                if( cArgs.ArgC() < 3 or )
+                if( cArgs.ArgC() < 3 )
                 {
                     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Plz specify the TopN you want to bet, cannot be larger than half of the current amount of players.\n");
                     return HOOK_CONTINUE;
@@ -303,7 +303,7 @@ HookReturnCode bet(SayParameters@ pParams)
 
         string target=cArgs[2];
         array<string> stake_and_target={cArgs[1],cArgs[2]};
-        Players.set[PlayerUniqueId,stake_and_target];
+        Players.set(PlayerUniqueId,stake_and_target);
         return HOOK_CONTINUE;
     }
     return HOOK_CONTINUE;
