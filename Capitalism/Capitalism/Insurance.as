@@ -56,7 +56,7 @@ void UpdateUserInfo()
         int users_count=int(users.length());
         for(int i=0;i<users_count;i++)
         {
-            fHandle.Write(users[i]+"\t"+string(INS_DMG_RADIATION[users[i]])+"\n");
+            fHandle.Write(users[i]+"\t"+string(int(INS_DMG_RADIATION[users[i]]))+"\n");
         }
         fHandle.Close();
     }
@@ -72,7 +72,7 @@ void UpdateUserInfo()
         int users_count=int(users.length());
         for(int i=0;i<users_count;i++)
         {
-            fHandle.Write(users[i]+"\t"+string(INS_DMG_BLAST[users[i]])+"\n");
+            fHandle.Write(users[i]+"\t"+string(int(INS_DMG_BLAST[users[i]]))+"\n");
         }
         fHandle.Close();
     }
