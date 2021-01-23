@@ -1,5 +1,5 @@
 #include "../Ecco/Include"
-dictionary INS_DMG_BULLET;
+dictionary INS_DMG_RADIATION;
 dictionary INS_DMG_BLAST;
 
 
@@ -17,7 +17,7 @@ void GetUserList()
     File@ fHandle;
     string sLine;
     
-    @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/ins_dmg_bullet.txt" , OpenFile::READ);
+    @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/ins_dmg_radiation.txt" , OpenFile::READ);
     if( fHandle !is null )
     {
         while(!fHandle.EOFReached())
@@ -25,7 +25,7 @@ void GetUserList()
             fHandle.ReadLine(sLine);
             string user_name=sLine.Split("\t")[0];
             int rest_time=atoi(sLine.Split("\t")[1]);
-            INS_DMG_BULLET.set(user_name,rest_time);
+            INS_DMG_RADIATION.set(user_name,rest_time);
 
         }
         fHandle.Close();
@@ -49,16 +49,20 @@ void UpdateUserInfo()
 {
     File@ fHandle;
 
-    @fHandle = g_FileSystem.OpenFile( "scripts/plugins/store/ins_dmg_bullet.txt" , OpenFile::WRITE);
+    @fHandle = g_FileSystem.OpenFile( "scripts/plugins/store/ins_dmg_radiation.txt" , OpenFile::WRITE);
     if( fHandle !is null )
     {
-        array<string> users=INS_DMG_BULLET.getKeys();
+        array<string> users=INS_DMG_RADIATION.getKeys();
         int users_count=int(users.length());
         for(int i=0;i<users_count;i++)
         {
-            fHandle.Write(users[i]+"\t"+string(INS_DMG_BULLET[users[i]])+"\n");
+            fHandle.Write(users[i]+"\t"+string(INS_DMG_RADIATION[users[i]])+"\n");
         }
         fHandle.Close();
+    }
+    else
+    {
+        g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Error! Can't write user info.\n");
     }
 
     @fHandle = g_FileSystem.OpenFile( "scripts/plugins/store/ins_dmg_blast.txt" , OpenFile::WRITE);
@@ -71,6 +75,11 @@ void UpdateUserInfo()
             fHandle.Write(users[i]+"\t"+string(INS_DMG_BLAST[users[i]])+"\n");
         }
         fHandle.Close();
+    }
+
+    else
+    {
+        g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Error! Can't write user info.\n");
     }
 }
 
@@ -169,29 +178,29 @@ HookReturnCode medical_servive(SayParameters@ pParams)
         }
         else
         {
-            if(cArgs[1]=="DMG_BULLET")
+            if(cArgs[1]=="rad")
             {
-                if(e_PlayerInventory.GetBalance(pPlayer)>10000)
+                if(e_PlayerInventory.GetBalance(pPlayer)>1000)
                 {
                     string PlayerUniqueId = e_PlayerInventory.GetUniquePlayerId(pPlayer);
-                    e_PlayerInventory.ChangeBalance(pPlayer, -10000);
-                    INS_DMG_BULLET.set(PlayerUniqueId,1000);
+                    e_PlayerInventory.ChangeBalance(pPlayer, -1000);
+                    INS_DMG_RADIATION.set(PlayerUniqueId,100);
                     UpdateUserInfo();
                 }
                 else
                 {
-                    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Price for Bullet INS is 10000, You need more funds.\n");
+                    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Price for Radiation INS is 10000, You need more funds.\n");
                     return HOOK_CONTINUE;
                 }
                 return HOOK_CONTINUE;
             }
-            else if(cArgs[1]=="DMG_BLAST")
+            else if(cArgs[1]=="blast")
             {
-                if(e_PlayerInventory.GetBalance(pPlayer)>20000)
+                if(e_PlayerInventory.GetBalance(pPlayer)>5000)
                 {
                     string PlayerUniqueId = e_PlayerInventory.GetUniquePlayerId(pPlayer);
-                    e_PlayerInventory.ChangeBalance(pPlayer, -20000);
-                    INS_DMG_BLAST.set(PlayerUniqueId,1000);
+                    e_PlayerInventory.ChangeBalance(pPlayer, -5000);
+                    INS_DMG_BLAST.set(PlayerUniqueId,100);
                     UpdateUserInfo();
                 }
                 else
@@ -225,12 +234,12 @@ HookReturnCode insurance_service(DamageInfo@ pDamageInfo)
         string PlayerUniqueId = e_PlayerInventory.GetUniquePlayerId(pPlayer);
         switch(pDamageInfo.bitsDamageType)
         {
-            case DMG_BULLET:
-                if(INS_DMG_BULLET.exists(PlayerUniqueId) and int(INS_DMG_BULLET[PlayerUniqueId])>0)
+            case DMG_RADIATION:
+                if(INS_DMG_RADIATION.exists(PlayerUniqueId) and int(INS_DMG_RADIATION[PlayerUniqueId])>0)
                 {
-                    INS_DMG_BULLET[PlayerUniqueId]-=1;
+                    INS_DMG_RADIATION.set(PlayerUniqueId,int(INS_DMG_RADIATION[PlayerUniqueId])-1);
                     e_PlayerInventory.ChangeBalance(pPlayer, int(pDamageInfo.flDamage));
-                    if(INS_DMG_BULLET[PlayerUniqueId]%10==0)
+                    if(int(INS_DMG_RADIATION[PlayerUniqueId])%10==0)
                     {
                         UpdateUserInfo();
                     }
@@ -243,9 +252,9 @@ HookReturnCode insurance_service(DamageInfo@ pDamageInfo)
             case DMG_BLAST:
                 if(INS_DMG_BLAST.exists(PlayerUniqueId) and int(INS_DMG_BLAST[PlayerUniqueId])>0)
                 {
-                    INS_DMG_BLAST[PlayerUniqueId]-=1;
+                    INS_DMG_BLAST.set(PlayerUniqueId,int(INS_DMG_BLAST[PlayerUniqueId])-1);
                     e_PlayerInventory.ChangeBalance(pPlayer, int(pDamageInfo.flDamage));
-                    if(INS_DMG_BLAST[PlayerUniqueId]%10==0)
+                    if(int(INS_DMG_BLAST[PlayerUniqueId])%10==0)
                     {
                         UpdateUserInfo();
                     }
@@ -264,5 +273,4 @@ HookReturnCode insurance_service(DamageInfo@ pDamageInfo)
     {
         return HOOK_CONTINUE;
     }
-    return HOOK_CONTINUE;
 }
