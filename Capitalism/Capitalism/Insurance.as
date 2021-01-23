@@ -23,10 +23,12 @@ void GetUserList()
         while(!fHandle.EOFReached())
         {
             fHandle.ReadLine(sLine);
-            string user_name=sLine.Split("\t")[0];
-            int rest_time=atoi(sLine.Split("\t")[1]);
-            INS_DMG_RADIATION.set(user_name,rest_time);
-
+            if(sLine.Length()>0)
+            {
+                string user_name=sLine.Split("\t")[0];
+                int rest_time=atoi(sLine.Split("\t")[1]);
+                INS_DMG_RADIATION.set(user_name,rest_time);
+            }
         }
         fHandle.Close();
     }
@@ -37,9 +39,12 @@ void GetUserList()
         while(!fHandle.EOFReached())
         {
             fHandle.ReadLine(sLine);
-            string user_name=sLine.Split("\t")[0];
-            int rest_time=atoi(sLine.Split("\t")[1]);
-            INS_DMG_BLAST.set(user_name,rest_time);
+            if(sLine.Length()>0)
+            {
+                string user_name=sLine.Split("\t")[0];
+                int rest_time=atoi(sLine.Split("\t")[1]);
+                INS_DMG_BLAST.set(user_name,rest_time);
+            }
         }
         fHandle.Close();
     }
@@ -56,7 +61,14 @@ void UpdateUserInfo()
         int users_count=int(users.length());
         for(int i=0;i<users_count;i++)
         {
-            fHandle.Write(users[i]+"\t"+string(int(INS_DMG_RADIATION[users[i]]))+"\n");
+            if(i==users_count-1)
+            {
+                fHandle.Write(users[i]+"\t"+string(int(INS_DMG_RADIATION[users[i]])));
+            }
+            else
+            {
+                fHandle.Write(users[i]+"\t"+string(int(INS_DMG_RADIATION[users[i]]))+"\n");
+            }
         }
         fHandle.Close();
     }
@@ -72,7 +84,14 @@ void UpdateUserInfo()
         int users_count=int(users.length());
         for(int i=0;i<users_count;i++)
         {
-            fHandle.Write(users[i]+"\t"+string(int(INS_DMG_BLAST[users[i]]))+"\n");
+            if(i==users_count-1)
+            {
+                fHandle.Write(users[i]+"\t"+string(int(INS_DMG_BLAST[users[i]])));
+            }
+            else
+            {
+                fHandle.Write(users[i]+"\t"+string(int(INS_DMG_BLAST[users[i]]))+"\n");
+            }
         }
         fHandle.Close();
     }
@@ -239,7 +258,7 @@ HookReturnCode insurance_service(DamageInfo@ pDamageInfo)
                 {
                     INS_DMG_RADIATION.set(PlayerUniqueId,int(INS_DMG_RADIATION[PlayerUniqueId])-1);
                     e_PlayerInventory.ChangeBalance(pPlayer, int(pDamageInfo.flDamage));
-                    if(int(INS_DMG_RADIATION[PlayerUniqueId])%10==0)
+                    if(int(INS_DMG_RADIATION[PlayerUniqueId])%5==0)
                     {
                         UpdateUserInfo();
                     }
@@ -254,7 +273,7 @@ HookReturnCode insurance_service(DamageInfo@ pDamageInfo)
                 {
                     INS_DMG_BLAST.set(PlayerUniqueId,int(INS_DMG_BLAST[PlayerUniqueId])-1);
                     e_PlayerInventory.ChangeBalance(pPlayer, int(pDamageInfo.flDamage));
-                    if(int(INS_DMG_BLAST[PlayerUniqueId])%10==0)
+                    if(int(INS_DMG_BLAST[PlayerUniqueId])%5==0)
                     {
                         UpdateUserInfo();
                     }
