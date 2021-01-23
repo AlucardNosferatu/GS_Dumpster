@@ -79,7 +79,7 @@ HookReturnCode EnhancePrimary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
         Vector vecEnd = pPlayer.GetAutoaimVector( 0.0f );
         Math.MakeVectors( pPlayer.pev.v_angle );
         TraceResult tr;
-        g_Utility.TraceLine(vecSrc, vecEnd*65536.0f, dont_ignore_monsters, ignore_glass, pPlayer.edict(), tr)	;
+        g_Utility.TraceLine(vecSrc, vecEnd*65536.0f, dont_ignore_monsters, dont_ignore_glass, pPlayer.edict(), tr)	;
         if(tr.pHit !is null)
         {
             CBaseEntity@ HitM=g_EntityFuncs.Instance(tr.pHit);
@@ -92,7 +92,7 @@ HookReturnCode EnhancePrimary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
             {
                 HitM.SetClassification(16);
             }
-            else if(HitM.GetClassname()=="func_door")
+            else if(HitM.GetClassname()=="func_door" or HitM.GetClassname()=="func_door_rotating" or HitM.GetClassname()=="func_button")
             {
                 HitM.Use(cast<CBaseEntity@>(pPlayer), cast<CBaseEntity@>(pPlayer), USE_TOGGLE);
             }
