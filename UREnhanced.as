@@ -88,6 +88,10 @@ HookReturnCode EnhancePrimary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
             {
                 HitM.SetClassification(11);
             }
+            else
+            {
+                HitM.SetClassification(16);
+            }
         }
     }
     return HOOK_CONTINUE;
