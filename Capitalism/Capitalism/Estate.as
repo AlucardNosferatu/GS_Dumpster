@@ -17,6 +17,7 @@ void InitEstate()
     GetAccountList();
     g_Scheduler.SetInterval( "UpdateVisitors", 600, g_Scheduler.REPEAT_INFINITE_TIMES);
     g_Hooks.RegisterHook(Hooks::Player::ClientSay, @estate_servive);
+    g_Hooks.RegisterHook(Hooks::Game::MapChange, @maintenance);
 }
 
 void GetEstateList()
@@ -201,6 +202,41 @@ HookReturnCode estate_servive(SayParameters@ pParams)
         {
 
         }
+        else if(action=="invest")
+        {
+            string UID=e_PlayerInventory.GetUniquePlayerId(pPlayer);
+            if(Estates.exists(g_Engine.mapname) and cast<array<string>>(Estates[g_Engine.mapname])[1]==UID)
+            {
+                if( cArgs.ArgC() < 3 )
+                {
+                    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Plz specify the funds you want to invest in this estate.\n");
+                    return HOOK_CONTINUE;
+                }
+                int funds=atoi(cArgs[2]);
+                array<string> infoArray;
+                string UID=e_PlayerInventory.GetUniquePlayerId(pPlayer);
+                infoArray.insertLast(string(price));
+                infoArray.insertLast(UID);
+                infoArray.insertLast("SELL");
+                Estates.set(g_Engine.mapname,infoArray);
+                UpdateEstateList();
+            }
+            else
+            {
+                g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "This is not your estate!\n");
+                return HOOK_CONTINUE;
+            }
+        }
     }
     return HOOK_CONTINUE;
+}
+
+HookReturnCode maintenance()
+{
+    if(Estates.exists(g_Engine.mapname) and cast<array<string>>(Estates[g_Engine.mapname])[2]=="SOLD")
+    {
+        string UID=cast<array<string>>(Estates[g_Engine.mapname])[1];
+
+    }
+	return HOOK_CONTINUE;
 }
