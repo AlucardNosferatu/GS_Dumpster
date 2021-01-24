@@ -250,7 +250,37 @@ HookReturnCode maintenance()
     if(Estates.exists(g_Engine.mapname) and cast<array<string>>(Estates[g_Engine.mapname])[2]=="SOLD")
     {
         string UID=cast<array<string>>(Estates[g_Engine.mapname])[1];
+        int price=0;
+        CBaseEntity@ pWorld = g_EntityFuncs.Instance(0);
+        Vector wSize=pWorld.pev.size;
+        price=int(wSize.x*wSize.y*wSize.z);
 
+        int maintenance_fare=int(float(price)/100.0);
+        if(Accounts.exists(UID))
+        {
+            if(int(Accounts[UID])<maintenance_fare)
+            {
+                array<string> estateInfo=cast<array<string>>(Estates[g_Engine.mapname]);
+                int price = atoi(string(estateInfo[0]));
+                string UID = string(estateInfo[1]);
+                string status = string(estateInfo[2]);
+                estateInfo[1] = "NO_OWNER";
+                estateInfo[2] = "SELL";
+                Estates.set(g_Engine.mapname,estateInfo);
+                UpdateEstateList();
+            }
+            else
+            {
+                int currentFunds=int(Accounts[UID]);
+                Accounts.set(UID,currentFunds-maintenance_fare);
+                UpdateAccountList();
+            }
+        }
+        else
+        {
+            Estates.delete(g_Engine.mapname);
+            UpdateEstateList();
+        }
     }
 	return HOOK_CONTINUE;
 }
