@@ -7,6 +7,7 @@ void PluginInit()
     g_Module.ScriptInfo.SetContactInfo("1641367382@qq.com");
     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "I love Carol forever and ever!\n");
     g_Hooks.RegisterHook(Hooks::Weapon::WeaponPrimaryAttack, @EnhancePrimary);
+    g_Hooks.RegisterHook(Hooks::Weapon::WeaponSecondaryAttack, @EnhanceSecondary);
     g_Hooks.RegisterHook(Hooks::Player::PlayerKilled, @CancelByDeath);
     
 }
@@ -35,7 +36,15 @@ void enhanceMore(const CCommand@ pArgs)
     edict_t@ edict_pp = pPlayer.edict();
     string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
     authid_pp=authid_pp.Replace(":","");
-    EnhancedP.set(authid_pp,666);
+    if(EnhancedP.exists(authid_pp) and int(EnhancedP[authid_pp])>100)
+    {
+        EnhancedP.set(authid_pp,0);
+    }
+    else
+    {
+        EnhancedP.set(authid_pp,666);
+    }
+    
 }
 
 CClientCommand g_GetEnhancedMooore("fuckfuckfuck", "Moooorrrrre Power!!!!", @enhanceMooore);
@@ -69,7 +78,13 @@ HookReturnCode EnhancePrimary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
         {
             pWeapon.m_iClip=666;
         }
+        if(pWeapon.m_iClip2>0)
+        {
+            pWeapon.m_iClip2=666;
+        }
         pPlayer.m_rgAmmo(pWeapon.PrimaryAmmoIndex(),pWeapon.iMaxAmmo1());
+        pPlayer.m_rgAmmo(pWeapon.SecondaryAmmoIndex(),pWeapon.iMaxAmmo2());
+        pWeapon.m_flNextSecondaryAttack/=10;
         pWeapon.m_flNextPrimaryAttack/=10;
     }
     if(MindControllerP.exists(authid_pp) and int(MindControllerP[authid_pp])>100)
@@ -97,6 +112,44 @@ HookReturnCode EnhancePrimary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
                 HitM.Use(cast<CBaseEntity@>(pPlayer), cast<CBaseEntity@>(pPlayer), USE_TOGGLE);
             }
         }
+    }
+    return HOOK_CONTINUE;
+
+}
+
+HookReturnCode EnhanceSecondary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
+{
+    edict_t@ edict_pp = pPlayer.edict();
+    string authid_pp = g_EngineFuncs.GetPlayerAuthId(edict_pp);
+    authid_pp=authid_pp.Replace(":","");
+
+    if(EnhancedP.exists(authid_pp) and int(EnhancedP[authid_pp])>100)
+    {
+        if(pWeapon.m_iClip>0)
+        {
+            pWeapon.m_iClip=666;
+        }
+        if(pWeapon.m_iClip2>0)
+        {
+            pWeapon.m_iClip2=666;
+        }
+        pPlayer.m_rgAmmo(pWeapon.PrimaryAmmoIndex(),pWeapon.iMaxAmmo1());
+        pPlayer.m_rgAmmo(pWeapon.SecondaryAmmoIndex(),pWeapon.iMaxAmmo2());
+        pWeapon.m_flNextSecondaryAttack/=10;
+        pWeapon.m_flNextPrimaryAttack/=10;
+    }
+    if(MindControllerP.exists(authid_pp) and int(MindControllerP[authid_pp])>100)
+    {
+        g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,"MC Activated...\n");
+        Vector vecSrc = pPlayer.GetOrigin();
+        g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,"vecSrc:"+vecSrc.ToString()+"\n");
+        Vector vecDir = pPlayer.GetAutoaimVector(0.0f);
+        g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,"vecDir:"+vecDir.ToString()+"\n");
+        g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,"len:"+formatFloat(vecDir.Length(),"0",0,4)+"\n");
+        Vector vecEnd = vecSrc+256*vecDir;
+        g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,"vecEnd:"+vecEnd.ToString()+"\n");
+        Math.MakeVectors( pPlayer.pev.v_angle );
+        pPlayer.SetOrigin(vecEnd);
     }
     return HOOK_CONTINUE;
 
