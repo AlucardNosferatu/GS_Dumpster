@@ -154,7 +154,7 @@ HookReturnCode estate_servive(SayParameters@ pParams)
                 int price=0;
                 CBaseEntity@ pWorld = g_EntityFuncs.Instance(0);
                 Vector wSize=pWorld.pev.size;
-                price=int(wSize.x*wSize.y*wSize.z);
+                price=(int(wSize.x*wSize.y*wSize.z)/1000)*1000;
                 if(e_PlayerInventory.GetBalance(pPlayer)>price)
                 {
                     e_PlayerInventory.ChangeBalance(pPlayer, -price);
@@ -253,7 +253,7 @@ HookReturnCode maintenance()
         int price=0;
         CBaseEntity@ pWorld = g_EntityFuncs.Instance(0);
         Vector wSize=pWorld.pev.size;
-        price=int(wSize.x*wSize.y*wSize.z);
+        price=(int(wSize.x*wSize.y*wSize.z)/1000)*1000;
 
         int maintenance_fare=int(float(price)/100.0);
         if(Accounts.exists(UID))
@@ -264,7 +264,6 @@ HookReturnCode maintenance()
                 int price = atoi(string(estateInfo[0]));
                 string UID = string(estateInfo[1]);
                 string status = string(estateInfo[2]);
-                estateInfo[1] = "NO_OWNER";
                 estateInfo[2] = "SELL";
                 Estates.set(g_Engine.mapname,estateInfo);
                 UpdateEstateList();
