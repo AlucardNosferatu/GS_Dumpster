@@ -200,7 +200,23 @@ HookReturnCode estate_servive(SayParameters@ pParams)
         }
         else if(action=="collect")
         {
-
+            string UID=e_PlayerInventory.GetUniquePlayerId(pPlayer);
+            if( cArgs.ArgC() < 3 )
+            {
+                g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Plz specify the funds you want to collect in your account.\n");
+                return HOOK_CONTINUE;
+            }
+            string UID=e_PlayerInventory.GetUniquePlayerId(pPlayer);
+            int currentFunds=int(Accounts[UID]);
+            int funds=atoi(cArgs[2]);
+            if(funds>currentFunds)
+            {
+                g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "You only have "+string(currentFunds)+" in your account.\n");
+                return HOOK_CONTINUE;
+            }
+            e_PlayerInventory.ChangeBalance(pPlayer, funds);
+            Accounts.set(UID,currentFunds-funds);
+            UpdateAccountList();
         }
         else if(action=="invest")
         {
@@ -212,14 +228,12 @@ HookReturnCode estate_servive(SayParameters@ pParams)
                     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Plz specify the funds you want to invest in this estate.\n");
                     return HOOK_CONTINUE;
                 }
-                int funds=atoi(cArgs[2]);
-                array<string> infoArray;
                 string UID=e_PlayerInventory.GetUniquePlayerId(pPlayer);
-                infoArray.insertLast(string(price));
-                infoArray.insertLast(UID);
-                infoArray.insertLast("SELL");
-                Estates.set(g_Engine.mapname,infoArray);
-                UpdateEstateList();
+                int currentFunds=int(Accounts[UID]);
+                int funds=atoi(cArgs[2]);
+                e_PlayerInventory.ChangeBalance(pPlayer, -funds);
+                Accounts.set(UID,currentFunds+funds);
+                UpdateAccountList();
             }
             else
             {
