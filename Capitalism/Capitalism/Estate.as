@@ -8,7 +8,7 @@ void PluginInit()
     g_Module.ScriptInfo.SetContactInfo("1641367382@qq.com");
     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "My-Dearest-Girl...Ms.Carol!\n");
     InitEcco();
-    InitEsate();
+    InitEstate();
 }
 
 void InitEstate()
@@ -108,7 +108,7 @@ void UpdateAccountList()
         int account_count=int(account_owners.length());
         for(int i=0;i<account_count;i++)
         {
-            string account_funds=string(Accounts[account_owners[i]]);
+            string account_funds=string(int(Accounts[account_owners[i]]));
             if(i==account_count-1)
             {
                 fHandle.Write(account_owners[i]+"\t"+account_funds);
@@ -138,13 +138,67 @@ void UpdateVisitors()
         else
         {
             int price=0;
-            CBaseEntity@ pWorld = g_EntityFuncs.Instance(0);
-            Vector wSize=pWorld.pev.size;
-            price=(int(wSize.x*wSize.y*wSize.z)/1000)*1000;
+            price=(int(GetMapVolume())/1000)*1000;
             Accounts.set(UID,price/2);
             UpdateEstateList();
         }
     }
+}
+
+float GetMapVolume()
+{
+    int entIndex=0;
+    float xmin=0.0;
+    float ymin=0.0;
+    float zmin=0.0;
+    float xmax=0.0;
+    float ymax=0.0;
+    float zmax=0.0;
+    CBaseEntity@ pEnt = null;
+	while ( (@pEnt = g_EntityFuncs.Instance(entIndex)) !is null )
+	{        
+		Vector entityOrigin = UTIL_EntityOrigin(pEnt);
+        float entX=entityOrigin.x;
+        if(entX>xmax)
+        {
+            xmax=entX;
+        }
+        else if(entX<xmin)
+        {
+            xmin=entX;
+        }
+        float entY=entityOrigin.y;
+        if(entY>ymax)
+        {
+            ymax=entY;
+        }
+        else if(entY<ymin)
+        {
+            ymin=entY;
+        }
+        float entZ=entityOrigin.z;
+        if(entZ>zmax)
+        {
+            zmax=entZ;
+        }
+        else if(entZ<zmin)
+        {
+            zmin=entZ;
+        }
+		entIndex+=1;
+	}
+    float dX=xmax-xmin;
+    float dY=ymax-ymin;
+    float dZ=zmax-zmin;
+    return dX*dY*dZ*entIndex/10000.0;
+}
+
+Vector UTIL_EntityOrigin ( CBaseEntity@ entity )
+{
+    //if ( entity.pev.flags & FL_MONSTER == FL_MONSTER )
+    //	return entity.pev.origin + (entity.pev.view_ofs/2);
+    return (entity.pev.absmin + entity.pev.absmax)/2;// (entity.pev.size / 2);
+    //return entity.pev.origin;
 }
 
 HookReturnCode estate_servive(SayParameters@ pParams)
@@ -169,9 +223,8 @@ HookReturnCode estate_servive(SayParameters@ pParams)
             else
             {
                 int price=0;
-                CBaseEntity@ pWorld = g_EntityFuncs.Instance(0);
-                Vector wSize=pWorld.pev.size;
-                price=(int(wSize.x*wSize.y*wSize.z)/1000)*1000;
+                price=(int(GetMapVolume())/1000)*1000;
+                g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Need "+string(price)+" to buy this estate!\n");
                 if(e_PlayerInventory.GetBalance(pPlayer)>price)
                 {
                     string UID=e_PlayerInventory.GetUniquePlayerId(pPlayer);
@@ -180,13 +233,15 @@ HookReturnCode estate_servive(SayParameters@ pParams)
                     {
                         int currentFunds=int(Accounts[UID]);
                         Accounts.set(UID,currentFunds+price);
-                        UpdateEstateList();
+                        UpdateAccountList();
                     }
                     else
                     {
                         Accounts.set(UID,price);
-                        UpdateEstateList();
+
+                        UpdateAccountList();
                     }
+                    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Account balance: "+string(int(Accounts[UID])+"\n");
                     array<string> infoArray;
                     infoArray.insertLast(string(price));
                     infoArray.insertLast(UID);
@@ -196,7 +251,7 @@ HookReturnCode estate_servive(SayParameters@ pParams)
                 }
                 else
                 {
-                    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "No enough cash!\n");
+                    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "No enough cash! You need "+string(price)+" to buy this estate!\n");
                     return HOOK_CONTINUE;
                 }
             }
@@ -213,7 +268,6 @@ HookReturnCode estate_servive(SayParameters@ pParams)
                 }
                 int price=atoi(cArgs[2]);
                 array<string> infoArray;
-                string UID=e_PlayerInventory.GetUniquePlayerId(pPlayer);
                 infoArray.insertLast(string(price));
                 infoArray.insertLast(UID);
                 infoArray.insertLast("SELL");
@@ -234,7 +288,6 @@ HookReturnCode estate_servive(SayParameters@ pParams)
                 g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Plz specify the funds you want to collect in your account.\n");
                 return HOOK_CONTINUE;
             }
-            string UID=e_PlayerInventory.GetUniquePlayerId(pPlayer);
             int currentFunds=int(Accounts[UID]);
             int funds=atoi(cArgs[2]);
             if(funds>currentFunds)
@@ -256,7 +309,6 @@ HookReturnCode estate_servive(SayParameters@ pParams)
                     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Plz specify the funds you want to invest in this estate.\n");
                     return HOOK_CONTINUE;
                 }
-                string UID=e_PlayerInventory.GetUniquePlayerId(pPlayer);
                 int currentFunds=int(Accounts[UID]);
                 int funds=atoi(cArgs[2]);
                 e_PlayerInventory.ChangeBalance(pPlayer, -funds);
@@ -279,9 +331,7 @@ HookReturnCode maintenance()
     {
         string UID=cast<array<string>>(Estates[g_Engine.mapname])[1];
         int price=0;
-        CBaseEntity@ pWorld = g_EntityFuncs.Instance(0);
-        Vector wSize=pWorld.pev.size;
-        price=(int(wSize.x*wSize.y*wSize.z)/1000)*1000;
+        price=(int(GetMapVolume())/1000)*1000;
 
         int maintenance_fare=int(float(price)/100.0);
         if(Accounts.exists(UID))
@@ -289,9 +339,7 @@ HookReturnCode maintenance()
             if(int(Accounts[UID])<maintenance_fare)
             {
                 array<string> estateInfo=cast<array<string>>(Estates[g_Engine.mapname]);
-                int price = atoi(string(estateInfo[0]));
-                string UID = string(estateInfo[1]);
-                string status = string(estateInfo[2]);
+                estateInfo[1] = UID;
                 estateInfo[2] = "SELL";
                 Estates.set(g_Engine.mapname,estateInfo);
                 UpdateEstateList();
