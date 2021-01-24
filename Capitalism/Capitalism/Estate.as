@@ -129,7 +129,11 @@ void UpdateVisitors()
         string UID=cast<array<string>>(Estates[g_Engine.mapname])[1];
         if(Accounts.exists(UID))
         {
-            
+            int currentFunds=int(Accounts[UID]);
+            int pCount=g_PlayerFuncs.GetNumPlayers();
+            int funds=pCount*100;
+            Accounts.set(UID,currentFunds+funds);
+            UpdateAccountList();
         }
         else
         {
@@ -137,8 +141,7 @@ void UpdateVisitors()
             CBaseEntity@ pWorld = g_EntityFuncs.Instance(0);
             Vector wSize=pWorld.pev.size;
             price=(int(wSize.x*wSize.y*wSize.z)/1000)*1000;
-
-            Accounts.set(UID,price);
+            Accounts.set(UID,price/2);
             UpdateEstateList();
         }
     }
