@@ -27,7 +27,7 @@ void GetEstateList()
     if( fHandle !is null ) 
     {
         string sLine;
-        while(true)
+        while(!fHandle.EOFReached())
         {
             fHandle.ReadLine(sLine);
             if(sLine.Length()>0)
@@ -35,12 +35,13 @@ void GetEstateList()
                 array<string> EsInfo=sLine.Split("\t");
                 if(EsInfo.length()==4)
                 {
-
+                    string map=EsInfo[0];
+                    // string price=EsInfo[1];
+                    // string owner=EsInfo[2];
+                    // string status=EsInfo[3];
+                    EsInfo.removeAt(0);
+                    Estates.set(map,EsInfo);
                 }
-            }
-            else
-            {
-                break;
             }
         }
         fHandle.Close();
@@ -54,7 +55,7 @@ void GetAccountList()
     if( fHandle !is null ) 
     {
         string sLine;
-        while(true)
+        while(!fHandle.EOFReached())
         {
             fHandle.ReadLine(sLine);
             if(sLine.Length()>0)
@@ -62,12 +63,8 @@ void GetAccountList()
                 array<string> EsInfo=sLine.Split("\t");
                 if(EsInfo.length()==2)
                 {
-
+                    Accounts.set(EsInfo[0],atoi(EsInfo[1]));
                 }
-            }
-            else
-            {
-                break;
             }
         }
         fHandle.Close();
