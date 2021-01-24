@@ -238,10 +238,9 @@ HookReturnCode estate_servive(SayParameters@ pParams)
                     else
                     {
                         Accounts.set(UID,price);
-
                         UpdateAccountList();
                     }
-                    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Account balance: "+string(int(Accounts[UID])+"\n");
+                    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Account balance: "+string(int(Accounts[UID]))+"\n");
                     array<string> infoArray;
                     infoArray.insertLast(string(price));
                     infoArray.insertLast(UID);
