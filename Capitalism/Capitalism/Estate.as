@@ -184,7 +184,6 @@ HookReturnCode estate_servive(SayParameters@ pParams)
                         Accounts.set(UID,price);
                         UpdateEstateList();
                     }
-
                     array<string> infoArray;
                     infoArray.insertLast(string(price));
                     infoArray.insertLast(UID);
