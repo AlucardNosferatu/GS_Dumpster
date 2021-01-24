@@ -124,7 +124,24 @@ void UpdateAccountList()
 
 void UpdateVisitors()
 {
-    
+    if(Estates.exists(g_Engine.mapname) and cast<array<string>>(Estates[g_Engine.mapname])[2]=="SOLD")
+    {
+        string UID=cast<array<string>>(Estates[g_Engine.mapname])[1];
+        if(Accounts.exists(UID))
+        {
+            
+        }
+        else
+        {
+            int price=0;
+            CBaseEntity@ pWorld = g_EntityFuncs.Instance(0);
+            Vector wSize=pWorld.pev.size;
+            price=(int(wSize.x*wSize.y*wSize.z)/1000)*1000;
+
+            Accounts.set(UID,price);
+            UpdateEstateList();
+        }
+    }
 }
 
 HookReturnCode estate_servive(SayParameters@ pParams)
@@ -154,9 +171,21 @@ HookReturnCode estate_servive(SayParameters@ pParams)
                 price=(int(wSize.x*wSize.y*wSize.z)/1000)*1000;
                 if(e_PlayerInventory.GetBalance(pPlayer)>price)
                 {
-                    e_PlayerInventory.ChangeBalance(pPlayer, -price);
-                    array<string> infoArray;
                     string UID=e_PlayerInventory.GetUniquePlayerId(pPlayer);
+                    e_PlayerInventory.ChangeBalance(pPlayer, -price);
+                    if(Accounts.exists(UID))
+                    {
+                        int currentFunds=int(Accounts[UID]);
+                        Accounts.set(UID,currentFunds+price);
+                        UpdateEstateList();
+                    }
+                    else
+                    {
+                        Accounts.set(UID,price);
+                        UpdateEstateList();
+                    }
+
+                    array<string> infoArray;
                     infoArray.insertLast(string(price));
                     infoArray.insertLast(UID);
                     infoArray.insertLast("SOLD");
