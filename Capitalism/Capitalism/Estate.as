@@ -1,6 +1,6 @@
 #include "../Ecco/Include"
 dictionary Estates;
-
+dictionary Accounts;
 
 void PluginInit()
 {
@@ -14,6 +14,7 @@ void PluginInit()
 void InitEstate()
 {
     GetEstateList();
+    GetAccountList();
     g_Scheduler.SetInterval( "UpdateVisitors", 600, g_Scheduler.REPEAT_INFINITE_TIMES);
     g_Hooks.RegisterHook(Hooks::Player::ClientSay, @estate_servive);
 }
@@ -31,7 +32,37 @@ void GetEstateList()
             if(sLine.Length()>0)
             {
                 array<string> EsInfo=sLine.Split("\t");
-                if(EsInfo.length()==3)
+                if(EsInfo.length()==4)
+                {
+
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+        fHandle.Close();
+    }
+}
+
+void GetAccountList()
+{
+    File@ fHandle;
+    @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/estates_acc.txt" , OpenFile::READ);
+    if( fHandle !is null ) 
+    {
+        string sLine;
+        while(true)
+        {
+            fHandle.ReadLine(sLine);
+            if(sLine.Length()>0)
+            {
+                array<string> EsInfo=sLine.Split("\t");
+                if(EsInfo.length()==2)
+                {
+
+                }
             }
             else
             {
@@ -69,6 +100,30 @@ void UpdateEstateList()
     }
 }
 
+void UpdateAccountList()
+{
+    File@ fHandle;
+    @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/estates_acc.txt" , OpenFile::WRITE);
+    if( fHandle !is null ) 
+    {
+        array<string> account_owners=Accounts.getKeys();
+        int account_count=int(account_owners.length());
+        for(int i=0;i<account_count;i++)
+        {
+            string account_funds=string(Accounts[account_owners[i]]);
+            if(i==account_count-1)
+            {
+                fHandle.Write(account_owners[i]+"\t"+account_funds);
+            }
+            else
+            {
+                fHandle.Write(account_owners[i]+"\t"+account_funds+"\n");
+            }
+        }
+        fHandle.Close();
+    }
+}
+
 void UpdateVisitors()
 {
     
@@ -88,31 +143,59 @@ HookReturnCode estate_servive(SayParameters@ pParams)
         string action=cArgs[1];
         if(action=="buy")
         {
-            int price=0;
-            CBaseEntity@ pWorld = g_EntityFuncs.Instance(0);
-            Vector wSize=pWorld.pev.size;
-            price=int(wSize.x*wSize.y*wSize.z);
-            if(e_PlayerInventory.GetBalance(pPlayer)>price)
+            if(Estates.exists(g_Engine.mapname) and cast<array<string>>(Estates[g_Engine.mapname])[2]=="SOLD")
             {
-                e_PlayerInventory.ChangeBalance(pPlayer, -price);
+                g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "This map has been sold!\n");
+                return HOOK_CONTINUE;
+            }
+            else
+            {
+                int price=0;
+                CBaseEntity@ pWorld = g_EntityFuncs.Instance(0);
+                Vector wSize=pWorld.pev.size;
+                price=int(wSize.x*wSize.y*wSize.z);
+                if(e_PlayerInventory.GetBalance(pPlayer)>price)
+                {
+                    e_PlayerInventory.ChangeBalance(pPlayer, -price);
+                    array<string> infoArray;
+                    string UID=e_PlayerInventory.GetUniquePlayerId(pPlayer);
+                    infoArray.insertLast(string(price));
+                    infoArray.insertLast(UID);
+                    infoArray.insertLast("SOLD");
+                    Estates.set(g_Engine.mapname,infoArray);
+                    UpdateEstateList();
+                }
+                else
+                {
+                    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "No enough cash!\n");
+                    return HOOK_CONTINUE;
+                }
+            }
+        }
+        else if(action=="sell")
+        {
+            string UID=e_PlayerInventory.GetUniquePlayerId(pPlayer);
+            if(Estates.exists(g_Engine.mapname) and cast<array<string>>(Estates[g_Engine.mapname])[1]==UID)
+            {
+                if( cArgs.ArgC() < 3 )
+                {
+                    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Plz specify the price you want to sell this estate.\n");
+                    return HOOK_CONTINUE;
+                }
+                int price=atoi(cArgs[2]);
                 array<string> infoArray;
                 string UID=e_PlayerInventory.GetUniquePlayerId(pPlayer);
                 infoArray.insertLast(string(price));
                 infoArray.insertLast(UID);
-                infoArray.insertLast("SOLD");
+                infoArray.insertLast("SELL");
                 Estates.set(g_Engine.mapname,infoArray);
                 UpdateEstateList();
             }
             else
             {
-                g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "No enough cash!\n");
+                g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "This is not your estate!\n");
                 return HOOK_CONTINUE;
             }
-
-        }
-        else if(action=="sell")
-        {
-
         }
         else if(action=="collect")
         {
