@@ -218,10 +218,60 @@ HookReturnCode estate_servive(SayParameters@ pParams)
         string action=cArgs[1];
         if(action=="buy")
         {
+            string UID=e_PlayerInventory.GetUniquePlayerId(pPlayer);
             if(Estates.exists(g_Engine.mapname) and cast<array<string>>(Estates[g_Engine.mapname])[2]=="SOLD")
             {
                 g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "This map has been sold!\n");
                 return HOOK_CONTINUE;
+            }
+            else if(Estates.exists(g_Engine.mapname) and cast<array<string>>(Estates[g_Engine.mapname])[2]=="SELL")
+            {
+                if(cast<array<string>>(Estates[g_Engine.mapname])[1]==UID)
+                {
+                    array<string> infoArray=cast<array<string>>(Estates[g_Engine.mapname]);
+                    infoArray[2]="SOLD";
+                    Estates.set(g_Engine.mapname,infoArray);
+                    UpdateEstateList();
+                }
+                else
+                {
+                    array<string> infoArray=cast<array<string>>(Estates[g_Engine.mapname]);
+                    string seller_ID=infoArray[1];
+                    int price=atoi(infoArray[0]);
+                    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Need "+string(price)+" to buy this estate!\n");
+                    if(e_PlayerInventory.GetBalance(pPlayer)>price)
+                    {
+                    
+                        e_PlayerInventory.ChangeBalance(pPlayer, -price);
+                        if(Accounts.exists(UID))
+                        {
+                            int currentFunds=int(Accounts[UID]);
+                            Accounts.set(UID,currentFunds+price);
+                            int sellerFunds=int(Accounts[seller_ID]);
+                            Accounts.set(seller_ID,sellerFunds+price);
+                            UpdateAccountList();
+                        }
+                        else
+                        {
+                            Accounts.set(UID,price);
+                            int sellerFunds=int(Accounts[seller_ID]);
+                            Accounts.set(seller_ID,sellerFunds+price);
+                            UpdateAccountList();
+                        }
+                        g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Account balance: "+string(int(Accounts[UID]))+"\n");
+                        array<string> infoArray;
+                        infoArray[0]=string(price);
+                        infoArray[1]=UID;
+                        infoArray[2]="SOLD";
+                        Estates.set(g_Engine.mapname,infoArray);
+                        UpdateEstateList();
+                    }
+                    else
+                    {
+                        g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "No enough cash! You need "+string(price)+" to buy this estate!\n");
+                        return HOOK_CONTINUE;
+                    }
+                }
             }
             else
             {
@@ -230,7 +280,7 @@ HookReturnCode estate_servive(SayParameters@ pParams)
                 g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Need "+string(price)+" to buy this estate!\n");
                 if(e_PlayerInventory.GetBalance(pPlayer)>price)
                 {
-                    string UID=e_PlayerInventory.GetUniquePlayerId(pPlayer);
+                    
                     e_PlayerInventory.ChangeBalance(pPlayer, -price);
                     if(Accounts.exists(UID))
                     {
