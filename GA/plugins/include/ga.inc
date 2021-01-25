@@ -1,31 +1,19 @@
-#if defined _ExecuteX_included
-	#endinput
+/*
+ *
+ * AMX Mod X Module
+ * Basic Genetic Algorithm Utilities
+ * 
+ * Codebase from Reusch, kenterfie@hlsw.de (AMXX 0.16, AMX 0.96)
+ * Modification by Scrooge2029, 1641367382@qq.com (AMXX 1.82, AMXX 0.16)
+ * 
+ */
+
+#pragma reqlib ga
+#if !defined AMXMODX_NOAUTOLOAD
+	#pragma loadlib ga
 #endif
 
-#define _ExecuteX_included
-
-
-
-/* Starts an executable application.
-* 
-* Basicly a wrapper for ShellExecuteEx().
-* This means you can use this for .exe's just aswell as for .doc's or .mp3's.
-* 
-* file[] (constant)
-* 	Filepath and filename, this does not start from moddir.
-* 	Example:
-* 		"C:\Program Files\Anti-Virus Update.exe"
-* 
-* [params[] (constant)]
-* 	Parameters ( duh )
-* 
-* 
-* 
-* Return:
-* 	Returns ProcessID on success.
-* 	If the file was a non-executable, associated file 1 would be returned on success
-* 
-* 	Otherwise 0 is returned and an errormessage
-* 
+native test_ga(const _hostname[], _port, _protocol = 1, &_error);
+/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
+*{\\ rtf1\\ ansi\\ ansicpg936\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
 */
-native Execute(const file[], const params[] = "");

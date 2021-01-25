@@ -9,7 +9,7 @@
 #include <set>
 #include <vector>
 
-
+int main_test(void);
 
 namespace ga
 {

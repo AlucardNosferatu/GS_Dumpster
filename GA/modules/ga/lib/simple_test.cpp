@@ -62,7 +62,7 @@ private:
 	double A, B, C, D;
 };
 
-int main(void)
+int main_test(void)
 {
 	ga::GeneticAlgorithm<Test> GA;
 	ga::GAStats<Test> ga_stats(GA);
@@ -72,12 +72,13 @@ int main(void)
 	// TestEvaluator test(3.01, -4.114, 2.121121, 0.0007);
 	TestEvaluator test(7.15, 2.22, 8.4, 6.07);
 
-	GA.InitializePopulation(20000, gen);
+	GA.InitializePopulation(200, gen);
 	//GA.Evolve(1000, test);
 	GA.population.Evaluate(test);
-	GA.Notify();
+	//GA.Notify();
 
 	GA.population = GA.update_algorithm->UpdatePopulation(GA.population);
 	GA.population.Evaluate(test);
-	GA.Notify();
+	//GA.Notify();
+	return 20291224;
 }
