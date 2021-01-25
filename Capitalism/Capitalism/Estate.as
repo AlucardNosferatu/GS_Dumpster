@@ -259,7 +259,6 @@ HookReturnCode estate_servive(SayParameters@ pParams)
                             UpdateAccountList();
                         }
                         g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Account balance: "+string(int(Accounts[UID]))+"\n");
-                        array<string> infoArray;
                         infoArray[0]=string(price);
                         infoArray[1]=UID;
                         infoArray[2]="SOLD";
