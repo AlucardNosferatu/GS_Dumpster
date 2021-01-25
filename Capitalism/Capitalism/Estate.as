@@ -15,7 +15,7 @@ void InitEstate()
 {
     GetEstateList();
     GetAccountList();
-    g_Scheduler.SetInterval( "UpdateVisitors", 600, g_Scheduler.REPEAT_INFINITE_TIMES);
+    g_Scheduler.SetInterval( "UpdateVisitors", 60, g_Scheduler.REPEAT_INFINITE_TIMES);
     g_Hooks.RegisterHook(Hooks::Player::ClientSay, @estate_servive);
     g_Hooks.RegisterHook(Hooks::Game::MapChange, @maintenance);
 }
@@ -33,7 +33,7 @@ void GetEstateList()
             if(sLine.Length()>0)
             {
                 array<string> EsInfo=sLine.Split("\t");
-                if(EsInfo.length()==4)
+                if(EsInfo.length()==5)
                 {
                     string map=EsInfo[0];
                     // string price=EsInfo[1];
@@ -85,13 +85,14 @@ void UpdateEstateList()
             string price=infoArray[0];
             string owner=infoArray[1];
             string status=infoArray[2];
+            string mFare=infoArray[3];
             if(i==maps_count-1)
             {
-                fHandle.Write(mapnames[i]+"\t"+price+"\t"+owner+"\t"+status);
+                fHandle.Write(mapnames[i]+"\t"+price+"\t"+owner+"\t"+status+"\t"+mFare);
             }
             else
             {
-                fHandle.Write(mapnames[i]+"\t"+price+"\t"+owner+"\t"+status+"\n");
+                fHandle.Write(mapnames[i]+"\t"+price+"\t"+owner+"\t"+status+"\t"+mFare+"\n");
             }
         }
         fHandle.Close();
@@ -131,9 +132,11 @@ void UpdateVisitors()
         {
             int currentFunds=int(Accounts[UID]);
             int pCount=g_PlayerFuncs.GetNumPlayers();
-            int funds=pCount*100;
+            int funds=pCount*10;
             Accounts.set(UID,currentFunds+funds);
             UpdateAccountList();
+            g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, string(funds)+" were charged for toll fee.\n");
+            g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "The owner of this map have "+string(int(int(Accounts[UID])))+" in his balance now.\n");
         }
         else
         {
@@ -222,8 +225,8 @@ HookReturnCode estate_servive(SayParameters@ pParams)
             }
             else
             {
-                int price=0;
-                price=(int(GetMapVolume())/1000)*1000;
+                int price=(int(GetMapVolume())/1000)*1000;
+                int mFare=int(float(price)/10.0);
                 g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Need "+string(price)+" to buy this estate!\n");
                 if(e_PlayerInventory.GetBalance(pPlayer)>price)
                 {
@@ -245,6 +248,7 @@ HookReturnCode estate_servive(SayParameters@ pParams)
                     infoArray.insertLast(string(price));
                     infoArray.insertLast(UID);
                     infoArray.insertLast("SOLD");
+                    infoArray.insertLast(string(mFare));
                     Estates.set(g_Engine.mapname,infoArray);
                     UpdateEstateList();
                 }
@@ -266,10 +270,9 @@ HookReturnCode estate_servive(SayParameters@ pParams)
                     return HOOK_CONTINUE;
                 }
                 int price=atoi(cArgs[2]);
-                array<string> infoArray;
-                infoArray.insertLast(string(price));
-                infoArray.insertLast(UID);
-                infoArray.insertLast("SELL");
+                array<string> infoArray=cast<array<string>>(Estates[g_Engine.mapname]);
+                infoArray[0]=string(price);
+                infoArray[2]="SELL";
                 Estates.set(g_Engine.mapname,infoArray);
                 UpdateEstateList();
             }
@@ -328,17 +331,13 @@ HookReturnCode maintenance()
 {
     if(Estates.exists(g_Engine.mapname) and cast<array<string>>(Estates[g_Engine.mapname])[2]=="SOLD")
     {
-        string UID=cast<array<string>>(Estates[g_Engine.mapname])[1];
-        int price=0;
-        price=(int(GetMapVolume())/1000)*1000;
-
-        int maintenance_fare=int(float(price)/100.0);
+        array<string> estateInfo=cast<array<string>>(Estates[g_Engine.mapname]);
+        string UID=estateInfo[1];
+        int maintenance_fare=atoi(estateInfo[3]);
         if(Accounts.exists(UID))
         {
             if(int(Accounts[UID])<maintenance_fare)
             {
-                array<string> estateInfo=cast<array<string>>(Estates[g_Engine.mapname]);
-                estateInfo[1] = UID;
                 estateInfo[2] = "SELL";
                 Estates.set(g_Engine.mapname,estateInfo);
                 UpdateEstateList();
@@ -348,6 +347,8 @@ HookReturnCode maintenance()
                 int currentFunds=int(Accounts[UID]);
                 Accounts.set(UID,currentFunds-maintenance_fare);
                 UpdateAccountList();
+                g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, string(maintenance_fare)+" were spent to maintain infrastructure.\n");
+                g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "The owner of this map have "+string(int(int(Accounts[UID])))+" in his balance now.\n");
             }
         }
         else
