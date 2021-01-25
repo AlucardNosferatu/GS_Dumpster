@@ -26,6 +26,9 @@
     <ClCompile Include="..\ga.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\lib\simple_test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\sdk\moduleconfig.h">
@@ -35,6 +38,9 @@
       <Filter>Module SDK\SDK Base</Filter>
     </ClInclude>
     <ClInclude Include="..\svn_version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\ga.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

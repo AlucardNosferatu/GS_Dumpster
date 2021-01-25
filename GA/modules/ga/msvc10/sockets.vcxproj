@@ -98,9 +98,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\ga.cpp" />
+    <ClCompile Include="..\lib\simple_test.cpp" />
     <ClCompile Include="..\sdk\amxxmodule.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\lib\ga.hpp" />
     <ClInclude Include="..\sdk\moduleconfig.h" />
     <ClInclude Include="..\sdk\amxxmodule.h" />
     <ClInclude Include="..\svn_version.h" />
