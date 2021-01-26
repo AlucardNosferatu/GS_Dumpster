@@ -4,41 +4,89 @@
 
 using namespace std;
 
-GATask* gTask;
+//GATask* gTask;
+GATaskIndex* gTask;
+bool status;
+bool eval;
 
-static cell AMX_NATIVE_CALL test_ga(AMX* amx, cell* params) {
-	gTask->Eva();
-	gTask->Update();
-	gTask->Eva();
-	const Test BestForNow = gTask->GetBest();
-	cell* a = MF_GetAmxAddr(amx, params[1]);
-	cell* b = MF_GetAmxAddr(amx, params[2]);
-	cell* c = MF_GetAmxAddr(amx, params[3]);
-	cell* d = MF_GetAmxAddr(amx, params[4]);
-	*a = static_cast<int>(std::round(BestForNow.a));
-	*b = static_cast<int>(std::round(BestForNow.b));
-	*c = static_cast<int>(std::round(BestForNow.c));
-	*d = static_cast<int>(std::round(BestForNow.d));
+static cell AMX_NATIVE_CALL init_task(AMX* amx, cell* params)
+{
+	const int population = params[1];
+	gTask = new GATaskIndex(population);
+	status = true;
+	eval = false;
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL init_task(AMX* amx, cell* params) {
+static cell AMX_NATIVE_CALL get_individual(AMX* amx, cell* params)
+{
+	if (status)
+	{
+		cell Index = params[1];
+		cell* IndArray = MF_GetAmxAddr(amx, params[2]);
+		const cell IndArray_size = params[3];
+		Test Ind = gTask->GetInd(Index);
+		if (IndArray_size >= 4)
+		{
+			IndArray[0] = amx_ftoc(static_cast<float>(Ind.a));
+			IndArray[1] = amx_ftoc(static_cast<float>(Ind.a));
+			IndArray[2] = amx_ftoc(static_cast<float>(Ind.a));
+			IndArray[3] = amx_ftoc(static_cast<float>(Ind.a));
+		}
+	}
+	return 1;
+}
 
-	const int population = params[1];
-	const double x = static_cast<double>(amx_ctof(params[2]));
-	const double y = static_cast<double>(amx_ctof(params[3]));
-	const double z = static_cast<double>(amx_ctof(params[4]));
-	const double w = static_cast<double>(amx_ctof(params[5]));
-	gTask = new GATask(population, x, y, z, w);
+static cell AMX_NATIVE_CALL evaluate_gen(AMX* amx, cell* params)
+{
+	if (status)
+	{
+		const cell* scores_amx = MF_GetAmxAddr(amx, params[3]);
+		const cell scores_size = params[4];
+		double* scores = new double[scores_size];
+		for (int i = 0; i < scores_size; i++)
+		{
+			const float element = amx_ctof(scores_amx[i]);
+			scores[i] = static_cast<double>(element);
+		}
+
+		gTask->Eva(scores);
+
+		eval = true;
+		const Test BestForNow = gTask->GetBest();
+		cell* array = MF_GetAmxAddr(amx, params[1]);
+		const cell array_size = params[2];
+		if (array_size >= 4)
+		{
+			array[0] = amx_ftoc(static_cast<float>(BestForNow.a));
+			array[1] = amx_ftoc(static_cast<float>(BestForNow.a));
+			array[2] = amx_ftoc(static_cast<float>(BestForNow.a));
+			array[3] = amx_ftoc(static_cast<float>(BestForNow.a));
+		}
+	}
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL update_gen(AMX* amx, cell* params)
+{
+	if (status)
+	{
+		gTask->Update();
+		eval = false;
+	}
 	return 1;
 }
 
 AMX_NATIVE_INFO natives[] = {
-	{ "test_ga", test_ga },
 	{ "init_task", init_task },
+	{ "get_individual", get_individual },
+	{ "evaluate_gen", evaluate_gen },
+	{ "update_gen", update_gen },
 	{ NULL, NULL }
 };
 
 void OnAmxxAttach() {
+	status = false;
+	eval = false;
 	MF_AddNatives(natives);
 }

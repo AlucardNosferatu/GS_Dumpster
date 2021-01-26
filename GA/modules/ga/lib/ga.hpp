@@ -101,6 +101,26 @@ namespace ga
 			return std::make_pair(best_individual, best_fitness);
 		}
 
+		template <typename FitnessFunction>
+		std::pair<int, double> EvaluateWithIndex(FitnessFunction f) // I don't love having to pass the function here...
+		{
+			best_individual = 0;
+			best_fitness = f(0);
+
+			fitness.clear();
+			fitness.reserve(individuals.size());
+
+			for (size_t ind = 0; ind < individuals.size(); ++ind) {
+				double this_fitness = f(ind);
+				if (this_fitness > best_fitness) {
+					best_fitness = this_fitness;
+					best_individual = ind;
+				}
+				fitness.push_back(this_fitness);
+			}
+			return std::make_pair(best_individual, best_fitness);
+		}
+
 	private:
 		std::vector<InputType> individuals;
 		std::vector<double>    fitness;
@@ -372,6 +392,7 @@ struct Test
 	double c;
 	double d;
 };
+
 class TestGenerator
 {
 public:
@@ -391,8 +412,8 @@ public:
 
 private:
 	std::mt19937 rng_mt;
-
 };
+
 class TestEvaluator
 {
 public:
@@ -411,15 +432,36 @@ public:
 			+ std::pow(t.d - D, 2.0)
 			);
 	}
-
 private:
 	double A, B, C, D;
 };
+
+class TestEvaluatorIndex
+{
+public:
+	TestEvaluatorIndex()
+	{
+		Index = 0;
+		Score = nullptr;
+	}
+	double operator()(int Index)
+	{
+		return -(Score[Index]);
+	}
+	void UpdateScore(double* InputScore)
+	{
+		Score = InputScore;
+	}
+private:
+	int Index;
+	double* Score;
+};
+
 class GATask
 {
 public:
 	ga::GeneticAlgorithm<Test>* GA;
-	ga::GAStats<Test>* ga_stats;
+	//ga::GAStats<Test>* ga_stats;
 	TestGenerator gen;
 	TestEvaluator* eva;
 	GATask(int population, double x, double y, double z, double w)
@@ -444,5 +486,38 @@ public:
 	{
 		Test BestIndiv = GA->population.GetBestIndividual();
 		return BestIndiv;
+	}
+};
+
+class GATaskIndex
+{
+public:
+	ga::GeneticAlgorithm<Test>* GA;
+	TestGenerator gen;
+	TestEvaluatorIndex* eva;
+	GATaskIndex(int population)
+	{
+		GA = new ga::GeneticAlgorithm<Test>();
+		GA->InitializePopulation(population, gen);
+		eva = new TestEvaluatorIndex();
+	}
+	void Eva(double* bScore)
+	{
+		eva->UpdateScore(bScore);
+		GA->population.EvaluateWithIndex(*eva);
+	}
+	void Update()
+	{
+		GA->population = GA->update_algorithm->UpdatePopulation(GA->population);
+	}
+	Test GetBest()
+	{
+		Test BestIndiv = GA->population.GetBestIndividual();
+		return BestIndiv;
+	}
+	Test GetInd(int Index)
+	{
+		Test Ind = GA->population.GetIndividual(Index);
+		return Ind;
 	}
 };
