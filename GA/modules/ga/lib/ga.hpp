@@ -9,13 +9,10 @@
 #include <set>
 #include <vector>
 
-int main_test(void);
+extern int main_new(void);
 
 namespace ga
 {
-
-
-
 	namespace utility
 	{
 
@@ -42,8 +39,6 @@ namespace ga
 
 
 	}; // namespace util
-
-
 
 	template <typename InputType>
 	class Population
@@ -114,9 +109,6 @@ namespace ga
 		size_t best_individual;
 	};
 
-
-
-
 	template <typename InputType>
 	class CrossoverAlgorithm
 	{
@@ -124,9 +116,6 @@ namespace ga
 		virtual std::vector<InputType> Recombine(const Population<InputType>& pop,
 			const std::vector<size_t>& mates) const = 0;
 	};
-
-
-
 
 	template <typename InputType>
 	class RandomCrossover : public CrossoverAlgorithm<InputType>
@@ -184,7 +173,6 @@ namespace ga
 		}
 	};
 
-
 	template <typename InputType>
 	class SelectionAlgorithm
 	{
@@ -192,8 +180,6 @@ namespace ga
 		// return a set of N unique indexes of individuals from the population
 		virtual std::vector<size_t> Select(size_t N, const Population<InputType>& pop) const = 0;
 	};
-
-
 
 	template <typename InputType>
 	class TournamentSelection : public SelectionAlgorithm<InputType>
@@ -239,7 +225,6 @@ namespace ga
 		size_t tournament_size;
 	};
 
-
 	template <typename InputType>
 	class MutationOperator
 	{
@@ -276,8 +261,6 @@ namespace ga
 		}
 	};
 
-
-
 	template <typename InputType>
 	class PopulationUpdateAlgorithm
 	{
@@ -285,8 +268,6 @@ namespace ga
 	public:
 		virtual PopulationType UpdatePopulation(const PopulationType& input_pop) const = 0;
 	};
-
-
 
 	template <typename InputType>
 	class ReplacePopulationAlgorithm : public PopulationUpdateAlgorithm<InputType>
@@ -323,8 +304,6 @@ namespace ga
 		std::unique_ptr<CrossoverAlgorithm<InputType>> crossover_algorithm;
 		std::unique_ptr<MutationOperator<InputType>>   mutation_operator;
 	};
-
-
 
 	template <typename InputType>
 	class GeneticAlgorithm : public utility::Observable
@@ -365,8 +344,6 @@ namespace ga
 		size_t total_generations;
 	};
 
-
-
 	template <typename InputType>
 	class GAStats : public utility::Observer
 	{
@@ -386,7 +363,86 @@ namespace ga
 		const GeneticAlgorithm<InputType>& gen_alg;
 	};
 
-
-
-
 }; // namespace ga
+
+struct Test
+{
+	double a;
+	double b;
+	double c;
+	double d;
+};
+class TestGenerator
+{
+public:
+	TestGenerator() : rng_mt{ std::random_device{}() } {}
+
+	Test operator()()
+	{
+		std::uniform_real_distribution<double> ddist(-100, 100);
+
+		return Test{
+			ddist(rng_mt),
+			ddist(rng_mt),
+			ddist(rng_mt),
+			ddist(rng_mt)
+		};
+	};
+
+private:
+	std::mt19937 rng_mt;
+
+};
+class TestEvaluator
+{
+public:
+	TestEvaluator(double x, double y, double z, double w)
+	{
+		A = x;
+		B = y;
+		C = z;
+		D = w;
+	}
+	double operator()(const Test& t)
+	{
+		return -(std::pow(t.a - A, 2.0)
+			+ std::pow(t.b - B, 2.0)
+			+ std::pow(t.c - C, 2.0)
+			+ std::pow(t.d - D, 2.0)
+			);
+	}
+
+private:
+	double A, B, C, D;
+};
+class GATask
+{
+public:
+	ga::GeneticAlgorithm<Test>* GA;
+	ga::GAStats<Test>* ga_stats;
+	TestGenerator gen;
+	TestEvaluator* eva;
+	GATask(int population, double x, double y, double z, double w)
+	{
+		GA = new ga::GeneticAlgorithm<Test>();
+		//ga_stats = new ga::GAStats<Test>(*GA);
+		//GA->Attach(ga_stats);
+
+		GA->InitializePopulation(population, gen);
+		eva = new TestEvaluator(x, y, z, w);
+	}
+	void Eva()
+	{
+		GA->population.Evaluate(*eva);
+		//GA->Notify();
+	}
+	void Update()
+	{
+		GA->population = GA->update_algorithm->UpdatePopulation(GA->population);
+	}
+	Test GetBest()
+	{
+		Test BestIndiv = GA->population.GetBestIndividual();
+		return BestIndiv;
+	}
+};

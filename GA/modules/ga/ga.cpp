@@ -4,10 +4,17 @@
 
 using namespace std;
 
-static cell AMX_NATIVE_CALL test_ga(AMX* amx, cell* amxparams) {
+GATask* gTask;
 
-	const cell result = main_test();
-	return result;
+static cell AMX_NATIVE_CALL test_ga(AMX* amx, cell* params) {
+	gTask->Eva();
+	gTask->Update();
+	gTask->Eva();
+	Test BestForNow = gTask->GetBest();
+	cell* a = MF_GetAmxAddr(amx, params[4]);
+	*a = int(std::round(BestForNow.a));
+	cell b = int(std::round(BestForNow.b));
+	return b;
 }
 
 AMX_NATIVE_INFO natives[] = {
@@ -16,5 +23,6 @@ AMX_NATIVE_INFO natives[] = {
 };
 
 void OnAmxxAttach() {
-	; MF_AddNatives(natives);
+	gTask = new GATask(200, 7.15, 2.22, 8.4, 6.07);
+	MF_AddNatives(natives);
 }

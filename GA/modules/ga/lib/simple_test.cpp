@@ -1,14 +1,5 @@
 ﻿#include "ga.hpp"
-
 #include <random>
-
-struct Test
-{
-	double a;
-	double b;
-	double c;
-	double d;
-};
 
 std::ostream& operator<<(std::ostream& out, const Test& t)
 {
@@ -21,53 +12,26 @@ std::ostream& operator<<(std::ostream& out, const Test& t)
 	return out;
 }
 
-class TestGenerator
+int main_new(void)
 {
-public:
-	TestGenerator() : rng_mt{ std::random_device{}() } {}
+	GATask* gTask = new GATask(8, 7.15, 2.22, 8.4, 6.07);
+	//for (int i = 0; i < 100; i++)
+	//{
+	gTask->Eva();
+	gTask->Update();
+	//}
+	gTask->Eva();
 
-	Test operator()()
-	{
-		std::uniform_real_distribution<double> ddist(-100, 100);
+	Test BestForNow = gTask->GetBest();
+	return int(std::round(BestForNow.a));
+}
 
-		return Test{
-			ddist(rng_mt),
-			ddist(rng_mt),
-			ddist(rng_mt),
-			ddist(rng_mt)
-		};
-	};
-
-private:
-	std::mt19937 rng_mt;
-
-};
-
-class TestEvaluator
-{
-public:
-	TestEvaluator(double x, double y, double z, double w)
-		: A(x), B(y), C(z), D(w) {}
-
-	double operator()(const Test& t)
-	{
-		return -(std::pow(t.a - A, 2.0)
-			+ std::pow(t.b - B, 2.0)
-			+ std::pow(t.c - C, 2.0)
-			+ std::pow(t.d - D, 2.0)
-			);
-	}
-
-private:
-	double A, B, C, D;
-};
-
-int main_test(void)
+int main_old(void)
 {
 	ga::GeneticAlgorithm<Test> GA;
-	ga::GAStats<Test> ga_stats(GA);
+	//ga::GAStats<Test> ga_stats(GA);
 
-	GA.Attach(&ga_stats);
+	//GA.Attach(&ga_stats);
 	TestGenerator gen;
 	// TestEvaluator test(3.01, -4.114, 2.121121, 0.0007);
 	TestEvaluator test(7.15, 2.22, 8.4, 6.07);
