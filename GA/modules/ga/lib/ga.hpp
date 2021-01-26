@@ -44,7 +44,10 @@ namespace ga
 	class Population
 	{
 	public:
-
+		std::vector<InputType> individuals;
+		std::vector<double>    fitness;
+		double best_fitness;
+		size_t best_individual;
 		Population() {}
 
 		template <typename GeneratorFunction>
@@ -104,29 +107,39 @@ namespace ga
 		template <typename FitnessFunction>
 		std::pair<int, double> EvaluateWithIndex(FitnessFunction f) // I don't love having to pass the function here...
 		{
-			best_individual = 0;
-			best_fitness = f(0);
+			int defaultIndex = 0;
+			bool invalid = true;
+			while (invalid)
+			{
+				best_individual = defaultIndex;
+				best_fitness = f(defaultIndex);
+				defaultIndex += 1;
+				invalid = (isfinite<double>(best_fitness) == 0);
+			}
+
 
 			fitness.clear();
 			fitness.reserve(individuals.size());
 
 			for (size_t ind = 0; ind < individuals.size(); ++ind) {
 				double this_fitness = f(ind);
-				if (this_fitness > best_fitness) {
-					best_fitness = this_fitness;
-					best_individual = ind;
+				if (isfinite<double>(this_fitness) != 0)
+				{
+					if (this_fitness > best_fitness)
+					{
+						best_fitness = this_fitness;
+						best_individual = ind;
+					}
+					fitness.push_back(this_fitness);
 				}
-				fitness.push_back(this_fitness);
+				else
+				{
+					fitness.push_back(static_cast<double>(-FLT_MAX));
+				}
+
 			}
 			return std::make_pair(best_individual, best_fitness);
 		}
-
-	private:
-		std::vector<InputType> individuals;
-		std::vector<double>    fitness;
-
-		double best_fitness;
-		size_t best_individual;
 	};
 
 	template <typename InputType>
@@ -446,7 +459,8 @@ public:
 	}
 	double operator()(int Index)
 	{
-		return -(Score[Index]);
+		const double ThisScore = Score[Index];
+		return -(ThisScore);
 	}
 	void UpdateScore(double* InputScore)
 	{

@@ -1,4 +1,5 @@
 ﻿#include <string>
+#include <math.h>
 #include "ga.hpp"
 #include "amxxmodule.h"
 
@@ -8,6 +9,7 @@ using namespace std;
 GATaskIndex* gTask;
 bool status;
 bool eval;
+int err_index;
 
 static cell AMX_NATIVE_CALL init_task(AMX* amx, cell* params)
 {
@@ -48,8 +50,11 @@ static cell AMX_NATIVE_CALL evaluate_gen(AMX* amx, cell* params)
 		{
 			const float element = amx_ctof(scores_amx[i]);
 			scores[i] = static_cast<double>(element);
+			if (isfinite<double>(scores[i]) == 0)
+			{
+				err_index = i;
+			}
 		}
-
 		gTask->Eva(scores);
 
 		eval = true;
