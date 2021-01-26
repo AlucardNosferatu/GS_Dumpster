@@ -51,7 +51,7 @@ public Float:process_score(Float:ind[],i)
 	new Float:bSqr=floatmul(ind[1]-29.0,ind[1]-29.0);
 	new Float:cSqr=floatmul(ind[2]-12.0,ind[2]-12.0);
 	new Float:dSqr=floatmul(ind[3]-24.0,ind[3]-24.0);
-	new Float:score=-(aSqr+bSqr+cSqr+dSqr);
+	new Float:score=(aSqr+bSqr+cSqr+dSqr);
 	//server_print("Score:%d %f abcd:%f %f %f %f",i,score,floatsub(ind[0],20.0),floatsub(ind[1],29.0),floatsub(ind[2],12.0),floatsub(ind[3],24.0));
 	return score
 }

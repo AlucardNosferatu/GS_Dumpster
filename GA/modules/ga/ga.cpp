@@ -31,9 +31,53 @@ static cell AMX_NATIVE_CALL get_individual(AMX* amx, cell* params)
 		if (IndArray_size >= 4)
 		{
 			IndArray[0] = amx_ftoc(static_cast<float>(Ind.a));
-			IndArray[1] = amx_ftoc(static_cast<float>(Ind.a));
-			IndArray[2] = amx_ftoc(static_cast<float>(Ind.a));
-			IndArray[3] = amx_ftoc(static_cast<float>(Ind.a));
+			if (isfinite<double>(IndArray[0]) == 0)
+			{
+				if (IndArray[0] > 0)
+				{
+					IndArray[0] = amx_ftoc(FLT_MAX);
+				}
+				else
+				{
+					IndArray[0] = amx_ftoc(-FLT_MAX);
+				}
+			}
+			IndArray[1] = amx_ftoc(static_cast<float>(Ind.b));
+			if (isfinite<double>(IndArray[1]) == 0)
+			{
+				if (IndArray[1] > 0)
+				{
+					IndArray[1] = amx_ftoc(FLT_MAX);
+				}
+				else
+				{
+					IndArray[1] = amx_ftoc(-FLT_MAX);
+				}
+			}
+			IndArray[2] = amx_ftoc(static_cast<float>(Ind.c));
+			if (isfinite<double>(IndArray[2]) == 0)
+			{
+				if (IndArray[2] > 0)
+				{
+					IndArray[2] = amx_ftoc(FLT_MAX);
+				}
+				else
+				{
+					IndArray[2] = amx_ftoc(-FLT_MAX);
+				}
+			}
+			IndArray[3] = amx_ftoc(static_cast<float>(Ind.d));
+			if (isfinite<double>(IndArray[3]) == 0)
+			{
+				if (IndArray[3] > 0)
+				{
+					IndArray[3] = amx_ftoc(FLT_MAX);
+				}
+				else
+				{
+					IndArray[3] = amx_ftoc(-FLT_MAX);
+				}
+			}
 		}
 	}
 	return 1;
@@ -50,10 +94,6 @@ static cell AMX_NATIVE_CALL evaluate_gen(AMX* amx, cell* params)
 		{
 			const float element = amx_ctof(scores_amx[i]);
 			scores[i] = static_cast<double>(element);
-			if (isfinite<double>(scores[i]) == 0)
-			{
-				err_index = i;
-			}
 		}
 		gTask->Eva(scores);
 
@@ -64,9 +104,9 @@ static cell AMX_NATIVE_CALL evaluate_gen(AMX* amx, cell* params)
 		if (array_size >= 4)
 		{
 			array[0] = amx_ftoc(static_cast<float>(BestForNow.a));
-			array[1] = amx_ftoc(static_cast<float>(BestForNow.a));
-			array[2] = amx_ftoc(static_cast<float>(BestForNow.a));
-			array[3] = amx_ftoc(static_cast<float>(BestForNow.a));
+			array[1] = amx_ftoc(static_cast<float>(BestForNow.b));
+			array[2] = amx_ftoc(static_cast<float>(BestForNow.c));
+			array[3] = amx_ftoc(static_cast<float>(BestForNow.d));
 		}
 	}
 	return 1;
