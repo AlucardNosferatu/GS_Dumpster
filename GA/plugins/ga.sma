@@ -13,7 +13,9 @@
 * 
 */
 new Float:ind[4];
-new Float:scores[200];
+new Float:scores[8];
+new Index
+new bool:wait
 
 public plugin_init()
 {
@@ -22,29 +24,36 @@ public plugin_init()
 	register_concmd("col","test_ga_once")
 	register_concmd("eva","evaluation")
 	register_concmd("sse","SpawnSendEnt")
-	//RegisterHam(Ham_Spawn, "info_target", "CheckRecvEnt", 1);  
+	RegisterHam(Ham_Spawn, "info_target", "CheckRecvEnt", 1); 
+	Index=0;
+	wait=false;
 }
 
 public test_ga_loop()
 {
-	init_task(200);
+	init_task(8);
 	set_task(1.0, "test_ga_once", .flags="b")
 }
 
 public test_ga_once()
 {
-	for(new i=0;i<200;i++)
+	if(!wait)
 	{
-		get_individual(i,ind,4);
+		get_individual(Index,ind,4);
 		SpawnSendEnt(ind[0],ind[1],ind[2],ind[3])
-		//scores[i]=process_score(ind,i)
+		wait=true
+		Index+=1
+		if(Index>=8)
+		{
+			Index=0
+		}
 	}
-	//evaluation();
+	
 }
 
 public evaluation()
 {
-	evaluate_gen(ind,4,scores,200);
+	evaluate_gen(ind,4,scores,8);
 	update_gen();
 	server_print("Best:%f %f %f %f",ind[0],ind[1],ind[2],ind[3]);
 	server_print("  ");
@@ -77,18 +86,19 @@ public SpawnSendEnt(Float:val1, Float:val2, Float:val3, Float:val4)
 
 public CheckRecvEnt(Ent)
 {
-	server_print("Detected Spawned Entity By AMXX")
 	if (pev_valid(Ent))
 	{
 		new targetname[32]
 		pev(Ent, pev_targetname, targetname, charsmax(targetname))
 		if (equal(targetname, "AS_RCBOT_SEND"))
 		{
-			new Float:test1=entity_get_float(Ent, EV_FL_fuser1)
-			new Float:test2=entity_get_float(Ent, EV_FL_fuser2)
-			new Float:test3=entity_get_float(Ent, EV_FL_fuser3)
-			new Float:test4=entity_get_float(Ent, EV_FL_fuser4)
-			server_print("Recv value %f %f %f %f",test1,test2,test3,test4)
+			server_print("Detected Spawned Entity By AMXX")
+			//new Float:test1=entity_get_float(Ent, EV_FL_fuser1)
+			//new Float:test2=entity_get_float(Ent, EV_FL_fuser2)
+			//new Float:test3=entity_get_float(Ent, EV_FL_fuser3)
+			//new Float:test4=entity_get_float(Ent, EV_FL_fuser4)
+			//server_print("Recv value %f %f %f %f",test1,test2,test3,test4)
+			wait=false
 			engfunc(EngFunc_RemoveEntity, Ent)
 		}
 	}
