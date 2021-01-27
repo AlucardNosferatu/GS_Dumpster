@@ -32,7 +32,7 @@ public plugin_init()
 public test_ga_loop()
 {
 	init_task(8);
-	set_task(1.0, "test_ga_once", .flags="b")
+	set_task(1.0, "test_ga_once", .id=0, .flags="b")
 }
 
 public test_ga_once()
@@ -45,7 +45,7 @@ public test_ga_once()
 		Index+=1
 		if(Index>=8)
 		{
-			Index=0
+			remove_task(0)
 		}
 	}
 	
