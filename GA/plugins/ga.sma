@@ -13,7 +13,7 @@
 * 
 */
 new Float:ind[4];
-new Float:scores[200];
+new Float:scores[2000];
 new Index
 new bool:wait
 
@@ -23,9 +23,17 @@ public plugin_init()
 	register_concmd("tga","test_ga_loop")
 	register_concmd("col","test_ga_once")
 	register_concmd("eva","evaluation")
+	register_concmd("ro","release_obj")
 	register_concmd("sse","SpawnSendEnt")
-	RegisterHam(Ham_Spawn, "info_target", "CheckRecvEnt", 1); 
-	wait=false;
+	RegisterHam(Ham_Spawn, "info_target", "CheckRecvEnt", 1);
+}
+
+public release_obj()
+{
+	Index=0;
+	remove_task(0)
+	wait=true;
+	release();
 }
 
 public test_ga_loop()
@@ -33,6 +41,7 @@ public test_ga_loop()
 	Index=0;
 	init_task(2000);
 	remove_task(0)
+	wait=false;
 	set_task(1.0, "test_ga_once", .id=0, .flags="b")
 }
 
@@ -44,7 +53,7 @@ public test_ga_once()
 		SpawnSendEnt(ind[0],ind[1],ind[2],ind[3])
 		wait=true
 		Index+=1
-		if(Index>=200)
+		if(Index>=2000)
 		{
 			Index=0
 			remove_task(0)
@@ -55,7 +64,7 @@ public test_ga_once()
 
 public evaluation()
 {
-	evaluate_gen(ind,4,scores,200);
+	evaluate_gen(ind,4,scores,2000);
 	update_gen();
 	server_print("Best:%f %f %f %f",ind[0],ind[1],ind[2],ind[3]);
 	server_print("  ");

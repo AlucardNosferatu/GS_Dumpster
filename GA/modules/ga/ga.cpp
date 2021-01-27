@@ -127,11 +127,24 @@ static cell AMX_NATIVE_CALL update_gen(AMX* amx, cell* params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL release(AMX* amx, cell* params)
+{
+	if (status)
+	{
+		delete gTask;
+		gTask = NULL;
+		status = false;
+		eval = false;
+	}
+	return 1;
+}
+
 AMX_NATIVE_INFO natives[] = {
 	{ "init_task", init_task },
 	{ "get_individual", get_individual },
 	{ "evaluate_gen", evaluate_gen },
 	{ "update_gen", update_gen },
+	{ "release", release },
 	{ NULL, NULL }
 };
 
