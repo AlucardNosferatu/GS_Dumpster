@@ -85,9 +85,7 @@ public CheckRecvEnt(Ent)
 			new Float:test3=entity_get_float(Ent, EV_FL_fuser3)
 			new Float:test4=entity_get_float(Ent, EV_FL_fuser4)
 			server_print("Recv value %f %f %f %f",test1,test2,test3,test4)
+			engfunc(EngFunc_RemoveEntity, Ent)
 		}
 	}
 }
-/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
-*{\\ rtf1\\ ansi\\ ansicpg936\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
-*/
