@@ -21,8 +21,8 @@ public plugin_init()
 	register_concmd("tga","test_ga_loop")
 	register_concmd("col","test_ga_once")
 	register_concmd("eva","evaluation")
-	register_concmd("ecp","SpawnSendEnt")
-	RegisterHam(Ham_Spawn, "info_target", "CheckRecvEnt", 1);  
+	register_concmd("sse","SpawnSendEnt")
+	//RegisterHam(Ham_Spawn, "info_target", "CheckRecvEnt", 1);  
 }
 
 public test_ga_loop()
@@ -64,16 +64,19 @@ public SpawnSendEnt()
 {
 	new ent_index=create_entity("info_target")
 	entity_set_string(ent_index, EV_SZ_targetname, "AMXX_GA_SEND")
-	entity_set_float(ent_index, EV_FL_fuser1, 20.29)
+	entity_set_float(ent_index, EV_FL_fuser1, 20.0)
+	entity_set_float(ent_index, EV_FL_fuser2, 29.0)
+	entity_set_float(ent_index, EV_FL_fuser3, 12.0)
+	entity_set_float(ent_index, EV_FL_fuser4, 24.0)
 	spawn(ent_index)
-	ent_index=find_ent_by_tname(0,"AMXX_GA_SEND")
-	new Float:test=entity_get_float(ent_index, EV_FL_fuser1)
-	server_print("Find value %f",test)
+	//ent_index=find_ent_by_tname(0,"AMXX_GA_SEND")
+	//new Float:test=entity_get_float(ent_index, EV_FL_fuser1)
+	//server_print("Find value %f",test)
 }
 
 public CheckRecvEnt(Ent)
 {
-	server_print("Detected Entity Spawned")
+	server_print("Detected Spawned Entity By AMXX")
 	if (pev_valid(Ent))
 	{
 		new targetname[32]
