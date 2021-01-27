@@ -36,9 +36,10 @@ public test_ga_once()
 	for(new i=0;i<200;i++)
 	{
 		get_individual(i,ind,4);
-		scores[i]=process_score(ind,i)
+		SpawnSendEnt(ind[0],ind[1],ind[2],ind[3])
+		//scores[i]=process_score(ind,i)
 	}
-	evaluation();
+	//evaluation();
 }
 
 public evaluation()
@@ -60,14 +61,14 @@ public Float:process_score(Float:ind[],i)
 	return score
 }
 
-public SpawnSendEnt()
+public SpawnSendEnt(Float:val1, Float:val2, Float:val3, Float:val4)
 {
 	new ent_index=create_entity("info_target")
 	entity_set_string(ent_index, EV_SZ_targetname, "AMXX_GA_SEND")
-	entity_set_float(ent_index, EV_FL_fuser1, 20.0)
-	entity_set_float(ent_index, EV_FL_fuser2, 29.0)
-	entity_set_float(ent_index, EV_FL_fuser3, 12.0)
-	entity_set_float(ent_index, EV_FL_fuser4, 24.0)
+	entity_set_float(ent_index, EV_FL_fuser1, val1)
+	entity_set_float(ent_index, EV_FL_fuser2, val2)
+	entity_set_float(ent_index, EV_FL_fuser3, val3)
+	entity_set_float(ent_index, EV_FL_fuser4, val4)
 	spawn(ent_index)
 	//ent_index=find_ent_by_tname(0,"AMXX_GA_SEND")
 	//new Float:test=entity_get_float(ent_index, EV_FL_fuser1)
