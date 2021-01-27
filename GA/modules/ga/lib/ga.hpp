@@ -122,14 +122,7 @@ namespace ga
 			fitness.reserve(individuals.size());
 
 			for (size_t ind = 0; ind < individuals.size(); ++ind) {
-				double this_fitness = f(ind);
-
-				double refer_fitness = -(std::pow(individuals[ind].a - 20.0, 2.0)
-					+ std::pow(individuals[ind].b - 29.0, 2.0)
-					+ std::pow(individuals[ind].c - 12.0, 2.0)
-					+ std::pow(individuals[ind].d - 24.0, 2.0)
-					);
-
+				const double this_fitness = f(ind);
 				if (isfinite<double>(this_fitness) != 0)
 				{
 					if (this_fitness > best_fitness)

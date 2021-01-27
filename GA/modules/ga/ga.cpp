@@ -14,6 +14,11 @@ int err_index;
 static cell AMX_NATIVE_CALL init_task(AMX* amx, cell* params)
 {
 	const int population = params[1];
+	if (status)
+	{
+		delete gTask;
+		gTask = NULL;
+	}
 	gTask = new GATaskIndex(population);
 	status = true;
 	eval = false;
