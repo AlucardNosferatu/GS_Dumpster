@@ -13,3 +13,7 @@ BSP/modules/ExecuteX/msvc10/Debug/
 BSP/modules/ExecuteX/msvc10/.vs/
 GA/modules/ga/msvc10/.vs/
 GA/modules/ga/msvc10/Debug/
+PY/env/DLLs/
+PY/modules/py/msvc10/.vs/
+PY/modules/py/msvc10/Debug/
+PY/test/CPPy/Debug/
