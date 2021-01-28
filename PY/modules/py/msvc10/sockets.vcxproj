@@ -54,13 +54,13 @@
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectName)_amxx</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\..\py37_32bit\libs;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\16413\Documents\GitHub\GS_Dumpster\PY\py37_32bit\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\16413\Documents\GitHub\GS_Dumpster\PY\py37_32bit\libs;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\;..\sdk;..\..\..\py37_32bit\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;..\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;PY_EXPORTS;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -72,7 +72,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>python37_d.lib;python37.lib;python3_d.lib;python3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>python37_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)sockets.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
