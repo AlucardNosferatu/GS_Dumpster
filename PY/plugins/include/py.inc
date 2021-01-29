@@ -15,11 +15,11 @@
 
 native init_py();
 
-native get_individual(index, Float:individual[], array_dims);
+native get_var(str_len, type_str[], var_name[], &dst_int, &Float:dst_fl, dst_str[], Float:dst_vec[]);
 
-native eval_py(const py_cmd[]);
+native eval_py(py_cmd[]);
 
-native update_gen();
+native set_var(type_str[], src_val_str[], dst_key_str[]);
 
 native exit_py();
 

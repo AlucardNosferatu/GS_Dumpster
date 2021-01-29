@@ -138,7 +138,7 @@ static cell AMX_NATIVE_CALL exit_py(AMX* amx, cell* params)
 	return 1;
 }
 
-AMX_NATIVE_INFO sockets_natives[] = {
+AMX_NATIVE_INFO py_natives[] = {
 	{ "init_py", init_py },
 	{ "get_var", get_var },
 	{ "eval_py", eval_py },
@@ -149,7 +149,7 @@ AMX_NATIVE_INFO sockets_natives[] = {
 
 void OnAmxxAttach()
 {
-	MF_AddNatives(sockets_natives);
+	MF_AddNatives(py_natives);
 	return;
 }
 
