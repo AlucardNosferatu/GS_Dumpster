@@ -4,8 +4,8 @@
 /*
 * 
 * Requests & Bugs:
-*	DivinityX@live.se
-*   DivinityX.no-ip.org/forum
+*	1641367382@qq.com
+*   https://github.com/AlucardNosferatu
 * 
 */
 
@@ -22,7 +22,7 @@ public plugin_init()
 public python_util()
 {
 	init_py();
-	eval_py("print('HelloWorld')");
+	eval_py("a=20291224");
 	exit_py();
 }
 
