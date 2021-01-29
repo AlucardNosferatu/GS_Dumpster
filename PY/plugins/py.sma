@@ -22,6 +22,8 @@ public plugin_init()
 public python_util()
 {
 	init_py();
+	server_print("I init, I exit.");
+	exit_py();
 }
 
 
