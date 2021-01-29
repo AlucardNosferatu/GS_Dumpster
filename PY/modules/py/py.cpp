@@ -1,18 +1,15 @@
 ﻿/*
  *
  * AMX Mod X Module
- * Basic Socket Functions
+ * Basic Python Wrapper
  *
  * Codebase from Ivan, -g-s-ivan@web.de (AMX 0.9.3)
  * Modification by Olaf Reusch, kenterfie@hlsw.de (AMXX 0.16, AMX 0.96)
  * Modification by David Anderson, dvander@tcwonline.org (AMXx 0.20)
+ * Modification by Scrooge2029, 1641367382@qq.com (AMXx 1.8.2)
  *
  * Bugs/Fixes
  *
- * v0.1
- * - code structure renewed
- * v0.2
- * - added socket_send2 to send data containing null bytes (FALUCO)(AMXX v1.65)
  */
 
 #include <stdlib.h>
@@ -20,7 +17,7 @@
 #include <errno.h>
 #include <string.h>
 #include <Python.h>
-
+#include <iostream>
 
  // AMX Headers
 #include "amxxmodule.h"
@@ -41,7 +38,9 @@ static cell AMX_NATIVE_CALL get_individual(AMX* amx, cell* params)
 
 static cell AMX_NATIVE_CALL eval_py(AMX* amx, cell* params)
 {
-
+	int len;
+	const char* cmd = MF_GetAmxString(amx, params[1], 0, &len);
+	PyRun_SimpleString(cmd);
 	return 1;
 }
 
