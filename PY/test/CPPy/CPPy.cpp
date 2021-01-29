@@ -2,15 +2,40 @@
 //
 
 #include <iostream>
+#include <windows.h>
 #include <Python.h>
+
+struct amxx_module_info_s
+{
+	const char* name;
+	const char* author;
+	const char* version;
+	int reload;				// reload on mapchange when nonzero
+	const char* logtag;		// added in version 2
+	const char* library;	// added in version 4
+	const char* libclass;	// added in version 4
+};
+
 
 int main()
 {
-	Py_Initialize();
-	if (!Py_IsInitialized()) {
-		return -1;
-	}
-	PyRun_SimpleString("print('Yeah')");
+	//Py_Initialize();
+	//if (!Py_IsInitialized()) {
+	//	return -1;
+	//}
+	//PyRun_SimpleString("print('Yeah')");
+
+	typedef int (*_pQ)(int* interfaceVersion, amxx_module_info_s* moduleInfo);
+
+	HINSTANCE hDll = LoadLibraryA("py_amxx.dll");
+	int nParam1 = 4;
+	amxx_module_info_s* nParam2 = new amxx_module_info_s();
+	_pQ pQ = (_pQ)GetProcAddress(hDll, "AMXX_Query");
+	int ret = pQ(&nParam1, nParam2);
+	std::cout << ret << std::endl;
+	FreeLibrary(hDll);
+	system("pause");
+
 	std::cout << "Hello World!\n";
 }
 
