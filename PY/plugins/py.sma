@@ -234,7 +234,7 @@ public python_util(id)
 			else if(contain(msg,"$PRINT$")!=-1)
 			{
 				new params[512]
-				new param1[128]//$GET$
+				new param1[128]//$PRINT$
 				new param2[128]//py_var_name
 				new param3[128]//type
 
@@ -368,3 +368,6 @@ public python_test()
 }
 
 
+/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
+*{\\ rtf1\\ ansi\\ ansicpg936\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
+*/
