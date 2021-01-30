@@ -70,7 +70,9 @@ static cell AMX_NATIVE_CALL get_var(AMX* amx, cell* params)
 	}
 	else if (strcmp(type, "s") == 0)
 	{
-		MF_SetAmxString(amx, params[6], PyBytes_AsString(Py_src_obj), dst_str_len);
+		PyObject* Py_src_str = PyUnicode_AsEncodedString(Py_src_obj, "utf-8", "~E~");
+		const char* Py_src_bytes = PyBytes_AS_STRING(Py_src_str);
+		MF_SetAmxString(amx, params[6], Py_src_bytes, dst_str_len);
 	}
 	else if (strcmp(type, "[d,d,d]") == 0)
 	{
