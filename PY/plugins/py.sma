@@ -35,6 +35,7 @@ public python_util(id)
 				exit_py()
 				UserId=-1;
 				InCMD=false;
+				server_print("Py Interpreter has been finalized")
 			}
 			else if(contain(msg,"$SET$")!=-1)
 			{
@@ -303,6 +304,7 @@ public python_util(id)
 			else
 			{
 				eval_py(msg)
+				server_print("Py Interpreter executed:%s",msg)
 			}
 		}
 		else
@@ -317,6 +319,7 @@ public python_util(id)
 			UserId=id
 			InCMD=true
 			init_py()
+			server_print("Py Interpreter has been initialized.")
 		}
 	}
 	
