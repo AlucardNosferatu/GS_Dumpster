@@ -13,7 +13,7 @@
 	#pragma loadlib py
 #endif
 
-native init_py();
+native init_py(size, py_home[]);
 
 native get_var(str_len, type_str[], var_name[], &dst_int, &Float:dst_fl, dst_str[], Float:dst_vec[]);
 

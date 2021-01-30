@@ -16,7 +16,7 @@ new UserId;
 public plugin_init()
 {
 	register_plugin("Python Interpreter", "0.1", "Scrooge2029");
-	register_concmd("python_test","python_test")
+	register_concmd("python_test","python_test_2")
 	register_concmd("say","python_util")
 	UserId=-1;
 	InCMD=false;
@@ -318,16 +318,33 @@ public python_util(id)
 		{
 			UserId=id
 			InCMD=true
-			init_py()
+			new pHome[64]=""
+			init_py(charsmax(pHome),pHome);
 			server_print("Py Interpreter has been initialized.")
 		}
 	}
-	
 }
 
-public python_test()
+public python_test_2()
 {
-	init_py();
+	new pHome[64]=""
+	init_py(charsmax(pHome),pHome);
+	server_print("PYTHONHOME=%s",pHome)
+	eval_py("import sys");
+	eval_py("b=list(sys.modules.keys())");
+	eval_py("a=str(len(b))");
+	new dst_int;
+	new Float:dst_fl
+	new dst_str[1024]
+	new Float:dst_vec[3]
+	get_var(charsmax(dst_str), "s", "a", dst_int, dst_fl, dst_str, dst_vec);
+	server_print("a=%s",dst_str)
+	exit_py();
+}
+public python_test_1()
+{
+	new pHome[64]=""
+	init_py(charsmax(pHome),pHome);
 	
 	eval_py("a=2029");
 	eval_py("b=a/100");
@@ -368,3 +385,6 @@ public python_test()
 }
 
 
+/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
+*{\\ rtf1\\ ansi\\ ansicpg936\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
+*/

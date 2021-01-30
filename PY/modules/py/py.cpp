@@ -15,7 +15,7 @@
 #include <Python.h>
 #include <string>
 #include <vector>
-
+#include <Windows.h>
  // AMX Headers
 #include "amxxmodule.h"
 
@@ -43,9 +43,57 @@ vector<string> split(const char* s, const char* delim)
 	return result;
 }
 
+//将 单字节char* 转换为 宽字节 wchar*
+inline wchar_t* AnsiToUnicode(const char* szStr)
+{
+	int nLen = MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, szStr, -1, NULL, 0);
+	if (nLen == 0)
+	{
+		return NULL;
+	}
+	wchar_t* pResult = new wchar_t[nLen];
+	MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, szStr, -1, pResult, nLen);
+	return pResult;
+}
+//----------------------------------------------------------------------------------
+// 将 宽字节wchar_t* 转换 单字节char*
+inline char* UnicodeToAnsi(const wchar_t* szStr)
+{
+	int nLen = WideCharToMultiByte(CP_ACP, 0, szStr, -1, NULL, 0, NULL, NULL);
+	if (nLen == 0)
+	{
+		return NULL;
+	}
+	char* pResult = new char[nLen];
+	WideCharToMultiByte(CP_ACP, 0, szStr, -1, pResult, nLen, NULL, NULL);
+	return pResult;
+}
+
 static cell AMX_NATIVE_CALL init_py(AMX* amx, cell* params)
 {
+	const cell buff_size = params[1];
+	int len;
+	char* pyhome = MF_GetAmxString(amx, params[2], 0, &len);
+	if (len > 0)
+	{
+		wchar_t* pyhome_w = AnsiToUnicode(pyhome);
+		if (pyhome_w != NULL)
+		{
+			Py_SetPythonHome(pyhome_w);
+			delete pyhome_w;
+		}
+	}
 	Py_Initialize();
+	char* pyhome_c = UnicodeToAnsi(Py_GetPythonHome());
+	if (pyhome_c != NULL)
+	{
+		if ((cell)strlen(pyhome_c) <= buff_size)
+		{
+			strcpy(pyhome, pyhome_c);
+		}
+		delete pyhome_c;
+	}
+	MF_SetAmxString(amx, params[2], pyhome, buff_size);
 	return 1;
 }
 
@@ -58,6 +106,10 @@ static cell AMX_NATIVE_CALL get_var(AMX* amx, cell* params)
 
 	PyObject* Py_main = PyImport_AddModule("__main__");
 	PyObject* Py_src_obj = PyObject_GetAttrString(Py_main, src_key_str);
+	if (Py_src_obj == NULL)
+	{
+		return -1;
+	}
 	if (strcmp(type, "i") == 0)
 	{
 		cell* dst_ptr = MF_GetAmxAddr(amx, params[4]);
