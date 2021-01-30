@@ -327,18 +327,25 @@ public python_util(id)
 
 public python_test_2()
 {
-	new pHome[64]=""
+	new pHome[256]=""
 	init_py(charsmax(pHome),pHome);
 	server_print("PYTHONHOME=%s",pHome)
 	eval_py("import sys");
 	eval_py("b=list(sys.modules.keys())");
-	eval_py("a=str(len(b))");
+	eval_py("a=len(b)");
 	new dst_int;
 	new Float:dst_fl
 	new dst_str[1024]
 	new Float:dst_vec[3]
-	get_var(charsmax(dst_str), "s", "a", dst_int, dst_fl, dst_str, dst_vec);
-	server_print("a=%s",dst_str)
+	get_var(charsmax(dst_str), "i", "a", dst_int, dst_fl, dst_str, dst_vec);
+	for(new i=0;i<dst_int;i++)
+	{
+		new cmd[64]=""
+		format(cmd,charsmax(cmd),"c=b[%d]",i)
+		eval_py(cmd);
+		get_var(charsmax(dst_str), "s", "c", dst_int, dst_fl, dst_str, dst_vec);
+		server_print("c=%s",dst_str)
+	}
 	exit_py();
 }
 public python_test_1()
@@ -385,6 +392,3 @@ public python_test_1()
 }
 
 
-/* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE
-*{\\ rtf1\\ ansi\\ ansicpg936\\ deff0{\\ fonttbl{\\ f0\\ fnil\\ fcharset134 Tahoma;}}\n\\ viewkind4\\ uc1\\ pard\\ lang2052\\ f0\\ fs16 \n\\ par }
-*/
