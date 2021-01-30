@@ -121,8 +121,8 @@ public python_util(id)
 						{
 							entity_get_vector(ent, kv_index, dst_vec)
 							new Float:x=dst_vec[0]
-							new Float:y=dst_vec[0]
-							new Float:z=dst_vec[0]
+							new Float:y=dst_vec[1]
+							new Float:z=dst_vec[2]
 							new fTemp[32]=""
 							float_to_str(x,fTemp,charsmax(fTemp))
 							strcat(dst_temp,fTemp,charsmax(dst_temp))
@@ -140,9 +140,8 @@ public python_util(id)
 				}
 				else
 				{
-					return
+					server_print("type error!")
 				}
-				
 				set_var(param5,dst_temp,param4)
 			}
 			else if(contain(msg,"$GET$")!=-1)
@@ -230,6 +229,76 @@ public python_util(id)
 						}
 					}
 				}
+			}
+			else if(contain(msg,"$PRINT$")!=-1)
+			{
+				new params[512]
+				new param1[128]//$GET$
+				new param2[128]//py_var_name
+				new param3[128]//type
+
+				params=""
+				
+				strcat(params,msg,charsmax(msg))
+				split(params,param1,charsmax(param1),param2,charsmax(param2),"@#")
+				//server_print(param1)
+				params=""
+				
+				strcat(params,param2,charsmax(param2))
+				split(params,param2,charsmax(param2),param3,charsmax(param3),"@#")
+				//server_print(param2)
+				params=""
+				
+				new dst_int;
+				new Float:dst_fl
+				new dst_str[512]
+				new Float:dst_vec[3]
+				new dst_temp[512]=""
+				
+				get_var(charsmax(dst_str), param3, param2, dst_int, dst_fl, dst_str, dst_vec)
+				
+				if(strcmp(param3,"i")==0)
+				{
+					num_to_str(dst_int,dst_temp,charsmax(dst_temp))
+				}
+				else if(strcmp(param3,"d")==0)
+				{
+					float_to_str(dst_fl,dst_temp,charsmax(dst_temp))
+				}
+				else if(strcmp(param3,"s")==0)
+				{
+					strcat(dst_temp,dst_str,charsmax(dst_temp))
+				}
+				else if(strcmp(param3,"[d,d,d]")==0)
+				{
+					
+					new Float:x=dst_vec[0]
+					new Float:y=dst_vec[1]
+					new Float:z=dst_vec[2]
+					
+					new fTemp[32]=""
+					
+					float_to_str(x,fTemp,charsmax(fTemp))
+					strcat(dst_temp,fTemp,charsmax(dst_temp))
+					fTemp=""
+					
+					strcat(dst_temp,"#",charsmax(dst_temp))
+					
+					float_to_str(y,fTemp,charsmax(fTemp))
+					strcat(dst_temp,fTemp,charsmax(dst_temp))
+					fTemp=""
+					
+					strcat(dst_temp,"#",charsmax(dst_temp))
+					
+					float_to_str(z,fTemp,charsmax(fTemp))
+					strcat(dst_temp,fTemp,charsmax(dst_temp))
+					fTemp=""
+				}
+				else
+				{
+					server_print("type error!")
+				}
+				server_print("Value:%s",dst_temp)
 			}
 			else
 			{
