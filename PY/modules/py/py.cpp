@@ -46,7 +46,7 @@ vector<string> split(const char* s, const char* delim)
 //将 单字节char* 转换为 宽字节 wchar*
 inline wchar_t* AnsiToUnicode(const char* szStr)
 {
-	int nLen = MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, szStr, -1, NULL, 0);
+	const int nLen = MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, szStr, -1, NULL, 0);
 	if (nLen == 0)
 	{
 		return NULL;
@@ -59,7 +59,7 @@ inline wchar_t* AnsiToUnicode(const char* szStr)
 // 将 宽字节wchar_t* 转换 单字节char*
 inline char* UnicodeToAnsi(const wchar_t* szStr)
 {
-	int nLen = WideCharToMultiByte(CP_ACP, 0, szStr, -1, NULL, 0, NULL, NULL);
+	const int nLen = WideCharToMultiByte(CP_ACP, 0, szStr, -1, NULL, 0, NULL, NULL);
 	if (nLen == 0)
 	{
 		return NULL;

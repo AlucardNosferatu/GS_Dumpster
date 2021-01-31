@@ -331,7 +331,8 @@ public python_test_2()
 	init_py(charsmax(pHome),pHome);
 	server_print("PYTHONHOME=%s",pHome)
 	eval_py("import sys");
-	eval_py("b=list(sys.modules.keys())");
+	eval_py("import cv2");
+	eval_py("b=[cv2.__version__]");
 	eval_py("a=len(b)");
 	new dst_int;
 	new Float:dst_fl
