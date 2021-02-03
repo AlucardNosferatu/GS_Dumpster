@@ -83,9 +83,80 @@ HookReturnCode EnhancePrimary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
             pWeapon.m_iClip2=666;
         }
         pPlayer.m_rgAmmo(pWeapon.PrimaryAmmoIndex(),pWeapon.iMaxAmmo1());
-        pPlayer.m_rgAmmo(pWeapon.SecondaryAmmoIndex(),pWeapon.iMaxAmmo2());
+        if(pWeapon.SecondaryAmmoIndex()!=-1)
+        {
+            pPlayer.m_rgAmmo(pWeapon.SecondaryAmmoIndex(),pWeapon.iMaxAmmo2());
+        }
         pWeapon.m_flNextSecondaryAttack/=10;
         pWeapon.m_flNextPrimaryAttack/=10;
+        if(pWeapon.GetClassname()=="weapon_357" or pWeapon.GetClassname()=="weapon_eagle" or pWeapon.GetClassname()=="weapon_sniperrifle")
+        {
+            // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,pWeapon.GetClassname()+" has AP ammo\n");
+            edict_t@ pentIgnore = pPlayer.edict();
+            Vector vecSrc = pPlayer.GetGunPosition();
+            g_EngineFuncs.MakeVectors(pPlayer.pev.v_angle+pPlayer.pev.punchangle);
+            Vector vecDir = g_Engine.v_forward;
+            Vector vecEnd;
+            int PunchCap = 4;
+            TraceResult tr, beam_tr;
+            while(PunchCap>0)
+            {
+                vecEnd = vecSrc+vecDir*8192;
+                g_Utility.TraceLine(vecSrc, vecEnd, dont_ignore_monsters, dont_ignore_glass, pentIgnore, tr); 
+                              
+                if (tr.fAllSolid != 0 )
+                {
+                    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,"All solid\n");
+                    break;
+                }
+                CBaseEntity@ pHitEnt=g_EntityFuncs.Instance(tr.pHit);
+                if(pHitEnt is null)
+                {
+                    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,"Hit nothing\n");
+                    break;
+                }
+                if(PunchCap<4)
+                {
+                    te_tracer(vecSrc,tr.vecEndPos);
+                    te_gunshot(tr.vecEndPos);
+                    if( pHitEnt.pev.takedamage != DAMAGE_NO )
+                    {
+                        g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,pHitEnt.GetClassname()+" take damage from AP ammo\n");
+                        g_WeaponFuncs.ClearMultiDamage();
+                        float iDamage;
+                        if(pWeapon.GetClassname()=="weapon_sniperrilfe")
+                        {
+                            iDamage = g_EngineFuncs.CVarGetFloat( "sk_plr_762_bullet" )/2;
+                        }
+                        else
+                        {
+                            iDamage = g_EngineFuncs.CVarGetFloat( "sk_plr_357_bullet" )/2;
+                        }
+                        pHitEnt.TraceAttack( pPlayer.pev, iDamage, vecDir, tr, DMG_BULLET );
+                        g_WeaponFuncs.ApplyMultiDamage( pPlayer.pev, pPlayer.pev );
+                    }
+                    else
+                    {
+                        g_Utility.GunshotDecalTrace(tr, 1);
+                    }
+                }
+                float n = -DotProduct(tr.vecPlaneNormal, vecDir);
+                if (n > 0.8)
+                {
+                    g_Utility.TraceLine( tr.vecEndPos + vecDir * 8, vecEnd, dont_ignore_monsters, pentIgnore, beam_tr);
+                    if (beam_tr.fAllSolid == 0)
+                    {
+                        g_Utility.TraceLine( beam_tr.vecEndPos, tr.vecEndPos, dont_ignore_monsters, pentIgnore, beam_tr);
+                        vecSrc = beam_tr.vecEndPos + vecDir;
+                    }
+                }
+                PunchCap-=1;
+            }
+
+        }
+
+        
+
     }
     if(MindControllerP.exists(authid_pp) and int(MindControllerP[authid_pp])>100)
     {
@@ -134,7 +205,10 @@ HookReturnCode EnhanceSecondary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon
             pWeapon.m_iClip2=666;
         }
         pPlayer.m_rgAmmo(pWeapon.PrimaryAmmoIndex(),pWeapon.iMaxAmmo1());
-        pPlayer.m_rgAmmo(pWeapon.SecondaryAmmoIndex(),pWeapon.iMaxAmmo2());
+        if(pWeapon.SecondaryAmmoIndex()!=-1)
+        {
+            pPlayer.m_rgAmmo(pWeapon.SecondaryAmmoIndex(),pWeapon.iMaxAmmo2());
+        }
         pWeapon.m_flNextSecondaryAttack/=10;
         pWeapon.m_flNextPrimaryAttack/=10;
     }
@@ -146,7 +220,7 @@ HookReturnCode EnhanceSecondary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon
         Vector vecDir = pPlayer.GetAutoaimVector(0.0f);
         g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,"vecDir:"+vecDir.ToString()+"\n");
         g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,"len:"+formatFloat(vecDir.Length(),"0",0,4)+"\n");
-        Vector vecEnd = vecSrc+256*vecDir;
+        Vector vecEnd = vecSrc+4*vecDir;
         g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,"vecEnd:"+vecEnd.ToString()+"\n");
         Math.MakeVectors( pPlayer.pev.v_angle );
         pPlayer.SetOrigin(vecEnd);
@@ -169,4 +243,29 @@ HookReturnCode CancelByDeath(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
         MindControllerP.set(authid_pp,0);
     }
     return HOOK_CONTINUE;
+}
+
+void te_gunshot(Vector pos, 
+	NetworkMessageDest msgType=MSG_BROADCAST, edict_t@ dest=null)
+{
+	NetworkMessage m(msgType, NetworkMessages::SVC_TEMPENTITY, dest);
+	m.WriteByte(TE_GUNSHOT);
+	m.WriteCoord(pos.x);
+	m.WriteCoord(pos.y);
+	m.WriteCoord(pos.z);
+	m.End();
+}
+
+void te_tracer(Vector start, Vector end, 
+	NetworkMessageDest msgType=MSG_BROADCAST, edict_t@ dest=null)
+{
+	NetworkMessage m(msgType, NetworkMessages::SVC_TEMPENTITY, dest);
+	m.WriteByte(TE_TRACER);
+	m.WriteCoord(start.x);
+	m.WriteCoord(start.y);
+	m.WriteCoord(start.z);
+	m.WriteCoord(end.x);
+	m.WriteCoord(end.y);
+	m.WriteCoord(end.z);
+	m.End();
 }
