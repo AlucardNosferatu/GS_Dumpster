@@ -154,7 +154,6 @@ HookReturnCode EnhancePrimary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
                 {
                     PunchCap=0;
                 }
-                
             }
         }
     }
@@ -185,7 +184,6 @@ HookReturnCode EnhancePrimary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
         }
     }
     return HOOK_CONTINUE;
-
 }
 
 HookReturnCode EnhanceSecondary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
@@ -244,8 +242,7 @@ HookReturnCode CancelByDeath(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int i
     return HOOK_CONTINUE;
 }
 
-void te_gunshot(Vector pos, 
-	NetworkMessageDest msgType=MSG_BROADCAST, edict_t@ dest=null)
+void te_gunshot(Vector pos, NetworkMessageDest msgType=MSG_BROADCAST, edict_t@ dest=null)
 {
 	NetworkMessage m(msgType, NetworkMessages::SVC_TEMPENTITY, dest);
 	m.WriteByte(TE_GUNSHOT);
@@ -255,8 +252,7 @@ void te_gunshot(Vector pos,
 	m.End();
 }
 
-void te_tracer(Vector start, Vector end, 
-	NetworkMessageDest msgType=MSG_BROADCAST, edict_t@ dest=null)
+void te_tracer(Vector start, Vector end, NetworkMessageDest msgType=MSG_BROADCAST, edict_t@ dest=null)
 {
 	NetworkMessage m(msgType, NetworkMessages::SVC_TEMPENTITY, dest);
 	m.WriteByte(TE_TRACER);
