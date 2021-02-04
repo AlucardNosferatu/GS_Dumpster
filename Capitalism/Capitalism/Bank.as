@@ -1,6 +1,7 @@
 #include "../Ecco/Include"
 array<string> Accounts;
 float bank_cap;
+float robbed;
 
 void PluginInit()
 {
@@ -35,6 +36,7 @@ void InitBank()
         Accounts.removeAt(0);
     }
     g_Scheduler.SetInterval( "UpdateProfit", 36, g_Scheduler.REPEAT_INFINITE_TIMES);
+    g_Hooks.RegisterHook(Hooks::PickupObject::Collected, @PickMoney);
     g_Hooks.RegisterHook(Hooks::Player::ClientSay, @depo_or_withd);
     g_Hooks.RegisterHook(Hooks::Game::MapChange, @statement);
 }
@@ -184,6 +186,7 @@ HookReturnCode depo_or_withd(SayParameters@ pParams)
 
 HookReturnCode statement()
 {
+    array<string> players_present; 
     int pCount=g_PlayerFuncs.GetNumPlayers();
     for(int i=1;i<=pCount;i++)
     {
@@ -191,6 +194,7 @@ HookReturnCode statement()
         if ( pPlayer !is null && pPlayer.IsConnected() )
         {
             string PlayerUniqueId = e_PlayerInventory.GetUniquePlayerId(pPlayer);
+            players_present.insertLast(PlayerUniqueId);
             File@ fHandle;
             float balance=0;
             float profit=0;
@@ -223,5 +227,66 @@ HookReturnCode statement()
             }
         }
     }
+    if(robbed>0)
+    {
+        array<string> users=Accounts.getKeys();
+        int users_count=int(users.length());
+        float loss=robbed/float(users_count-pCount);
+        for(int i=0;i<users_count;i++)
+        {
+            string username=users[i];
+            if(players_present.find(username)<0)
+            {
+                @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+username+".txt" , OpenFile::READ);
+                if( fHandle !is null ) 
+                {
+                    string sLine;
+                    fHandle.ReadLine(sLine);
+                    balance=atof(sLine.Split("\t")[1]);
+                    fHandle.ReadLine(sLine);
+                    profit=atof(sLine.Split("\t")[1]);
+                    fHandle.ReadLine(sLine);
+                    profRate=atof(sLine.Split("\t")[1]);
+                    fHandle.Close();
+                }
+                balance+=profit;
+                profit=0;
+                balance-=loss;
+                @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+username+".txt" , OpenFile::WRITE);
+                if( fHandle !is null ) 
+                {
+                    fHandle.Write("BALANCE\t"+formatFloat(balance,"0",0,4)+"\n");
+                    fHandle.Write("PROFIT\t"+formatFloat(profit,"0",0,4)+"\n");
+                    fHandle.Write("PROFIT RATE\t"+formatFloat(profRate,"0",0,4));
+                    fHandle.Close();
+                }
+            }
+        }
+        robbed=0;
+    }
+	return HOOK_CONTINUE;
+}
+
+HookReturnCode PickMoney( CBaseEntity@ pPickup, CBaseEntity@ pOther )
+{
+	if(pPickup.GetTargetname()=="ME_BANK_MONEY")
+	{
+		CustomKeyvalues@ CKV=pPickup.GetCustomKeyvalues();
+		CustomKeyvalue BUFF_VALUE=CKV.GetKeyvalue("$f_BANK_MONEY");
+		float BValueFloat=BUFF_VALUE.GetFloat();
+		g_EngineFuncs.ServerPrint("Get MONEY-"+string(BValueFloat)+"\n");
+		CBasePlayerItem@ BuffItem=cast<CBasePlayerItem@>(pPickup);
+        EHandle Owner=BuffItem.m_hPlayer;
+        if(Owner.IsValid())
+        {
+            CBaseEntity@ ePlayer=Owner.GetEntity();
+            if(ePlayer !is null)
+            {
+                CBasePlayer@ pPlayer=cast<CBasePlayer@>(ePlayer);
+                e_PlayerInventory.ChangeBalance(pPlayer, int(BValueFloat));
+                robbed+=BValueFloat;
+            }
+        }
+	}
 	return HOOK_CONTINUE;
 }
