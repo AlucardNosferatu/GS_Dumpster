@@ -9,7 +9,6 @@ void PluginInit()
     g_Hooks.RegisterHook(Hooks::Weapon::WeaponPrimaryAttack, @EnhancePrimary);
     g_Hooks.RegisterHook(Hooks::Weapon::WeaponSecondaryAttack, @EnhanceSecondary);
     g_Hooks.RegisterHook(Hooks::Player::PlayerKilled, @CancelByDeath);
-    
 }
 
 CClientCommand g_GetEnhanced("fuck", "I Need Power!!!!", @enhance);
@@ -44,7 +43,6 @@ void enhanceMore(const CCommand@ pArgs)
     {
         EnhancedP.set(authid_pp,666);
     }
-    
 }
 
 CClientCommand g_GetEnhancedMooore("fuckfuckfuck", "Moooorrrrre Power!!!!", @enhanceMooore);
@@ -97,7 +95,8 @@ HookReturnCode EnhancePrimary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
             g_EngineFuncs.MakeVectors(pPlayer.pev.v_angle+pPlayer.pev.punchangle);
             Vector vecDir = g_Engine.v_forward;
             Vector vecEnd;
-            int PunchCap = 4;
+            int PuncMax = 4;
+            int PunchCap = PuncMax;
             TraceResult tr, beam_tr;
             while(PunchCap>0)
             {
@@ -115,7 +114,7 @@ HookReturnCode EnhancePrimary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
                     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,"Hit nothing\n");
                     break;
                 }
-                if(PunchCap<4)
+                if(PunchCap<PuncMax)
                 {
                     te_tracer(vecSrc,tr.vecEndPos);
                     te_gunshot(tr.vecEndPos);
@@ -126,11 +125,11 @@ HookReturnCode EnhancePrimary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
                         float iDamage;
                         if(pWeapon.GetClassname()=="weapon_sniperrilfe")
                         {
-                            iDamage = g_EngineFuncs.CVarGetFloat( "sk_plr_762_bullet" )/2;
+                            iDamage = g_EngineFuncs.CVarGetFloat( "sk_plr_762_bullet" )/(PuncMax-PunchCap+1);
                         }
                         else
                         {
-                            iDamage = g_EngineFuncs.CVarGetFloat( "sk_plr_357_bullet" )/2;
+                            iDamage = g_EngineFuncs.CVarGetFloat( "sk_plr_357_bullet" )/(PuncMax-PunchCap+1);
                         }
                         pHitEnt.TraceAttack( pPlayer.pev, iDamage, vecDir, tr, DMG_BULLET );
                         g_WeaponFuncs.ApplyMultiDamage( pPlayer.pev, pPlayer.pev );
@@ -149,8 +148,13 @@ HookReturnCode EnhancePrimary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
                         g_Utility.TraceLine( beam_tr.vecEndPos, tr.vecEndPos, dont_ignore_monsters, pentIgnore, beam_tr);
                         vecSrc = beam_tr.vecEndPos + vecDir;
                     }
+                    PunchCap-=1;
                 }
-                PunchCap-=1;
+                else
+                {
+                    PunchCap=0;
+                }
+                
             }
         }
     }
