@@ -15,10 +15,10 @@ CClientCommand g_GetEnhanced("fuck", "I Need Power!!!!", @enhance);
 void enhance(const CCommand@ pArgs) 
 {
     CBasePlayer@ pPlayer=g_ConCommandSystem.GetCurrentPlayer();
-    pPlayer.GiveNamedItem("weapon_egon",0,450);
-    pPlayer.GiveNamedItem("weapon_rpg",0,15);
-    pPlayer.GiveNamedItem("weapon_m249",0,150);
-    pPlayer.GiveNamedItem("weapon_uziakimbo",0,128);
+    pPlayer.GiveNamedItem("weapon_egon");
+    pPlayer.GiveNamedItem("weapon_rpg");
+    pPlayer.GiveNamedItem("weapon_m16");
+    pPlayer.GiveNamedItem("weapon_uziakimbo");
     pPlayer.GiveNamedItem("item_healthkit");
     pPlayer.GiveNamedItem("item_healthkit");
     pPlayer.GiveNamedItem("item_battery");
@@ -96,13 +96,30 @@ HookReturnCode EnhancePrimary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
             Vector vecDir = g_Engine.v_forward;
             Vector vecEnd;
             int PuncMax = 4;
-            int PunchCap = PuncMax;
+            int PunchCap = 0;
+            int PunchDepth = 8;
+            float PunchAngle = 0.8;
+            float iDamage;
             TraceResult tr, beam_tr;
-            while(PunchCap>0)
+            while(PunchCap<PuncMax)
             {
+                if(pWeapon.GetClassname()=="weapon_sniperrifle")
+                {
+                    PuncMax = 4;
+                    iDamage = g_EngineFuncs.CVarGetFloat( "sk_plr_762_bullet" )/(PuncMax-PunchCap+1);
+                    PunchDepth = 32;
+                    PunchAngle = 0.5;  
+                }
+                else
+                {
+                    PuncMax = 2;
+                    iDamage = g_EngineFuncs.CVarGetFloat( "sk_plr_357_bullet" )/(PuncMax-PunchCap+1);
+                    PunchDepth = 32;
+                    PunchAngle = 0.8;
+                }
+
                 vecEnd = vecSrc+vecDir*8192;
-                g_Utility.TraceLine(vecSrc, vecEnd, dont_ignore_monsters, dont_ignore_glass, pentIgnore, tr); 
-                              
+                g_Utility.TraceLine(vecSrc, vecEnd, dont_ignore_monsters, dont_ignore_glass, pentIgnore, tr);      
                 if (tr.fAllSolid != 0 )
                 {
                     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,"All solid\n");
@@ -122,15 +139,7 @@ HookReturnCode EnhancePrimary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
                     {
                         g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE,pHitEnt.GetClassname()+" take damage from AP ammo\n");
                         g_WeaponFuncs.ClearMultiDamage();
-                        float iDamage;
-                        if(pWeapon.GetClassname()=="weapon_sniperrilfe")
-                        {
-                            iDamage = g_EngineFuncs.CVarGetFloat( "sk_plr_762_bullet" )/(PuncMax-PunchCap+1);
-                        }
-                        else
-                        {
-                            iDamage = g_EngineFuncs.CVarGetFloat( "sk_plr_357_bullet" )/(PuncMax-PunchCap+1);
-                        }
+                        
                         pHitEnt.TraceAttack( pPlayer.pev, iDamage, vecDir, tr, DMG_BULLET );
                         g_WeaponFuncs.ApplyMultiDamage( pPlayer.pev, pPlayer.pev );
                     }
@@ -140,19 +149,19 @@ HookReturnCode EnhancePrimary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
                     }
                 }
                 float n = -DotProduct(tr.vecPlaneNormal, vecDir);
-                if (n > 0.8)
+                if (n > PunchAngle)
                 {
-                    g_Utility.TraceLine( tr.vecEndPos + vecDir * 8, vecEnd, dont_ignore_monsters, pentIgnore, beam_tr);
+                    g_Utility.TraceLine( tr.vecEndPos + vecDir * PunchDepth, vecEnd, dont_ignore_monsters, pentIgnore, beam_tr);
                     if (beam_tr.fAllSolid == 0)
                     {
                         g_Utility.TraceLine( beam_tr.vecEndPos, tr.vecEndPos, dont_ignore_monsters, pentIgnore, beam_tr);
                         vecSrc = beam_tr.vecEndPos + vecDir;
                     }
-                    PunchCap-=1;
+                    PunchCap+=1;
                 }
                 else
                 {
-                    PunchCap=0;
+                    PunchCap=PuncMax;
                 }
             }
         }
