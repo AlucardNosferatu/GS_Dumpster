@@ -152,11 +152,7 @@ HookReturnCode EnhancePrimary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon)
                 }
                 PunchCap-=1;
             }
-
         }
-
-        
-
     }
     if(MindControllerP.exists(authid_pp) and int(MindControllerP[authid_pp])>100)
     {
@@ -226,7 +222,6 @@ HookReturnCode EnhanceSecondary(CBasePlayer@ pPlayer, CBasePlayerWeapon@ pWeapon
         pPlayer.SetOrigin(vecEnd);
     }
     return HOOK_CONTINUE;
-
 }
 
 HookReturnCode CancelByDeath(CBasePlayer@ pPlayer, CBaseEntity@ pAttacker, int iGib)
