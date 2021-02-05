@@ -229,15 +229,26 @@ HookReturnCode statement()
     }
     if(robbed>0)
     {
-        array<string> users=Accounts.getKeys();
-        int users_count=int(users.length());
-        float loss=robbed/float(users_count-pCount);
+        int users_count=int(Accounts.length());
+        float loss;
+        if(users_count==0)
+        {
+            loss=0;
+        }
+        else
+        {
+            loss=robbed/float(users_count);
+        }
         for(int i=0;i<users_count;i++)
         {
-            string username=users[i];
+            string username=Accounts[i];
             if(players_present.find(username)<0)
             {
-                @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/"+username+".txt" , OpenFile::READ);
+                File@ fHandle;
+                float balance=0;
+                float profit=0;
+                float profRate=0.1;
+                @fHandle = g_FileSystem.OpenFile( "scripts/plugins/store/"+username+".txt" , OpenFile::READ);
                 if( fHandle !is null ) 
                 {
                     string sLine;
@@ -284,7 +295,11 @@ HookReturnCode PickMoney( CBaseEntity@ pPickup, CBaseEntity@ pOther )
             {
                 CBasePlayer@ pPlayer=cast<CBasePlayer@>(ePlayer);
                 e_PlayerInventory.ChangeBalance(pPlayer, int(BValueFloat));
-                robbed+=BValueFloat;
+                CBaseEntity@ EntRecv=g_EntityFuncs.FindEntityByTargetname(g_EntityFuncs.Instance(0),"ME_BANK_PAYDAY");
+                if(EntRecv !is null and EntRecv.pev.netname=="ME_BANK_HEIST")
+                {
+                    robbed+=BValueFloat;
+                }
             }
         }
 	}
