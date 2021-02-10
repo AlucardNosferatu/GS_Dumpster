@@ -58,7 +58,16 @@ weapon_sniperrifle
 weapon_sporelauncher
 weapon_tripmine
 weapon_uzi
+ammo_9mm_beretta
+ammo_12gauge
+ammo_38special
+ammo_45acp
+ammo_50ae
+ammo_303british
 ammo_454casul
+ammo_545mm
+ammo_556_famas
+ammo_792mauser
 ammo_9mmclip
 ammo_357
 ammo_556
