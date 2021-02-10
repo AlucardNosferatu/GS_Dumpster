@@ -30,6 +30,8 @@ void MapInit()
 	RegisterCoFMP5K();
 	RegisterCoFUZI();
 	RegisterCoFM76();
+	RegisterCoFBENELLI();
+	RegisterCoFSHOTGUN();
     RegisterCoFM16();
 	RegisterCoFFAMAS();
 	RegisterCoFL85();
