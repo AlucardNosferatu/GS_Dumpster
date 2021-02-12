@@ -1084,7 +1084,7 @@ namespace BotManager
 
 				if ( task !is null )
 				{
-					sched.addTask(task);
+					//sched.addTask(task);
 					sched.addTask(CBotMoveToOrigin(vecDst));
 					sched.addTask(CBotTaskWait(90.0,vecDst));
 					g_EngineFuncs.ServerPrint("Set Dest finished.\n");
