@@ -114,7 +114,7 @@ class CBotCam
 				//BotMessage("m_pCameraEdict is null ");
 				return;
 			}
-	CBasePlayer@ pPlayer = m_pCurrentBot.m_pPlayer;
+			CBasePlayer@ pPlayer = m_pCurrentBot.m_pPlayer;
 			Vector vLookAt;
 			CBaseEntity@ pEnemy = m_pCurrentBot.m_pEnemy.GetEntity();
 			if ( pEnemy !is null )
@@ -196,7 +196,7 @@ class CBotCam
 		return (m_pCurrentBot.m_pEnemy.GetEntity() !is null);
 	}
 
-Vector vCamOrigin;
+	Vector vCamOrigin;
 
 	void SetCurrentBot(RCBot@ pBot)
 	{
@@ -1073,6 +1073,27 @@ namespace BotManager
 
 			if(recv)
 			{
+				g_EngineFuncs.ServerPrint("Bot Index:"+string(int(this.test1))+"\n");
+				RCBot@ pBot=cast<RCBot@>(GetBot(int(this.test1)));
+				Vector vecSrc = pBot.origin();
+				Vector vecDst = vecSrc+Vector(this.test2,this.test3,this.test4);
+				g_EngineFuncs.ServerPrint("Dest Vec:"+vecDst.ToString()+"\n");
+				
+				RCBotSchedule@ sched = pBot.SCHED_CREATE_NEW();
+				RCBotTask@ task = pBot.SCHED_CREATE_PATH(vecDst);
+
+				if ( task !is null )
+				{
+					sched.addTask(task);
+					sched.addTask(CBotMoveToOrigin(vecDst));
+					sched.addTask(CBotTaskWait(90.0,vecDst));
+					g_EngineFuncs.ServerPrint("Set Dest finished.\n");
+				}
+				else
+				{
+					g_EngineFuncs.ServerPrint("Set Dest failed.\n");
+				}
+
 				CBaseEntity@ EntSend = null;
 				dictionary@ pEntityValues = {{"targetname", "AS_RCBOT_SEND"}};
 				@EntSend = g_EntityFuncs.CreateEntity("info_target", @pEntityValues, false);

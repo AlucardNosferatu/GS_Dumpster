@@ -24,7 +24,7 @@ public plugin_init()
 	register_concmd("col","test_ga_once")
 	register_concmd("eva","evaluation")
 	register_concmd("ro","release_obj")
-	register_concmd("sse","SpawnSendEnt")
+	register_concmd("sse","SSE")
 	RegisterHam(Ham_Spawn, "info_target", "CheckRecvEnt", 1);
 }
 
@@ -79,6 +79,11 @@ public Float:process_score(Float:ind[],i)
 	new Float:dSqr=floatmul(ind[3]-24.0,ind[3]-24.0);
 	new Float:score=(aSqr+bSqr+cSqr+dSqr);
 	return score
+}
+
+public SSE()
+{
+	SpawnSendEnt(0.0,32.0,32.0,32.0)
 }
 
 public SpawnSendEnt(Float:val1, Float:val2, Float:val3, Float:val4)
