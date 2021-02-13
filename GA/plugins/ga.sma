@@ -17,6 +17,9 @@ new Float:scores[2000];
 new Index
 new bool:wait
 
+new Float:move_x
+new Float:move_y
+
 public plugin_init()
 {
 	register_plugin("Sample", "1.0", "Scrooge2029");
@@ -24,7 +27,7 @@ public plugin_init()
 	register_concmd("col","test_ga_once")
 	register_concmd("eva","evaluation")
 	register_concmd("ro","release_obj")
-	register_concmd("sse","SSE")
+	register_concmd("sse","test_sse_loop")
 	RegisterHam(Ham_Spawn, "info_target", "CheckRecvEnt", 1);
 }
 
@@ -81,9 +84,45 @@ public Float:process_score(Float:ind[],i)
 	return score
 }
 
+public test_sse_loop()
+{
+	Index=0;
+	remove_task(0)
+	wait=false;
+	move_x=32.0
+	move_y=32.0
+	set_task(1.0, "SSE", .id=0, .flags="b")
+}
+
 public SSE()
 {
-	SpawnSendEnt(0.0,32.0,32.0,32.0)
+	if(!wait)
+	{
+		SpawnSendEnt(0.0,move_x,move_y,0.0)
+		wait=true
+		Index+=1
+		if(Index==1)
+		{
+			move_x=0.0
+			move_y=32.0
+		}
+		else if(Index==2)
+		{
+			move_x=-32.0
+			move_y=0.0
+		}
+		else if(Index==3)
+		{
+			move_x=0.0
+			move_y=-32.0
+		}
+		else if(Index>=4)
+		{
+			move_x=32.0
+			move_y=0.0
+			Index=0
+		}
+	}
 }
 
 public SpawnSendEnt(Float:val1, Float:val2, Float:val3, Float:val4)
