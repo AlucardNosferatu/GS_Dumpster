@@ -47,9 +47,9 @@ Wadinclude list :
 [zhlt.wad]
 
 CreateBrush:
- (0.02 seconds)
+ (0.01 seconds)
 CSGBrush:
- (0.21 seconds)
+ (0.09 seconds)
 
 Using Wadfile: \program files (x86)\steam\steamapps\common\sven co-op\svencoop\svencoop1.wad
  - Contains 0 used textures, 0.00 percent of map (71 textures in wad)
@@ -62,9 +62,65 @@ Using Wadfile: \program files (x86)\steam\steamapps\common\sven co-op\svencoop\t
 
 Wad files required to run the map: "svencoop1.wad;svencoop2.wad;tfc.wad;tfc2.wad;"
 Texture usage is at 0.02 mb (of 64.00 mb MAX)
-0.28 seconds elapsed
+0.14 seconds elapsed
 
 -----   END   hlcsg -----
+
+
+
+hlbsp v3.4-VL34-SC5.23 32-bit (Oct 17 2020)
+Zoner's Half-Life Compilation Tools -- Custom build for Sven Co-op 5.23
+Based on code modifications by Vluzacn (VL34)
+Based on code modifications by Sean "Zoner" Cavanaugh (3.4)
+Based on Valve's version, modified with permission.
+Submit detailed bug reports to http://forums.svencoop.com
+-----  BEGIN  hlbsp -----
+Command line: C:\PROGRA~2\Steam\STEAMA~1\common\SVENCO~2\mapping\COMPIL~1\SC-BSP.exe C:\Users\16413\Documents\GitHub\GS_Dumpster\GA\test_field\maze\sample 
+Arguments: C:\Users\16413\Documents\GitHub\GS_Dumpster\GA\test_field\maze\sample 
+
+-= Current hlbsp Settings =-
+Setting                        |  Map value            |  Default value        
+-------------------------------|-----------------------|-----------------------
+Verbose                         [                 off ] [                 off ]
+Log                             [                  on ] [                  on ]
+Developer mode                  [                   0 ] [                   0 ]
+Estimate times                  [                 off ] [                 off ]
+Statistics chart                [                 off ] [                 off ]
+CPU thread count                [                   8 ] [              Varies ]
+CPU process priority            [              Normal ] [              Normal ]
+Texture data memory limit       [            67108864 ] [            67108864 ]
+Lighting data memory limit      [            67108864 ] [            67108864 ]
+
+Leak only mode                  [                 off ] [                 off ]
+Face subdivide size             [                 528 ] [                 528 ]
+Maximum portal node size        [                1024 ] [                1024 ]
+Don't break edges on T-juncs?   [                 off ] [                 off ]
+Don't smooth brinks?            [                 off ] [                 off ]
+Don't process the clipping hull?[                 off ] [                 off ]
+Don't fill outside?             [                 off ] [                 off ]
+Don't fill empty spaces?        [                 off ] [                 off ]
+Don't optimize planes?          [                 off ] [                 off ]
+Don't optimize clip nodes?      [                 off ] [                 off ]
+Don't strip NULL textures?      [                 off ] [                 off ]
+Don't generate hull 2?          [                 off ] [                 off ]
+Show portal boundaries in PTS?  [                 off ] [                 off ]
+
+
+SolidBSP [hull 0] 104 (0.01 seconds)
+BSP generation successful, writing portal file 'C:\Users\16413\Documents\GitHub\GS_Dumpster\GA\test_field\maze\sample.prt'
+SolidBSP [hull 1] 160 (0.02 seconds)
+SolidBSP [hull 2] 75 (0.01 seconds)
+Warning: No entities exist in hull 2, no filling performed for this hull
+SolidBSP [hull 3] 160 (0.01 seconds)
+Reduced 360 clipnodes to 332
+Reduced 3 texinfos to 3
+Reduced 1 texdatas to 1 (48 bytes to 48)
+Reduced 316 planes to 137
+FixBrinks:
+Increased 332 clipnodes to 332.
+0.17 seconds elapsed
+
+-----   END   hlbsp -----
 
 
 
@@ -77,8 +133,33 @@ Submit detailed bug reports to http://forums.svencoop.com
 -----  BEGIN  hlvis -----
 Command line: C:\PROGRA~2\Steam\STEAMA~1\common\SVENCO~2\mapping\COMPIL~1\SC-VIS.exe C:\Users\16413\Documents\GitHub\GS_Dumpster\GA\test_field\maze\sample 
 Arguments: C:\Users\16413\Documents\GitHub\GS_Dumpster\GA\test_field\maze\sample 
->> There was a problem compiling the map.
->> Check the file C:\Users\16413\Documents\GitHub\GS_Dumpster\GA\test_field\maze\sample.log for the cause.
+  52 portalleafs
+ 109 numportals
+
+-= Current hlvis Settings =-
+Setting                        |  Map value            |  Default value        
+-------------------------------|-----------------------|-----------------------
+Verbose                         [                 off ] [                 off ]
+Log                             [                  on ] [                  on ]
+Developer mode                  [                   0 ] [                   0 ]
+Estimate times                  [                 off ] [                 off ]
+Statistics chart                [                 off ] [                 off ]
+CPU thread count                [                   8 ] [              Varies ]
+CPU process priority            [              Normal ] [              Normal ]
+Texture data memory limit       [            67108864 ] [            67108864 ]
+Lighting data memory limit      [            67108864 ] [            67108864 ]
+
+Fast mode                       [                 off ] [                 off ]
+Full mode                       [                 off ] [                 off ]
+
+
+BasePortalVis:
+ (0.01 seconds)
+LeafThread:
+ (0.01 seconds)
+average leafs visible: 17
+g_visdatasize:407  compressed from 364
+0.03 seconds elapsed
 
 -----   END   hlvis -----
 
@@ -93,8 +174,112 @@ Submit detailed bug reports to http://forums.svencoop.com
 -----  BEGIN  hlrad -----
 Command line: C:\PROGRA~2\Steam\STEAMA~1\common\SVENCO~2\mapping\COMPIL~1\SC-RAD.exe C:\Users\16413\Documents\GitHub\GS_Dumpster\GA\test_field\maze\sample 
 Arguments: C:\Users\16413\Documents\GitHub\GS_Dumpster\GA\test_field\maze\sample 
->> There was a problem compiling the map.
->> Check the file C:\Users\16413\Documents\GitHub\GS_Dumpster\GA\test_field\maze\sample.log for the cause.
+
+-= Current hlrad Settings =-
+Setting                        |  Map value            |  Default value        
+-------------------------------|-----------------------|-----------------------
+Verbose                         [                 off ] [                 off ]
+Log                             [                  on ] [                  on ]
+Developer mode                  [                   0 ] [                   0 ]
+Estimate times                  [                 off ] [                 off ]
+Statistics chart                [                 off ] [                 off ]
+CPU thread count                [                   8 ] [              Varies ]
+CPU process priority            [              Normal ] [              Normal ]
+Texture data memory limit       [            67108864 ] [            67108864 ]
+Lighting data memory limit      [            67108864 ] [            67108864 ]
+
+Fast mode                       [                 off ] [                 off ]
+Extra mode                      [                 off ] [                 off ]
+Visibility matrix               [              Sparse ] [              Sparse ]
+Bounces                         [                   8 ] [                   8 ]
+Ambient world light (R G B)     [   0.000 0.000 0.000 ] [   0.000 0.000 0.000 ]
+Light clipping threshold        [             188.000 ] [             188.000 ]
+Circus mode?                    [                 off ] [                 off ]
+Disable sunlight spread angles? [                 off ] [                 off ]
+Disable opaque light flags?     [                 off ] [                 off ]
+Smoothing t.hold for blending   [              50.000 ] [              50.000 ]
+Smoothing t.hold diff textures  [                 N/A ] [                 N/A ]
+Patch size for normal textures  [              64.000 ] [              64.000 ]
+Patch size for t-light faces    [              32.000 ] [              32.000 ]
+Scale patches with texture?     [                  on ] [                  on ]
+Patch subdividing?              [                  on ] [                  on ]
+Lighting threshold before black [               0.010 ] [               0.010 ]
+Direct lighting threshold       [              10.000 ] [              10.000 ]
+Direct lighting scale           [               1.000 ] [               1.000 ]
+Disable interpolation?          [                 off ] [                 off ]
+Global fade                     [               1.000 ] [               1.000 ]
+Global gap distance for t-light [               0.000 ] [               0.000 ]
+Global light scale (R G B)      [   2.000 2.000 2.000 ] [   2.000 2.000 2.000 ]
+Global gamma (R G B)            [   0.550 0.550 0.550 ] [   0.550 0.550 0.550 ]
+Ambient sunlight shade contrib. [               1.000 ] [               1.000 ]
+Disable sky light being global? [                 off ] [                 off ]
+Use incremental transfer list?  [                 off ] [                 off ]
+Dump light patches?             [                 off ] [                 off ]
+Colour jitter (R G B)           [         0.0 0.0 0.0 ] [         0.0 0.0 0.0 ]
+Monochromatic jitter (R G B)    [         0.0 0.0 0.0 ] [         0.0 0.0 0.0 ]
+Custom shadows with bounces?    [                 off ] [                 off ]
+Enable RBG transfers?           [                 off ] [                 off ]
+Minimum final light             [                   0 ] [                   0 ]
+Compress transfers?             [               16bit ] [               16bit ]
+Compress RGB transfers?         [               32bit ] [               32bit ]
+Smooth skylight?                [                  on ] [                  on ]
+Thickness of translucent faces  [               2.000 ] [               2.000 ]
+Remove black around opaques?    [                  on ] [                  on ]
+Don't load textures?            [                 off ] [                 off ]
+Reflection gamma                [               1.760 ] [               1.760 ]
+Reflection scale                [               0.700 ] [               0.700 ]
+Blur size                       [               1.500 ] [               1.500 ]
+Don't fix pointy t-lights?      [                 off ] [                 off ]
+Don't fix wall bleeding?        [                 off ] [                 off ]
+
+
+Load Textures:
+Using Wadfile: C:\Users\16413\Documents\GitHub\GS_Dumpster\GA\test_field\maze\sample.wa_
+1 textures referenced
+Reading texlights from 'C:\PROGRA~2\Steam\STEAMA~1\common\SVENCO~2\mapping\COMPIL~1\lights.rad'
+0 opaque models
+0 opaque faces
+258 faces
+Create Patches : 1022 base patches
+25696 square feet [3700224.00 square inches]
+0 direct lights and 0 fast direct lights
+1 light styles
+
+FindFacePositions:
+ (0.05 seconds)
+BuildFacelights:
+ (0.13 seconds)
+BuildVisLeafs:
+ (0.03 seconds)
+visibility matrix   :   0.1 megs
+MakeScales:
+ (0.03 seconds)
+Transfer Lists :      237145 :   237.15k transfers
+       Indices :      169584 :   165.61k bytes
+          Data :      477356 :   466.17k bytes
+Bounce 1 GatherLight:
+ (0.00 seconds)
+Bounce 2 GatherLight:
+ (0.00 seconds)
+Bounce 3 GatherLight:
+ (0.01 seconds)
+Bounce 4 GatherLight:
+ (0.00 seconds)
+Bounce 5 GatherLight:
+ (0.00 seconds)
+Bounce 6 GatherLight:
+ (0.00 seconds)
+Bounce 7 GatherLight:
+ (0.00 seconds)
+Bounce 8 GatherLight:
+ (0.01 seconds)
+CreateTriangulations:
+ (0.00 seconds)
+AddPatchLights:
+ (0.29 seconds)
+FinalLightFace:
+ (0.00 seconds)
+1.62 seconds elapsed
 
 -----   END   hlrad -----
 
