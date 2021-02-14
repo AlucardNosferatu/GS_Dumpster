@@ -1,0 +1,102 @@
+hlcsg v3.4-VL34-SC5.23 32-bit (Oct 17 2020)
+Zoner's Half-Life Compilation Tools -- Custom build for Sven Co-op 5.23
+Based on code modifications by Vluzacn (VL34)
+Based on code modifications by Sean "Zoner" Cavanaugh (3.4)
+Based on Valve's version, modified with permission.
+Submit detailed bug reports to http://forums.svencoop.com
+-----  BEGIN  hlcsg -----
+Command line: C:\PROGRA~2\Steam\STEAMA~1\common\SVENCO~2\mapping\COMPIL~1\SC-CSG.exe C:\Users\16413\Documents\GitHub\GS_Dumpster\GA\test_field\maze\sample 
+Arguments: C:\Users\16413\Documents\GitHub\GS_Dumpster\GA\test_field\maze\sample 
+Entering C:\Users\16413\Documents\GitHub\GS_Dumpster\GA\test_field\maze\sample.map
+
+-= Current hlcsg Settings =-
+Setting                        |  Map value            |  Default value        
+-------------------------------|-----------------------|-----------------------
+Verbose                         [                 off ] [                 off ]
+Log                             [                  on ] [                  on ]
+Developer mode                  [                   0 ] [                   0 ]
+Estimate times                  [                 off ] [                 off ]
+Statistics chart                [                 off ] [                 off ]
+CPU thread count                [                   8 ] [              Varies ]
+CPU process priority            [              Normal ] [              Normal ]
+Texture data memory limit       [            67108864 ] [            67108864 ]
+Lighting data memory limit      [            67108864 ] [            67108864 ]
+
+Entities only                   [                 off ] [                 off ]
+WAD textures                    [                  on ] [                  on ]
+Clipping hull generation        [                  on ] [                 off ]
+Clipping economy mode           [                 off ] [                 off ]
+Clipping hull type              [              Simple ] [              Simple ]
+Custom hull file                [                None ] [                None ]
+Sky brush clipping              [                  on ] [                  on ]
+Minimum surface area            [               0.000 ] [               0.000 ]
+Brush union threshold           [               0.000 ] [               0.000 ]
+NULL texture substitutions file [                None ] [                None ]
+WAD configuration file          [                None ] [                None ]
+WAD configuration name          [                None ] [                None ]
+WAD auto-detect                 [                 off ] [                  on ]
+Strip null texture faces        [                  on ] [                  on ]
+Strip trigger texture faces     [                  on ] [                  on ]
+Optimize engine light entities  [                  on ] [                  on ]
+Convert game_text ANSI to UTF-8 [                  on ] [                  on ]
+Scale the world                 [                None ] [                None ]
+
+
+Using mapfile wad configuration
+Wadinclude list :
+[zhlt.wad]
+
+CreateBrush:
+ (0.02 seconds)
+CSGBrush:
+ (0.21 seconds)
+
+Using Wadfile: \program files (x86)\steam\steamapps\common\sven co-op\svencoop\svencoop1.wad
+ - Contains 0 used textures, 0.00 percent of map (71 textures in wad)
+Using Wadfile: \program files (x86)\steam\steamapps\common\sven co-op\svencoop\svencoop2.wad
+ - Contains 0 used textures, 0.00 percent of map (1 textures in wad)
+Using Wadfile: \program files (x86)\steam\steamapps\common\sven co-op\svencoop\tfc.wad
+ - Contains 1 used texture, 100.00 percent of map (279 textures in wad)
+Using Wadfile: \program files (x86)\steam\steamapps\common\sven co-op\svencoop\tfc2.wad
+ - Contains 0 used textures, 0.00 percent of map (395 textures in wad)
+
+Wad files required to run the map: "svencoop1.wad;svencoop2.wad;tfc.wad;tfc2.wad;"
+Texture usage is at 0.02 mb (of 64.00 mb MAX)
+0.28 seconds elapsed
+
+-----   END   hlcsg -----
+
+
+
+hlvis v3.4-VL34-SC5.23 32-bit (Oct 17 2020)
+Zoner's Half-Life Compilation Tools -- Custom build for Sven Co-op 5.23
+Based on code modifications by Vluzacn (VL34)
+Based on code modifications by Sean "Zoner" Cavanaugh (3.4)
+Based on Valve's version, modified with permission.
+Submit detailed bug reports to http://forums.svencoop.com
+-----  BEGIN  hlvis -----
+Command line: C:\PROGRA~2\Steam\STEAMA~1\common\SVENCO~2\mapping\COMPIL~1\SC-VIS.exe C:\Users\16413\Documents\GitHub\GS_Dumpster\GA\test_field\maze\sample 
+Arguments: C:\Users\16413\Documents\GitHub\GS_Dumpster\GA\test_field\maze\sample 
+>> There was a problem compiling the map.
+>> Check the file C:\Users\16413\Documents\GitHub\GS_Dumpster\GA\test_field\maze\sample.log for the cause.
+
+-----   END   hlvis -----
+
+
+
+hlrad v3.4-VL34-SC5.23 32-bit (Oct 17 2020)
+Zoner's Half-Life Compilation Tools -- Custom build for Sven Co-op 5.23
+Based on code modifications by Vluzacn (VL34)
+Based on code modifications by Sean "Zoner" Cavanaugh (3.4)
+Based on Valve's version, modified with permission.
+Submit detailed bug reports to http://forums.svencoop.com
+-----  BEGIN  hlrad -----
+Command line: C:\PROGRA~2\Steam\STEAMA~1\common\SVENCO~2\mapping\COMPIL~1\SC-RAD.exe C:\Users\16413\Documents\GitHub\GS_Dumpster\GA\test_field\maze\sample 
+Arguments: C:\Users\16413\Documents\GitHub\GS_Dumpster\GA\test_field\maze\sample 
+>> There was a problem compiling the map.
+>> Check the file C:\Users\16413\Documents\GitHub\GS_Dumpster\GA\test_field\maze\sample.log for the cause.
+
+-----   END   hlrad -----
+
+
+
