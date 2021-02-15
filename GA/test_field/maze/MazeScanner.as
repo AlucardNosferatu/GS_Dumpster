@@ -23,18 +23,15 @@ void ScanForward(CBasePlayer@ pPlayer)
     int end_y=-1024;
     int stride=8;
     int dx=end_x-start_x;
-    int dy=end_y-start_y;
     int x_scan_lines=dx/stride;
     File@ fHandle;
-    @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/ScanResult.txt" , OpenFile::APPEND);
+    @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/ScanResultF.txt" , OpenFile::APPEND);
     if( fHandle !is null ) 
     {
         for(int i=0;i<x_scan_lines;i++)
         {
             int ScanX=i*stride+int(stride/2);
-            int ScanY=start_y;
-            int ScanZ=z;
-            ScanLineF(float(ScanX),float(ScanY),float(ScanZ),float(end_y),stride,pPlayer,fHandle);
+            ScanLineF(float(ScanX),float(start_y),float(z),float(end_y),stride,pPlayer,fHandle);
             g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "\n");
             g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "\n");
         }
@@ -52,18 +49,15 @@ void ScanBackward(CBasePlayer@ pPlayer)
     int end_y=0;
     int stride=8;
     int dx=end_x-start_x;
-    int dy=end_y-start_y;
     int x_scan_lines=dx/stride;
     File@ fHandle;
-    @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/ScanResult.txt" , OpenFile::APPEND);
+    @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/ScanResultB.txt" , OpenFile::APPEND);
     if( fHandle !is null ) 
     {
         for(int i=0;i<x_scan_lines;i++)
         {
             int ScanX=i*stride+int(stride/2);
-            int ScanY=start_y;
-            int ScanZ=z;
-            ScanLineB(float(ScanX),float(ScanY),float(ScanZ),float(end_y),stride,pPlayer,fHandle);
+            ScanLineB(float(ScanX),float(start_y),float(z),float(end_y),stride,pPlayer,fHandle);
             g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "\n");
             g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "\n");
         }
@@ -71,10 +65,10 @@ void ScanBackward(CBasePlayer@ pPlayer)
     }
 }
 
-void ScanLineF(float ScanX,float ScanY,float ScanZ,float end_y,int stride,CBasePlayer@ pPlayer,File@ fHandle)
+void ScanLineF(float ScanX,float start_y,float ScanZ,float end_y,int stride,CBasePlayer@ pPlayer,File@ fHandle)
 {
     TraceResult tr;
-    Vector vecSrc=Vector(ScanX,ScanY,ScanZ);
+    Vector vecSrc=Vector(ScanX,start_y,ScanZ);
     Vector vecEnd=Vector(ScanX,end_y,ScanZ);
     g_Utility.TraceLine(vecSrc, vecEnd, ignore_monsters, ignore_glass, pPlayer.edict(), tr);
     // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "AllSolid:"+string(tr.fAllSolid)+" StartSolid:"+string(tr.fStartSolid)+" Start:"+vecSrc.ToString()+" End:"+tr.vecEndPos.ToString()+"\n");
@@ -97,10 +91,10 @@ void ScanLineF(float ScanX,float ScanY,float ScanZ,float end_y,int stride,CBaseP
     }
 }
 
-void ScanLineB(float ScanX,float ScanY,float ScanZ,float end_y,int stride,CBasePlayer@ pPlayer,File@ fHandle)
+void ScanLineB(float ScanX,float start_y,float ScanZ,float end_y,int stride,CBasePlayer@ pPlayer,File@ fHandle)
 {
     TraceResult tr;
-    Vector vecSrc=Vector(ScanX,ScanY,ScanZ);
+    Vector vecSrc=Vector(ScanX,start_y,ScanZ);
     Vector vecEnd=Vector(ScanX,end_y,ScanZ);
     g_Utility.TraceLine(vecSrc, vecEnd, ignore_monsters, ignore_glass, pPlayer.edict(), tr);
     // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "AllSolid:"+string(tr.fAllSolid)+" StartSolid:"+string(tr.fStartSolid)+" Start:"+vecSrc.ToString()+" End:"+tr.vecEndPos.ToString()+"\n");
