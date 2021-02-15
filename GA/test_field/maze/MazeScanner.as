@@ -31,7 +31,7 @@ void ScanForward(CBasePlayer@ pPlayer)
     {
         for(int i=0;i<x_scan_lines;i++)
         {
-            int ScanX=i*stride;
+            int ScanX=i*stride+int(stride/2);
             int ScanY=start_y;
             int ScanZ=z;
             ScanLineF(float(ScanX),float(ScanY),float(ScanZ),float(end_y),stride,pPlayer,fHandle);
@@ -60,7 +60,7 @@ void ScanBackward(CBasePlayer@ pPlayer)
     {
         for(int i=0;i<x_scan_lines;i++)
         {
-            int ScanX=i*stride;
+            int ScanX=i*stride+int(stride/2);
             int ScanY=start_y;
             int ScanZ=z;
             ScanLineB(float(ScanX),float(ScanY),float(ScanZ),float(end_y),stride,pPlayer,fHandle);

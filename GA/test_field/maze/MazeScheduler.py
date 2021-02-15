@@ -29,6 +29,7 @@ def traces_to_blocklist(traces):
     for key in blockdict:
         blockdict[key] = list(set(blockdict[key]))
         blockdict[key].sort()
+    for key in blockdict:
         temp_block = []
         for i, plane in enumerate(blockdict[key]):
             if i % 2 == 0:
