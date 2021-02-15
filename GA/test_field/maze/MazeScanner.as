@@ -10,7 +10,65 @@ void ScanMaze(const CCommand@ pArgs)
 {
     CBasePlayer@ pPlayer=g_ConCommandSystem.GetCurrentPlayer();
     g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Start Maze Scanning\n");
-    int z=64;
+    int z=68;
+    int start_x=0;
+    int start_y=0;
+    int end_x=1024;
+    int end_y=-1024;
+    int stride=8;
+    int dx=end_x-start_x;
+    int dy=end_y-start_y;
+    int x_scan_lines=dx/stride;
+    File@ fHandle;
+    @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/ScanResult.txt" , OpenFile::APPEND);
+    if( fHandle !is null ) 
+    {
+        for(int i=0;i<x_scan_lines;i++)
+        {
+            int ScanX=i*stride;
+            int ScanY=0;
+            int ScanZ=z;
+            ScanLine(float(ScanX),float(ScanY),float(ScanZ),float(dy),stride,pPlayer,fHandle);
+            g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "\n");
+            g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "\n");
+        }
+        fHandle.Close();
+    }
+}
+
+void ScanForward(CBasePlayer@ pPlayer)
+{
+    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Start Maze Scanning\n");
+    int z=68;
+    int start_x=0;
+    int start_y=0;
+    int end_x=1024;
+    int end_y=-1024;
+    int stride=8;
+    int dx=end_x-start_x;
+    int dy=end_y-start_y;
+    int x_scan_lines=dx/stride;
+    File@ fHandle;
+    @fHandle  = g_FileSystem.OpenFile( "scripts/plugins/store/ScanResult.txt" , OpenFile::APPEND);
+    if( fHandle !is null ) 
+    {
+        for(int i=0;i<x_scan_lines;i++)
+        {
+            int ScanX=i*stride;
+            int ScanY=0;
+            int ScanZ=z;
+            ScanLine(float(ScanX),float(ScanY),float(ScanZ),float(dy),stride,pPlayer,fHandle);
+            g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "\n");
+            g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "\n");
+        }
+        fHandle.Close();
+    }
+}
+
+void ScanBackward(CBasePlayer@ pPlayer)
+{
+    g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "Start Maze Scanning\n");
+    int z=68;
     int start_x=0;
     int start_y=0;
     int end_x=1024;
@@ -53,6 +111,7 @@ void ScanLine(float ScanX,float ScanY,float ScanZ,float dy,int stride,CBasePlaye
         vecSrc=tr.vecEndPos;
         vecSrc.y-=1.0;
         g_Utility.TraceLine(vecSrc, vecEnd, ignore_monsters, ignore_glass, pPlayer.edict(), tr);
+        vecSrc.y+=1.0;
         // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "AllSolid:"+string(tr.fAllSolid)+" StartSolid:"+string(tr.fStartSolid)+" Start:"+vecSrc.ToString()+" End:"+tr.vecEndPos.ToString()+"\n");
         y_seg_start=int(vecSrc.y/stride);
         y_seg_end=int(tr.vecEndPos.y/stride);
