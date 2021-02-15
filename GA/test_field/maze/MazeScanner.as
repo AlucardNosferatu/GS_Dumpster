@@ -70,7 +70,7 @@ void ScanLineF(float ScanX,float start_y,float ScanZ,float end_y,int stride,CBas
     TraceResult tr;
     Vector vecSrc=Vector(ScanX,start_y,ScanZ);
     Vector vecEnd=Vector(ScanX,end_y,ScanZ);
-    g_Utility.TraceLine(vecSrc, vecEnd, ignore_monsters, ignore_glass, pPlayer.edict(), tr);
+    g_Utility.TraceLine(vecSrc, vecEnd, dont_ignore_monsters, dont_ignore_glass, pPlayer.edict(), tr);
     // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "AllSolid:"+string(tr.fAllSolid)+" StartSolid:"+string(tr.fStartSolid)+" Start:"+vecSrc.ToString()+" End:"+tr.vecEndPos.ToString()+"\n");
     int x_seg=int(ScanX/stride);
     int y_seg_start=int(vecSrc.y/stride);
@@ -81,7 +81,7 @@ void ScanLineF(float ScanX,float start_y,float ScanZ,float end_y,int stride,CBas
     {
         vecSrc=tr.vecEndPos;
         vecSrc.y-=1.0;
-        g_Utility.TraceLine(vecSrc, vecEnd, ignore_monsters, ignore_glass, pPlayer.edict(), tr);
+        g_Utility.TraceLine(vecSrc, vecEnd, dont_ignore_monsters, dont_ignore_glass, pPlayer.edict(), tr);
         vecSrc.y+=1.0;
         // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "AllSolid:"+string(tr.fAllSolid)+" StartSolid:"+string(tr.fStartSolid)+" Start:"+vecSrc.ToString()+" End:"+tr.vecEndPos.ToString()+"\n");
         y_seg_start=int(vecSrc.y/stride);
@@ -96,7 +96,7 @@ void ScanLineB(float ScanX,float start_y,float ScanZ,float end_y,int stride,CBas
     TraceResult tr;
     Vector vecSrc=Vector(ScanX,start_y,ScanZ);
     Vector vecEnd=Vector(ScanX,end_y,ScanZ);
-    g_Utility.TraceLine(vecSrc, vecEnd, ignore_monsters, ignore_glass, pPlayer.edict(), tr);
+    g_Utility.TraceLine(vecSrc, vecEnd, dont_ignore_monsters, dont_ignore_glass, pPlayer.edict(), tr);
     // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "AllSolid:"+string(tr.fAllSolid)+" StartSolid:"+string(tr.fStartSolid)+" Start:"+vecSrc.ToString()+" End:"+tr.vecEndPos.ToString()+"\n");
     int x_seg=int(ScanX/stride);
     int y_seg_start=int(vecSrc.y/stride);
@@ -107,7 +107,7 @@ void ScanLineB(float ScanX,float start_y,float ScanZ,float end_y,int stride,CBas
     {
         vecSrc=tr.vecEndPos;
         vecSrc.y+=1.0;
-        g_Utility.TraceLine(vecSrc, vecEnd, ignore_monsters, ignore_glass, pPlayer.edict(), tr);
+        g_Utility.TraceLine(vecSrc, vecEnd, dont_ignore_monsters, dont_ignore_glass, pPlayer.edict(), tr);
         vecSrc.y-=1.0;
         // g_PlayerFuncs.ClientPrintAll(HUD_PRINTCONSOLE, "AllSolid:"+string(tr.fAllSolid)+" StartSolid:"+string(tr.fStartSolid)+" Start:"+vecSrc.ToString()+" End:"+tr.vecEndPos.ToString()+"\n");
         y_seg_start=int(vecSrc.y/stride);
