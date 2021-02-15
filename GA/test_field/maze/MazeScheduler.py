@@ -16,17 +16,28 @@ def get_column_info():
 
 
 def traces_to_blocklist(traces):
-    blocklist = {}
+    blockdict = {}
+    blocklist = []
     for trace in traces:
         x = trace['x_seg']
         ys = trace['y_seg_start']
         ye = trace['y_seg_end']
-        if x not in blocklist:
-            blocklist[x]=[]
-        blocklist[x].append(ys)
-        blocklist[x].append(ye)
-    for key in blocklist:
-        blocklist[key]=list(set(blocklist[key]))
+        if x not in blockdict:
+            blockdict[x] = []
+        blockdict[x].append(ys)
+        blockdict[x].append(ye)
+    for key in blockdict:
+        blockdict[key] = list(set(blockdict[key]))
+        blockdict[key].sort()
+        temp_block = []
+        for i, plane in enumerate(blockdict[key]):
+            if i % 2 == 0:
+                temp_block.clear()
+                temp_block.append(plane)
+            else:
+                temp_block.append(plane)
+                for j in range(temp_block[0], temp_block[1]):
+                    blocklist.append((key, j))
     return blocklist
 
 
