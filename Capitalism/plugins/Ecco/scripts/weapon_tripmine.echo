@@ -1,6 +1,0 @@
-name:Laser Mine
-cost:10
-category:Military Weapon
-give weapon_tripmine
-buycount weapon_tripmine
-discount weapon_tripmine

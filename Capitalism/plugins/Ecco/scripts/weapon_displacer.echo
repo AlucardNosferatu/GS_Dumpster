@@ -1,6 +1,0 @@
-name:Teleport Gun
-cost:50
-category:Energy Weapon
-give weapon_displacer
-buycount weapon_displacer
-discount weapon_displacer
